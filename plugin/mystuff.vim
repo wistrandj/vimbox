@@ -45,25 +45,27 @@ nnoremap <c-w>oo :call OpenOutput()<cr>
 " -----------------------------------------------------------------------------
 " Insert Something
 
-nnoremap <leader>mi :call <SID>InsertBelow()<CR>
-nnoremap <leader>im :call <SID>DropRestBelow()<CR>ka
-nmap <leader>cm :call <SID>DropRestBelow()<CR>gccka
-
-function! s:DropRestBelow()
-    let col = col('.')
-    exe "normal! i\<CR>\<ESC>0d^" . col . "i \<ESC>x"
-endfunction
-function! s:InsertBelow()
-    " <leader>mi
-    let column = col('.') - 1
-    exe "normal! o\<ESC>" . column . "i "
-    startinsert!
-endfunction
+nnoremap <expr> <leader>hh <SID>ToggleHilightSearch()
 function! s:ToggleHilightSearch()
     " <leader>hh
     let nextstate = (&hls == 0) ? "on" : "off"
     set invhls
     echo "HLS " . nextstate
+endfunction
+
+nnoremap <leader>im :call <SID>DropRestBelow()<CR>ka
+nnoremap <leader>cm :call <SID>DropRestBelow()<CR>gccka
+function! s:DropRestBelow()
+    let col = col('.')
+    exe "normal! i\<CR>\<ESC>0d^" . col . "i \<ESC>x"
+endfunction
+
+nnoremap <leader>mi :call <SID>InsertBelow()<CR>
+function! s:InsertBelow()
+    " <leader>mi
+    let column = col('.') - 1
+    exe "normal! o\<ESC>" . column . "i "
+    startinsert!
 endfunction
 
 " -----------------------------------------------------------------------------

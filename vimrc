@@ -120,7 +120,6 @@ vnoremap Ö {
 vnoremap Ä }
 
 " Search
-nnoremap <expr> <leader>hh <SID>ToggleHilightSearch()
 nnoremap <leader>hw :set hls<CR>*#
 
 " Fold
