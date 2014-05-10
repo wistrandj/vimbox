@@ -120,7 +120,7 @@ vnoremap Ö {
 vnoremap Ä }
 
 " Search
-nnoremap <leader>hw :set hls<CR>*#
+nnoremap <leader>hw :set invhls<CR>*#
 
 " Fold
 nnoremap <Space> za
