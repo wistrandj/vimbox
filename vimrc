@@ -99,25 +99,19 @@ vnoremap <Leader>xi :w !xsel -pi<CR>
 
 " Escaping and moving cursor
 inoremap kj <Esc>l
-nnoremap , ;
-nnoremap ; ,
-vnoremap , ;
-vnoremap ; ,
+noremap , ;
+noremap ; ,
 noremap j gj
 noremap k gk
 noremap <C-y> 3<C-y>
 noremap <C-e> 3<C-e>
 
 " Use scandinavian keys for something useful
-nnoremap ö [
-nnoremap ä ]
-vnoremap ö [
-vnoremap ä ]
+noremap ö [
+noremap ä ]
 
-nnoremap Ö {
-nnoremap Ä }
-vnoremap Ö {
-vnoremap Ä }
+noremap Ö {
+noremap Ä }
 
 " Search
 nnoremap <leader>hw :set invhls<CR>*#
