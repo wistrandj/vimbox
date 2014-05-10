@@ -142,9 +142,6 @@ inoremap vvl <esc>^v$h
 
 " Insert
 nnoremap s i_<Esc>r
-nnoremap <leader>im :call <SID>DropRestBelow<CR>ka
-nnoremap <leader>mi :call <SID>InsertNextLineSameColumn()<CR>
-nmap <leader>cm :call <SID>DropRestBelow()<CR>gccka
 nnoremap <leader>j yyp
 
 " Replace with empty line
@@ -178,27 +175,5 @@ autocmd BufNewFile,BufRead *.story set ft=groovy
 autocmd BufNewFile,BufRead *memo set ft=memo
 autocmd BufNewFile,BufRead kirjat set ft=kirjat
 autocmd BufNewFile,BufRead *.scl set ft=scala
-
-" ENDSECTION
-" SECTION Functions for mappings
-
-fun! s:DropRestBelow()
-    let col = col('.')
-    exe "normal! i\<CR>\<ESC>0d^" . col . "i \<ESC>x"
-endfun
-
-fun! s:InsertNextLineSameColumn()
-    " <leader>mi
-    let column = col('.') - 1
-    exe "normal! o\<ESC>" . column . "i "
-    startinsert!
-endfun
-
-fun! s:ToggleHilightSearch()
-    " <leader>hh
-    let nextstate = (&hls == 0) ? "on" : "off"
-    set invhls
-    echo "HLS " . nextstate
-endfun
 
 " ENDSECTION
