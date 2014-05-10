@@ -122,7 +122,7 @@ vnoremap Ä }
 " Search
 nnoremap \ :%s/
 vnoremap \ :s/
-nnoremap <expr> <leader>hh ToggleHilightSearch()
+nnoremap <expr> <leader>hh <SID>ToggleHilightSearch()
 nnoremap <leader>hw :set hls<CR>*#
 
 " Fold
@@ -144,9 +144,9 @@ inoremap vvl <esc>^v$h
 
 " Insert
 nnoremap s i_<Esc>r
-nnoremap <leader>im :InsertNextLine<CR>ka
-nnoremap <leader>mi :call InsertNextLineSameColumn()<CR>
-nmap <leader>cm :InsertNextLine<CR>gccka
+nnoremap <leader>im :call <SID>DropRestBelow<CR>ka
+nnoremap <leader>mi :call <SID>InsertNextLineSameColumn()<CR>
+nmap <leader>cm :call <SID>DropRestBelow()<CR>gccka
 nnoremap <leader>j yyp
 
 " Replace with empty line
@@ -184,24 +184,23 @@ autocmd BufNewFile,BufRead *.scl set ft=scala
 " ENDSECTION
 " SECTION Functions for mappings
 
-com! InsertNextLine exe "normal! i\<CR>\<ESC>0d^" . col('.') . "i \<ESC>x"
+fun! s:DropRestBelow()
+    let col = col('.')
+    exe "normal! i\<CR>\<ESC>0d^" . col . "i \<ESC>x"
+endfun
 
-fun! InsertNextLineSameColumn()
+fun! s:InsertNextLineSameColumn()
     " <leader>mi
     let column = col('.') - 1
     exe "normal! o\<ESC>" . column . "i "
     startinsert!
 endfun
 
-fun! ToggleHilightSearch()
+fun! s:ToggleHilightSearch()
     " <leader>hh
-    if &hls == 0
-        set hls
-        echo "HLS on"
-    else
-        set nohls
-        echo "HLS off"
-    endif
+    let nextstate = (&hls == 0) ? "on" : "off"
+    set invhls
+    echo "HLS " . nextstate
 endfun
 
 " ENDSECTION
