@@ -13,3 +13,8 @@ endfunction
 
 nnoremap <leader>gs :echo system("git status")<CR>
 nnoremap <leader>gc :call GitCommit()<CR>
+
+" runfile
+
+command! Run call runfile#Run()
+command! Runout call runfile#RunFileToOutPut()

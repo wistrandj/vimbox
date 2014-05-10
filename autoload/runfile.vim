@@ -34,11 +34,11 @@
 " ------------------------------------------------------------------------------
 " Public
 
-fun! Run()
+fun! runfile#Run()
     echo s:RunCurrentFile()
 endfun
 
-fun! RunFileToOutput()
+fun! runfile#RunFileToOutput()
     " NOTE: depends on outputbuffer.vim
     let out = s:RunCurrentFile()
     call OutputText(out)
