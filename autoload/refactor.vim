@@ -4,13 +4,17 @@
 " 2) Modify found lines in quickfix window
 " 3) Call WriteQuickfix()
 
-
-fun! s:readChanges()
+fun! refactor#ApplyQuickfixChanges()
     if &buftype != "quickfix"
         echoerr "refactor#readChanges(): Use quickfix window"
         return {}
     endif
 
+    let changes = s:readChanges()
+    call s:applyChanges(changes)
+endfun
+
+fun! s:readChanges()
     let changes = {}
     for i in range(1, line('.'))
         let [file, nr, line] = split(getline('.'), '|')
@@ -29,10 +33,13 @@ endfun
 
 fun! s:applyChanges(changes)
     for file in keys(a:changes)
+        echo "file: " . file
         let lines = readfile(file)
 
-        for [nr, ch] in a:changes[file]
-            let lines[nr] = ch
+        for change in a:changes[file]
+            let [nr, ch] = change
+            echo "    change: " . nr . " : " . ch
+            let lines[nr - 1] = ch
         endfor
 
         call writefile(lines, file)

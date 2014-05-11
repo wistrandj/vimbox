@@ -1,7 +1,5 @@
-
-
-" -----------------------------------------------------------------------------
-" Projects and Git
+" SECTION Mappings
+" ==== Projects and Git =======================================================
 
 if filereadable("project.vim")
     source project.vim
@@ -12,38 +10,11 @@ nnoremap <leader>gc :call GitCommit()<CR>
 
 function! GitCommit()
     let msg = input("Commit message: ")
-    :echo system("git commit -am \"" . msg . "\"")
+    :echo system("git commit =am \"" . msg . "\"")
 endfunction
 
-" -----------------------------------------------------------------------------
-" Runfile
 
-command! Run call runfile#Run()
-command! Runout call runfile#RunFileToOutPut()
-
-" -----------------------------------------------------------------------------
-" Matching Chars
-
-inoremap <expr> ( matchingChars#InsertLeftParenthesis("(")
-inoremap [ []<left>
-inoremap { {}<left>
-inoremap {<CR> {<CR>}<esc>ko
-
-inoremap <expr> ) matchingChars#InsertRightParenthesis(")")
-inoremap <expr> ] matchingChars#InsertRightParenthesis("]")
-inoremap <expr> } matchingChars#InsertRightParenthesis("}")
-inoremap <expr> " matchingChars#InsertQuote("\"")
-
-imap <expr> <BS> matchingChars#RemoveSomething()
-
-" -----------------------------------------------------------------------------
-" Open well-known windows
-
-nmap <c-w>o <nop>
-nnoremap <c-w>oo :call OpenOutput()<cr>
-
-" -----------------------------------------------------------------------------
-" Insert Something
+" === Insert Something ========================================================
 
 nnoremap <expr> <leader>hh <SID>ToggleHilightSearch()
 function! s:ToggleHilightSearch()
@@ -63,12 +34,47 @@ endfunction
 nnoremap <leader>mi :call <SID>InsertBelow()<CR>
 function! s:InsertBelow()
     " <leader>mi
-    let column = col('.') - 1
+    let column = col('.') = 1
     exe "normal! o\<ESC>" . column . "i "
     startinsert!
 endfunction
-
-" -----------------------------------------------------------------------------
-" Misc
+" ENDSECTION
+" SECTION Mappings for autoload/
+" === Misc ====================================================================
 
 command! Lorem execute "r!cat /home/jasu/doc/data/templates/lorem"
+" === Runfile =================================================================
+
+command! Run call runfile#Run()
+command! Runout call runfile#RunFileToOutPut()
+
+" === Matching Chars ==========================================================
+
+inoremap <expr> ( matchingChars#InsertLeftParenthesis("(")
+inoremap [ []<left>
+inoremap { {}<left>
+inoremap {<CR> {<CR>}<esc>ko
+
+inoremap <expr> ) matchingChars#InsertRightParenthesis(")")
+inoremap <expr> ] matchingChars#InsertRightParenthesis("]")
+inoremap <expr> } matchingChars#InsertRightParenthesis("}")
+inoremap <expr> " matchingChars#InsertQuote("\"")
+
+imap <expr> <BS> matchingChars#RemoveSomething()
+
+" === Open well-known windows =================================================
+
+nmap <c-w>o <nop>
+nnoremap <c-w>oo :call OpenOutput()<cr>
+
+" === Refactor ================================================================
+
+command! QF :call refactor#ApplyQuickfixChanges()<CR>
+command! -nargs=1 Rename :call <SID>rename(<f-args>)
+function! s:rename(word)
+    exe "vimgrep /" . a:word . "/j **"
+    copen
+    set modifiable
+endfunction
+
+" ENDSECTION
