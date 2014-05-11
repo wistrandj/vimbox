@@ -12,6 +12,8 @@ fun! refactor#ApplyQuickfixChanges()
 
     let changes = s:readChanges()
     call s:applyChanges(changes)
+    call s:updateBuffers(changes)
+    return changes
 endfun
 
 fun! s:readChanges()
@@ -43,5 +45,14 @@ fun! s:applyChanges(changes)
         endfor
 
         call writefile(lines, file)
+    endfor
+endfun
+
+fun! s:updateBuffers(changes)
+    for file in keys(a:changes)
+        if bufnr(file) != -1
+            exe "buffer " . bufnr(file)
+            edit
+        endif
     endfor
 endfun

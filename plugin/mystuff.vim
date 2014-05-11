@@ -10,7 +10,7 @@ nnoremap <leader>gc :call GitCommit()<CR>
 
 function! GitCommit()
     let msg = input("Commit message: ")
-    :echo system("git commit =am \"" . msg . "\"")
+    :echo system("git commit -am \"" . msg . "\"")
 endfunction
 
 
@@ -69,7 +69,7 @@ nnoremap <c-w>oo :call OpenOutput()<cr>
 
 " === Refactor ================================================================
 
-command! QF :call refactor#ApplyQuickfixChanges()<CR>
+command! RenameA :call refactor#ApplyQuickfixChanges()<CR>
 command! -nargs=1 Rename :call <SID>rename(<f-args>)
 function! s:rename(word)
     exe "vimgrep /" . a:word . "/j **"
