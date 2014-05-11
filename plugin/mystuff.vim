@@ -72,39 +72,3 @@ endfunction
 " Misc
 
 command! Lorem execute "r!cat /home/jasu/doc/data/templates/lorem"
-
-function! QuickfixWrite()
-    if &buftype != "quickfix"
-        return
-    endif
-
-    let changelists = {}
-    for i in range(1, line('$'))
-        call ReadQuickfixLine(changelists, line(i))
-    endfor
-
-    call ApplyQuickfixChanges(changelists)
-endfunction
-
-function! ApplyQuickfixChanges(changelists)
-    for file in keys(a:changelists)
-        let lines = readfile(file)
-
-        for [linenr, newline] in a:changelists[file]
-            let lines[linenr] = newline
-        endfor
-
-        call writefile(lines, file)
-    endfor
-endfunction
-
-function! ReadQuickfixLine(changelists, line)
-    let [file, linenr, newline] = split(line, '|')
-    let newline = newline[1:]
-
-    if !has_key(a:changelists, file)
-        let a:changelists[l:file] = []
-    endif
-
-    call add(a:changelists[l:file], [linenr, newline])
-endfunction
