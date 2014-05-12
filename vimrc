@@ -121,7 +121,6 @@ nnoremap <Space> za
 
 " Macros and Commands
 nnoremap Q @q
-nnoremap <leader>q q:
 
 " Visual
 vnoremap > >gv
