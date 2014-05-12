@@ -148,6 +148,8 @@ vnoremap <Leader>ta :Tabular /
 " SECTION Plugins and filetypes
 "
 
+let g:gundo_prefer_python3 = 1
+
 " Use pathogen to manage plugins
 runtime bundle/pathogen/autoload/pathogen.vim
 call pathogen#infect()
