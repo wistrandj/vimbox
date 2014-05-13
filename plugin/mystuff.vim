@@ -32,6 +32,44 @@ function! s:InsertBelow()
     exe "normal! o\<ESC>" . column . "i "
     startinsert!
 endfunction
+
+" === Scroll with <C-y> and <C-e> " ===========================================
+
+let s:scroll_max = 10
+let s:scroll_min = 3
+
+nnoremap <c-y> :call <SID>scroll_block(-1)<CR>
+nnoremap <c-e> :call <SID>scroll_block(1)<CR>
+function! s:find_blank_line(linenr, lines, by, times)
+    let nr = a:linenr
+    let i = 0
+
+    while (i < a:times && 1 < nr && nr < a:lines)
+        if getline(nr) =~ "^\s*$"
+            return nr
+        endif
+        let nr += a:by
+        let i += 1
+    endwhile
+    return nr
+endfunction
+function! s:scroll_block(dir)
+    " NOTE: quotes or ' with \<C-y> ?
+    let winedge = line('w0')
+    let key = "\<C-y>"
+    if (a:dir > 0)
+        let key = "\<C-e>"
+        let winedge = line('w$')
+    endif
+
+    let blank = s:find_blank_line(winedge + a:dir, line('$'), a:dir, s:scroll_max)
+    let diff = abs(blank - winedge)
+    let diff = (diff < s:scroll_min) ? s:scroll_min : diff
+    let diff = (diff > s:scroll_max) ? s:scroll_max : diff
+
+    exe "normal! " . diff . key
+endfunction
+
 " ENDSECTION
 " SECTION Mappings for autoload/
 " === Misc ====================================================================
@@ -73,3 +111,4 @@ function! s:rename(word, filepattern)
 endfunction
 
 " ENDSECTION
+

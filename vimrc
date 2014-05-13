@@ -103,8 +103,6 @@ noremap , ;
 noremap ; ,
 noremap j gj
 noremap k gk
-noremap <C-y> 3<C-y>
-noremap <C-e> 3<C-e>
 
 " Use scandinavian keys for something useful
 noremap ö [
