@@ -4,6 +4,13 @@
 " endif
 " let g:mystuff_git_loaded = 1
 
+" === Variables ===============================================================
+
+let git#git_available = 0
+let git#git_folder = ""
+
+" === Public Functions ========================================================
+
 fun! git#status()
     echo system("git status")
 endfun
@@ -28,23 +35,32 @@ fun! git#commit()
     echo system('git commit -am "'. msg . '"')
 endfun
 
-fun! git#get_current_branch(gitpath)
-    let headfile = a:gitpath . "/HEAD"
-    let line = readfile(headfile)[0]
-    return substitute(line, '.*\/', '', 'g')
+fun! git#get_current_branch()
+    let headfile = git#git_folder . "/HEAD"
+    if filereadable(headfile)
+        let line = readfile(headfile)[0]
+        return substitute(line, '.*\/', '', 'g')
+    else
+        return ""
+    endif
 endfun
 
 fun! git#find_git_folder()
+    if git#git_available
+        return git#git_folder
+    endif
+
     let path = getcwd()
     while path != ""
         if s:has_git_folder(path)
-            return path . "/.git"
+            let git#git_folder = path . '/.git'
+            return git#git_folder
         else
             let path = s:extract_parent_folder(path)
         endif
     endwhile
 
-    throw "MyStuff/Git: no git folder"
+    return ""
 endfun
 
 " === private =================================================================
