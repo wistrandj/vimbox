@@ -18,9 +18,17 @@ fun! git#commit()
     echo system('git commit -am "'. msg . '"')
 endfun
 
-fun! git#untracked_files()
-    let files = system('git ls-files --others --exclude-standard')
+fun! s:ls_files(options)
+    let files = system('git ls-files --exclude-standard' . options)
     return split(files, '\n')
+endfun
+
+fun! git#untracked_files()
+    return s:ls_files('--others')
+endfun
+
+fun! git#modified_files()
+    return s:ls_files('--modified')
 endfun
 
 fun! git#get_current_branch(gitpath)
