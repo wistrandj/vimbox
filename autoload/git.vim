@@ -13,14 +13,16 @@ fun! git#commit()
     let modified = s:modified_files()
 
     if len(untracked) > 0
-        echo "Working tree has untracked files: " . join(untracked, ', ')
+        echo 'Working tree has untracked files:'
+        echo join(untracked, ', ')
     endif
 
-    if len(modified)
-        echo "Everything's up to date!"
+    if len(modified) == 0
+        echo "Tracked files are up to date!"
         return
     endif
 
+    echo "Modified files: " . join(modified, ', ')
     let msg = input("Commit message: ")
     echo system('git commit -am "'. msg . '"')
 endfun
@@ -46,6 +48,21 @@ endfun
 
 " === private =================================================================
 
+fun! git#echo_coloured_file_list(msg, files, colour, newline)
+    let nl = (a:newline) ? '\n' : ''
+    echon a:msg . ": " . nl
+
+    for i in range(0, len(a:files) - 1)
+        echohl a:colour
+        exe "normal! :echon " . a:files[i]
+        echohl None
+        if (i < len(a:files) - 1)
+            echon ', '
+        endif
+    endfor
+    echo "HIIOHOI"
+endfun
+
 fun! s:untracked_files()
     return s:ls_files('--others')
 endfun
@@ -55,7 +72,7 @@ fun! s:modified_files()
 endfun
 
 fun! s:ls_files(options)
-    let files = system('git ls-files --exclude-standard' . options)
+    let files = system('git ls-files --exclude-standard ' . a:options)
     return split(files, '\n')
 endfun
 
