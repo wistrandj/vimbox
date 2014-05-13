@@ -5,14 +5,8 @@ if filereadable("project.vim")
     source project.vim
 endif
 
-nnoremap <leader>gs :echo system("git status")<CR>
-nnoremap <leader>gc :call GitCommit()<CR>
-
-function! GitCommit()
-    let msg = input("Commit message: ")
-    :echo system("git commit -am \"" . msg . "\"")
-endfunction
-
+nnoremap <leader>gs :call git#status()<CR>
+nnoremap <leader>gc :call git#commit()<CR>
 
 " === Insert Something ========================================================
 
