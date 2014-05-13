@@ -10,8 +10,15 @@ endfun
 
 fun! git#commit()
     let untracked = git#untracked_files()
+    let modified = git#modified_files()
+
     if len(untracked) > 0
         echo "Working tree has untracked files: " . join(untracked, ', ')
+    endif
+
+    if len(modified)
+        echo "Everything's up to date!"
+        return
     endif
 
     let msg = input("Commit message: ")
