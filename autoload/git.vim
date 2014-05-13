@@ -6,8 +6,9 @@
 
 " === Variables ===============================================================
 
-let git#git_available = 0
-let git#git_folder = ""
+let s:git_available = 0
+let s:git_folder = ""
+let s:git_folder_searched = 0
 
 " === Public Functions ========================================================
 
@@ -35,8 +36,12 @@ fun! git#commit()
     echo system('git commit -am "'. msg . '"')
 endfun
 
+fun! git#git_available()
+    return git#find_git_folder() != ""
+endfun
+
 fun! git#get_current_branch()
-    let headfile = git#git_folder . "/HEAD"
+    let headfile = git#find_git_folder() . "/HEAD"
     if filereadable(headfile)
         let line = readfile(headfile)[0]
         return substitute(line, '.*\/', '', 'g')
@@ -46,15 +51,28 @@ fun! git#get_current_branch()
 endfun
 
 fun! git#find_git_folder()
-    if git#git_available
-        return git#git_folder
+    if s:git_folder_searched
+        return s:git_folder
     endif
 
+    let s:git_folder_searched = 1
+
+    let res = s:do_search()
+    if res != ""
+        let s:git_available = 1
+        let s:git_folder = res
+    endif
+
+    return res
+endfun
+
+" === private =================================================================
+
+fun! s:do_search()
     let path = getcwd()
     while path != ""
         if s:has_git_folder(path)
-            let git#git_folder = path . '/.git'
-            return git#git_folder
+            return path . "/.git"
         else
             let path = s:extract_parent_folder(path)
         endif
@@ -62,8 +80,6 @@ fun! git#find_git_folder()
 
     return ""
 endfun
-
-" === private =================================================================
 
 fun! s:echo_colour(msg, colour)
     exe "echohl " . a:colour
