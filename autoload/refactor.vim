@@ -1,4 +1,4 @@
-
+" NOTE: Does not work :(
 " USE:
 " 1) Use vimgrep to find all instances of a given word
 " 2) Modify found lines in quickfix window
@@ -12,14 +12,13 @@ fun! refactor#ApplyQuickfixChanges()
 
     let changes = s:readChanges()
     call s:applyChanges(changes)
-    call s:updateBuffers(changes)
-    return changes
+    " call s:updateBuffers(changes)
 endfun
 
 fun! s:readChanges()
     let changes = {}
     for i in range(1, line('.'))
-        let [file, nr, line] = split(getline('.'), '|')
+        let [file, nr, line] = split(getline(i), '|')
         let nr = str2nr(substitute(nr, '^([0-9]\+).*', '\1', ''))
         let line = line[1:]
 
@@ -35,12 +34,10 @@ endfun
 
 fun! s:applyChanges(changes)
     for file in keys(a:changes)
-        echo "file: " . file
         let lines = readfile(file)
 
         for change in a:changes[file]
             let [nr, ch] = change
-            echo "    change: " . nr . " : " . ch
             let lines[nr - 1] = ch
         endfor
 
