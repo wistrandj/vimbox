@@ -13,8 +13,8 @@ fun! git#commit()
     let modified = s:modified_files()
 
     if len(untracked) > 0
-        echo 'Working tree has untracked files:'
-        echo join(untracked, ', ')
+        let msg = 'Working tree has untracked files'
+        call s:echo_coloured_file_list(msg, untracked, "String")
     endif
 
     if len(modified) == 0
@@ -22,7 +22,8 @@ fun! git#commit()
         return
     endif
 
-    echo "Modified files: " . join(modified, ', ')
+    let msg = "Modified files"
+    call s:echo_coloured_file_list(msg, modified, "Question")
     let msg = input("Commit message: ")
     echo system('git commit -am "'. msg . '"')
 endfun
@@ -48,19 +49,28 @@ endfun
 
 " === private =================================================================
 
-fun! git#echo_coloured_file_list(msg, files, colour, newline)
-    let nl = (a:newline) ? '\n' : ''
-    echon a:msg . ": " . nl
+fun! s:echo_colour(msg, colour)
+    exe "echohl " . a:colour
+    echo a:msg
+    echohl None
+endfun
+fun! s:echon_colour(msg, colour)
+    exe "echohl " . a:colour
+    echon a:msg
+    echohl None
+endfun
+
+fun! s:echo_coloured_file_list(msg, files, colour)
+    echon a:msg . ": "
 
     for i in range(0, len(a:files) - 1)
-        echohl a:colour
-        exe "normal! :echon " . a:files[i]
-        echohl None
+        call s:echon_colour(a:files[i], a:colour)
         if (i < len(a:files) - 1)
             echon ', '
+        else
+            echo ""
         endif
     endfor
-    echo "HIIOHOI"
 endfun
 
 fun! s:untracked_files()
