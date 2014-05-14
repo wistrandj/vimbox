@@ -35,7 +35,7 @@ fun! s:Git()
 endfun
 
 fun! s:yanked(num, len)
-    let regs = [0, 1, 2, '-', 'q']
+    let regs = [0, 1, 2, '-']
     return s:view_regs(regs, a:len)
 endfun
 
