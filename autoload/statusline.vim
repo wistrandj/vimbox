@@ -34,6 +34,16 @@ fun! s:Git()
     endif
 endfun
 
+fun! s:Yanked(num, len)
+    " TODO:
+    let yank_list = []
+    for i in range(1, a:num)
+        let line = getreg(i)
+        call add(yank_list, line[0:a:len - 1])
+    endfor
+    return '[' . join(yank_list, "|") . ']'
+endfun
+
 fun! statusline#StatusLineFunction()
     let flags = s:StatusLineFlags()
     let lines = s:StatusLineLines()
@@ -42,5 +52,12 @@ fun! statusline#StatusLineFunction()
     if (git_branch) != ""
         let git_branch = "[G: " . git_branch . "]"
     endif
-    return "(buf %n) %y %f " . flags . " " . git_branch .  " %= " . lines . " " . pages
+
+    let lst = ["(buf %n) %y %f ", flags, " ", git_branch, " %= "]
+    call add(lst, lines)
+    call add(lst, " ")
+    call add(lst, s:Yanked(3, 5))
+    call add(lst, " ")
+    call add(lst, pages)
+    return join(lst, "")
 endfun
