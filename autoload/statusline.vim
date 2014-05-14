@@ -43,9 +43,7 @@ fun! s:view_regs(names, len)
     let s = ""
     let regs = map(a:names, 's:strip_reg(getreg(v:val), a:len)')
     for i in range(0, len(regs) - 1)
-        if (i < len(regs) - 1)
-        endif
-        let s .= (0 < i && i < len(regs) - 1 ? '|': '') . regs[i]
+        let s .= (0 < i && i < len(regs) ? ',': '') . regs[i]
     endfor
     return '[' . s . ']'
 endfun
