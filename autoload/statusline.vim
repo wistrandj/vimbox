@@ -1,4 +1,4 @@
-fun! s:CursorPosition()
+fun! s:cursor_position()
     if (line('w0') == 1 && line('w$') == line('$'))
         return "[All]"
     end
@@ -16,11 +16,11 @@ fun! s:CursorPosition()
     return "[" . current . "/" . pages ."]"
 endfun
 
-fun! s:StatusLineLines()
+fun! s:lines()
     return col('.') . "'" . line('.') . "/" . line('$')
 endfun
 
-fun! s:StatusLineFlags()
+fun! s:flags()
     return "[%M%R%H%W]"
 endfun
 
@@ -34,7 +34,7 @@ fun! s:Git()
     endif
 endfun
 
-fun! s:Yanked(num, len)
+fun! s:yanked(num, len)
     let regs = [0, 1, 2, '-', 'q']
     return s:view_regs(regs, a:len)
 endfun
@@ -63,11 +63,11 @@ fun! s:strip_reg(line, len)
 endfun
 
 fun! statusline#StatusLineFunction()
-    let flags = s:StatusLineFlags()
-    let lines = s:StatusLineLines()
-    let pages = s:CursorPosition()
+    let flags = s:flags()
+    let lines = s:lines()
+    let pages = s:cursor_position()
     let git_branch = s:Git()
-    let yanked = s:Yanked(3, 5)
+    let yanked = s:yanked(3, 5)
 
     if (git_branch) != ""
         let git_branch = "[G: " . git_branch . "]"
