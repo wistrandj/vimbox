@@ -35,19 +35,19 @@ fun! s:Git()
 endfun
 
 fun! s:Yanked(num, len)
-    " TODO:
-    let yank_list = []
-    for i in range(1, a:num)
-        let line = s:strip_reg(getreg(i), a:len)
-        call add(yank_list, line_)
-    endfor
-    return '[' . join(yank_list, "|") . ']'
+    let regs = [0, 1, 2, '-', 'q']
+    return s:view_regs(regs, a:len)
 endfun
 
-fun! s:view_regs(names)
-    let regs = map(names, 's:strip_reg(getreg(v:val))')
-    exe 'let s = ' . join(regs, '|')
-    return s
+fun! s:view_regs(names, len)
+    let s = ""
+    let regs = map(a:names, 's:strip_reg(getreg(v:val), a:len)')
+    for i in range(0, len(regs) - 1)
+        if (i < len(regs) - 1)
+        endif
+        let s .= (0 < i && i < len(regs) - 1 ? '|': '') . regs[i]
+    endfor
+    return '[' . s . ']'
 endfun
 
 fun! s:strip_reg(line, len)
