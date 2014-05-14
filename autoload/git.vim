@@ -9,6 +9,7 @@
 let s:git_available = 0
 let s:git_folder = ""
 let s:git_folder_searched = 0
+let s:git_branch = ""
 
 " === Public Functions ========================================================
 
@@ -41,10 +42,16 @@ fun! git#git_available()
 endfun
 
 fun! git#get_current_branch()
+    if !empty(s:git_branch)
+        return s:git_branch
+    endif
+
     let headfile = git#find_git_folder() . "/HEAD"
+
     if filereadable(headfile)
         let line = readfile(headfile)[0]
-        return substitute(line, '.*\/', '', 'g')
+        let s:git_branch = substitute(line, '.*\/', '', 'g')
+        return s:git_branch
     else
         return ""
     endif
