@@ -151,8 +151,6 @@ let g:gundo_prefer_python3 = 1
 runtime bundle/pathogen/autoload/pathogen.vim
 call pathogen#infect()
 
-let g:clang_periodic_quickfix = 1
-
 nnoremap <Leader>sc :Scratch<CR>
 
 " NERDtree
