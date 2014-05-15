@@ -40,6 +40,9 @@ endfun
 fun! git#get_current_branch()
     if !empty(s:git_branch)
         return s:git_branch
+    elseif s:git_folder_searched
+        " We have already tried to search the file
+        return ''
     endif
 
     let headfile = git#find_git_folder() . "/HEAD"
