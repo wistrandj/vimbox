@@ -3,10 +3,10 @@ let s:statusline = ""
 
 fun! statusline#StatusLineFunction()
     let s:statusline = ""
-    let git_branch = s:Git()
+    let git_branch = s:git()
     let git_branch = (git_branch == '') ? '' : ('[G: ' . git_branch . ' ]')
     call s:add("(buf %n) %y %f")
-    call s:add(s:flags(), "Question")
+    call s:add(s:flags())
     call s:add(git_branch)
     call s:add(s:yanked(3, 5))
     call s:add("%=")
@@ -18,7 +18,7 @@ endfun
 " === Simple interface for building statusline ================================
 
 fun! s:add(text, ...)
-    let higrp = (a:0 > 0) ? a:0 : ''
+    let higrp = (a:0 > 0) ? a:1 : ''
     if !empty(higrp)
         let s:statusline .= "%#" . higrp. "#"
         let s:statusline .= a:text . " "
@@ -56,14 +56,8 @@ fun! s:flags()
     return "[%M%R%H%W]"
 endfun
 
-fun! s:Git()
-    let s:git_available = git#git_available()
-
-    if !s:git_available
-        return ""
-    else
-        return git#get_current_branch()
-    endif
+fun! s:git()
+    return git#get_current_branch()
 endfun
 
 fun! s:yanked(num, len)
