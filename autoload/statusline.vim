@@ -61,21 +61,17 @@ fun! s:strip_reg(line, len)
 endfun
 
 fun! statusline#StatusLineFunction()
-    let flags = s:flags()
-    let lines = s:lines()
-    let pages = s:cursor_position()
+    let s:statusline = ""
     let git_branch = s:Git()
-    let yanked = s:yanked(3, 5)
-
-    if (git_branch) != ""
-        let git_branch = "[G: " . git_branch . "]"
-    endif
-
-    let left = "(buf %n) %y %f " . flags . " " . git_branch . yanked
-    let right = lines . " " . pages
-    let stat = left . "%=". right
-    return stat
-    return join(lst, "")
+    let git_branch = (git_branch == '') ? '' : ('[G: ' . git_branch . ' ]')
+    call s:add("(buf %n) %y %f")
+    call s:add(s:flags())
+    call s:add(git_branch)
+    call s:add(s:yanked(3, 5))
+    call s:add("%=")
+    call s:add(s:lines())
+    call s:add(s:cursor_position())
+    return s:statusline
 endfun
 
 " === Simple interface for building statusline ================================
@@ -84,11 +80,11 @@ let s:statusline = ""
 
 fun! s:add(text, ...)
     let higrp = (a:0 > 0) ? a:0 : ''
-    if !empty(ft)
+    if !empty(higrp)
         let s:statusline .= "%#" . higrp. "#"
-        s:statusline .= a:text
+        let s:statusline .= a:text . " "
         let s:statusline .= "%#StatusLine#"
     else
-        s:statusline .= a:text
+        let s:statusline .= a:text . " "
     endif
 endfun
