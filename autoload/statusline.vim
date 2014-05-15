@@ -77,3 +77,18 @@ fun! statusline#StatusLineFunction()
     return stat
     return join(lst, "")
 endfun
+
+" === Simple interface for building statusline ================================
+
+let s:statusline = ""
+
+fun! s:add(text, ...)
+    let higrp = (a:0 > 0) ? a:0 : ''
+    if !empty(ft)
+        let s:statusline .= "%#" . higrp. "#"
+        s:statusline .= a:text
+        let s:statusline .= "%#StatusLine#"
+    else
+        s:statusline .= a:text
+    endif
+endfun
