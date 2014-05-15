@@ -1,9 +1,4 @@
 
-" if exists("g:mystuff_git_loaded")
-"     finish
-" endif
-" let g:mystuff_git_loaded = 1
-
 " === Variables ===============================================================
 
 let s:git_available = 0
@@ -18,6 +13,7 @@ fun! git#status()
 endfun
 
 fun! git#commit()
+    " XXX: Does not show newly added files
     let untracked = s:untracked_files()
     let modified = s:modified_files()
 
