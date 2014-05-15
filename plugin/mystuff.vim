@@ -71,6 +71,18 @@ function! s:scroll_block(dir)
 endfunction
 
 " ENDSECTION
+" SECTION Commands
+
+command! Sep call <SID>MakeCommentSeparator()
+fun! s:MakeCommentSeparator()
+    let comment = substitute(getline('.'), '^\([^ ]*\).*', '\1', '')
+    let txt = substitute(getline('.'), '^[^ ]* *\(.*\) *$', '\1', '')
+    let len = len(comment) + len(txt) + 1
+    let line = comment . ' === ' . txt . ' ' . repeat('=', 79 - len - 5)
+    call setline('.', line)
+endfun
+
+" ENDSECTION
 " SECTION Mappings for autoload/
 " === Misc ====================================================================
 
