@@ -1,9 +1,3 @@
-" NOTE: Does not work :(
-" USE:
-" 1) Use vimgrep to find all instances of a given word
-" 2) Modify found lines in quickfix window
-" 3) Call WriteQuickfix()
-
 fun! refactor#apply_renaming()
     let changes = s:readChanges()
     call s:applyChanges(changes)
