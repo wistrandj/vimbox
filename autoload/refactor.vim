@@ -5,14 +5,19 @@
 " 3) Call WriteQuickfix()
 
 fun! refactor#ApplyQuickfixChanges()
-    if &buftype != "quickfix"
-        echoerr "refactor#readChanges(): Use quickfix window"
-        return {}
-    endif
-
     let changes = s:readChanges()
     call s:applyChanges(changes)
-    " call s:updateBuffers(changes)
+    call s:updateBuffers(changes)
+endfun
+
+fun! refactor#grep(word, filepattern)
+    let recursive = (a:filepattern == "*") ? ' -R ' : ''
+    let lines = system("grep -n " . recursive . a:word)
+    let lines = substitute(lines, ':', '|', 'g')
+    call OutputText(lines, 'qf')
+
+    call SwitchToOutputWindow()
+    set ft=qf
 endfun
 
 fun! s:readChanges()
