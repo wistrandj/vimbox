@@ -1,3 +1,35 @@
+
+let s:statusline = ""
+
+fun! statusline#StatusLineFunction()
+    let s:statusline = ""
+    let git_branch = s:Git()
+    let git_branch = (git_branch == '') ? '' : ('[G: ' . git_branch . ' ]')
+    call s:add("(buf %n) %y %f")
+    call s:add(s:flags(), "Question")
+    call s:add(git_branch)
+    call s:add(s:yanked(3, 5))
+    call s:add("%=")
+    call s:add(s:lines())
+    call s:add(s:cursor_position())
+    return s:statusline
+endfun
+
+" === Simple interface for building statusline ================================
+
+fun! s:add(text, ...)
+    let higrp = (a:0 > 0) ? a:0 : ''
+    if !empty(higrp)
+        let s:statusline .= "%#" . higrp. "#"
+        let s:statusline .= a:text . " "
+        let s:statusline .= "%#StatusLine#"
+    else
+        let s:statusline .= a:text . " "
+    endif
+endfun
+
+" === Building block ==========================================================
+
 fun! s:cursor_position()
     if (line('w0') == 1 && line('w$') == line('$'))
         return "[All]"
@@ -58,33 +90,4 @@ fun! s:strip_reg(line, len)
 
     let s = a:line[(l:fst):(l:lst)]
     return substitute(s, "[^a-zA-Z0-9 ]", '', '')
-endfun
-
-fun! statusline#StatusLineFunction()
-    let s:statusline = ""
-    let git_branch = s:Git()
-    let git_branch = (git_branch == '') ? '' : ('[G: ' . git_branch . ' ]')
-    call s:add("(buf %n) %y %f")
-    call s:add(s:flags())
-    call s:add(git_branch)
-    call s:add(s:yanked(3, 5))
-    call s:add("%=")
-    call s:add(s:lines())
-    call s:add(s:cursor_position())
-    return s:statusline
-endfun
-
-" === Simple interface for building statusline ================================
-
-let s:statusline = ""
-
-fun! s:add(text, ...)
-    let higrp = (a:0 > 0) ? a:0 : ''
-    if !empty(higrp)
-        let s:statusline .= "%#" . higrp. "#"
-        let s:statusline .= a:text . " "
-        let s:statusline .= "%#StatusLine#"
-    else
-        let s:statusline .= a:text . " "
-    endif
 endfun
