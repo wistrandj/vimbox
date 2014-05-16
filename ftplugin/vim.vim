@@ -1,3 +1,3 @@
-" TODO
-" key 'K': view vimhelp for the word under cursor
-"  see keywordprg
+nnoremap K :exe "help " . expand("<cword>")<CR>
+
+iabbrev CR <CR>
