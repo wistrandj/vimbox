@@ -13,6 +13,7 @@ autocmd BufWritePre <buffer> :%s/\s\+$//e
 
 " Binds
 nnoremap <buffer> <Leader>r :call RunEcho()<CR>
+nnoremap <buffer> <Leader>mar :call RunAsync()<CR>
 nnoremap <buffer> <Leader>mr :call RunOutput()<CR>
 nnoremap <buffer> <leader>mc :call Compile()<CR>
 nnoremap <buffer> <leader>mC :call Make("clean")<CR>
@@ -40,7 +41,7 @@ abbrev i6 int64_t
 
 " -----------------------------------------------------------------------------
 " Compile and Run C/C++ sources
-" NOTE: These functions depends on MyOutput (output.vim)
+" NOTE: These funs depends on MyOutput (output.vim)
 
 fun! Make(...)
     let arg = ""
@@ -76,18 +77,25 @@ fun! RunEcho()
     endtry
 endfun
 
-function! RunOutput()
+fun! RunOutput()
     try
         let out = s:RunC()
         call OutputText(out)
     endtry
-endfunction
+endfun
+
+fun! RunAsync()
+    let file = s:FindExecutable(1)
+    if executable(file)
+        call system("./" . file . " &")
+    endif
+endfun
 
 
 " -----------------------------------------------------------------------------
 " Private
 
-function! s:RunC()
+fun! s:RunC()
     let file = s:FindExecutable(1)
     let out = ""
     if executable(file)
@@ -96,7 +104,7 @@ function! s:RunC()
 
     echoerr "ftplugin/c.vim|runC(): Couldn't find executable"
     throw "ExecutableNotFound"
-endfunction
+endfun
 
 fun! s:FindExecutable(trycompile)
     if exists("g:exefile") && executable("./" . g:exefile)

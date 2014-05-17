@@ -108,7 +108,6 @@ imap <expr> <BS> matchingChars#RemoveSomething()
 
 " === Open well-known windows =================================================
 
-nmap <c-w>o <nop>
 nnoremap <c-w>oo :call OpenOutput()<cr>
 
 " === Refactor ================================================================
