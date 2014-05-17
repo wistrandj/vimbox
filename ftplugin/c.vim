@@ -7,6 +7,9 @@ let g:clang_hl_errors=1
 set completeopt=menu,menuone    " Don't show the preview buffer
 nnoremap <leader>cc :call g:ClangUpdateQuickFix()<CR>
 
+command! -nargs=1 InitSource :call s:init_source_file(<f-args>)<CR>
+
+
 
 " Remove trailing whitespace before saving
 autocmd BufWritePre <buffer> :%s/\s\+$//e
@@ -126,4 +129,34 @@ fun! s:AskExecutable()
         return ""
     endif
     return g:exefile
+endfun
+
+fun! s:init_source_file(name)
+    let src = isdirectory('src') ? 'src/' : ''
+    let cfile = src . name . ".c"
+    let hfile = src . name . ".h"
+    let macro = toupper(name . "_H")
+
+    if (s:source_file_exists_and_not_empty(cfile))
+        echoerr cfile . " already exists"
+        return
+    elseif (s:source_file_exists_and_not_empty(hfile))
+        echoerr hfile . " already exists"
+        return
+    endif
+
+    let hlines = ['#ifndef ' . macro, '#define ' . macro,
+    \             '', '', '', '#endif // ' . macro]
+    let clines = ['#include "' . substitute(hfile), '^src/', '', ''), '', '']
+
+    writefile(hlines, hfile)
+    writefile(clines, cfile)
+endfun
+
+fun! s:source_file_exists_and_not_empty(file)
+    if !filereadable(a:file)
+        return 0
+    else
+        return !empty(readfile(a:file))
+    endif
 endfun
