@@ -112,8 +112,11 @@ nnoremap <c-w>oo :call OpenOutput()<cr>
 
 " === Refactor ================================================================
 
+
+" FIXME:
+nnoremap <leader>ss :exe "normal! :%s/" . expand("<cword>") . "\/\<ESC>q:kA"
 command! -nargs=? Rename :call <SID>mygrep('*', <f-args>)
-command! RenameA :call refactor#apply_renaming()
+command! RenameA :call ()
 fun! s:mygrep(filepattern, ...)
     if a:0 == 0
         let word = expand("<cword>")

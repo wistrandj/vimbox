@@ -1,25 +1,15 @@
 " TODO:
-" - use AsyncMake if it's available
-
-" Clang complete
-let g:clang_complete_copen=1
-let g:clang_hl_errors=1
-set completeopt=menu,menuone    " Don't show the preview buffer
-nnoremap <leader>cc :call g:ClangUpdateQuickFix()<CR>
+" - use Asyncs:make if it's available
 
 command! -nargs=* InitSource call s:cmd_init_source_file(<f-args>)
 
-
-
-" Remove trailing whitespace before saving
 autocmd BufWritePre <buffer> :%s/\s\+$//e
 
-" Binds
-nnoremap <buffer> <Leader>r :call RunEcho()<CR>
-nnoremap <buffer> <Leader>mar :call RunAsync()<CR>
-nnoremap <buffer> <Leader>mr :call RunOutput()<CR>
-nnoremap <buffer> <leader>mc :call Compile()<CR>
-nnoremap <buffer> <leader>mC :call Make("clean")<CR>
+nnoremap <buffer> <Leader>r :call s:run_echo()<CR>
+nnoremap <buffer> <Leader>mar :call s:run_async()<CR>
+nnoremap <buffer> <Leader>mr :call s:run_output()<CR>
+nnoremap <buffer> <leader>mc :call s:compile()<CR>
+nnoremap <buffer> <leader>mC :call s:make("clean")<CR>
 
 " Open quickfix window on compile errors
 autocmd QuickFixCmdPost [^l]* nested cwindow
@@ -40,19 +30,17 @@ abbrev i3 int32_t
 abbrev i6 int64_t
 
 
-
-
 " -----------------------------------------------------------------------------
-" Compile and Run C/C++ sources
+" s:compile and s:run_ C/C++ sources
 " NOTE: These funs depends on MyOutput (output.vim)
 
-fun! Make(...)
+fun! s:make(...)
     let arg = ""
     if a:0 > 1
         let arg = a:1
     end
 
-    if filereadable("makefile") || filereadable("Makefile")
+    if filereadable("makefile") || filereadable("s:makefile")
         exe "make " . arg
         return 1
     end
@@ -60,9 +48,8 @@ fun! Make(...)
     return 0
 endfun
 
-
-fun! Compile()
-    if Make()
+fun! s:compile()
+    if s:make()
         return 1
     else
         exe ":!clear"
@@ -74,21 +61,21 @@ fun! Compile()
 
 endfun
 
-fun! RunEcho()
+fun! s:run_echo()
     try
-        echo s:RunC()
+        echo s:run_C()
     endtry
 endfun
 
-fun! RunOutput()
+fun! s:run_output()
     try
-        let out = s:RunC()
+        let out = s:run_C()
         call OutputText(out)
     endtry
 endfun
 
-fun! RunAsync()
-    let file = s:FindExecutable(1)
+fun! s:run_async()
+    let file = s:find_executable(1)
     if executable(file)
         call system("./" . file . " &")
     endif
@@ -98,8 +85,8 @@ endfun
 " -----------------------------------------------------------------------------
 " Private
 
-fun! s:RunC()
-    let file = s:FindExecutable(1)
+fun! s:run_C()
+    let file = s:find_executable(1)
     let out = ""
     if executable(file)
         return system("./" . file)
@@ -109,20 +96,20 @@ fun! s:RunC()
     throw "ExecutableNotFound"
 endfun
 
-fun! s:FindExecutable(trycompile)
+fun! s:find_executable(trycompile)
     if exists("g:exefile") && executable("./" . g:exefile)
         return "./" . g:exefile
     elseif executable("./a.out")
         return "./a.out"
-    elseif a:trycompile && Compile()
-        return s:FindExecutable(0)
+    elseif a:trycompile && s:compile()
+        return s:find_executable(0)
     else
-        return s:AskExecutable()
+        return s:ask_executable()
     endif
 
 endfun
 
-fun! s:AskExecutable()
+fun! s:ask_executable()
     let g:exefile = input("Enter the name of the executable file: ")
     if !executable(g:exefile)
         echo g:exefile . " is not an executable file"
@@ -134,11 +121,11 @@ endfun
 fun! s:cmd_init_source_file(...)
     echo "cmd_init_source_file input: " . string(a:000)
     let name = ''
-    let split = 0
+    let split = 1
 
     for input in a:000
-        if input == '-v'
-            let split = 1
+        if input == '-q' || input == "--nosplit"
+            let split = 0
         else
             let name = input
         endif
@@ -153,8 +140,8 @@ fun! s:cmd_init_source_file(...)
     let cfile = substitute(hfile, '.h$', '.c', '')
 
     if l:split
-        exe "edit " . cfile
-        exe "vsplit " . hfile
+        silent! exe "edit " . cfile
+        silent! exe "vsplit " . hfile
     endif
 endfun
 
@@ -176,9 +163,8 @@ fun! s:init_source_file(name)
     \             '', '', '', '#endif // ' . macro]
     let clines = ['#include "' . substitute(hfile, '^src/', '', ''), '', '']
 
-    " XXX: silent! hides function already in use error
-    silent! call writefile(hlines, hfile)
-    silent! call writefile(clines, cfile)
+    call writefile(hlines, hfile)
+    call writefile(clines, cfile)
     return hfile
 endfun
 
