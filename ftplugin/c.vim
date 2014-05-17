@@ -7,7 +7,7 @@ let g:clang_hl_errors=1
 set completeopt=menu,menuone    " Don't show the preview buffer
 nnoremap <leader>cc :call g:ClangUpdateQuickFix()<CR>
 
-command! -nargs=1 InitSource :call s:init_source_file(<f-args>)<CR>
+command! -nargs=* InitSource call s:cmd_init_source_file(<f-args>)
 
 
 
@@ -131,11 +131,38 @@ fun! s:AskExecutable()
     return g:exefile
 endfun
 
+fun! s:cmd_init_source_file(...)
+    echo "cmd_init_source_file input: " . string(a:000)
+    let name = ''
+    let split = 0
+
+    for input in a:000
+        if input == '-v'
+            let split = 1
+        else
+            let name = input
+        endif
+    endfor
+
+    if empty(name)
+        echoerr "No file name given"
+        return
+    endif
+
+    let hfile = s:init_source_file(name)
+    let cfile = substitute(hfile, '.h$', '.c', '')
+
+    if l:split
+        exe "edit " . cfile
+        exe "vsplit " . hfile
+    endif
+endfun
+
 fun! s:init_source_file(name)
     let src = isdirectory('src') ? 'src/' : ''
-    let cfile = src . name . ".c"
-    let hfile = src . name . ".h"
-    let macro = toupper(name . "_H")
+    let cfile = src . a:name . ".c"
+    let hfile = src . a:name . ".h"
+    let macro = toupper(a:name . "_H")
 
     if (s:source_file_exists_and_not_empty(cfile))
         echoerr cfile . " already exists"
@@ -147,10 +174,12 @@ fun! s:init_source_file(name)
 
     let hlines = ['#ifndef ' . macro, '#define ' . macro,
     \             '', '', '', '#endif // ' . macro]
-    let clines = ['#include "' . substitute(hfile), '^src/', '', ''), '', '']
+    let clines = ['#include "' . substitute(hfile, '^src/', '', ''), '', '']
 
-    writefile(hlines, hfile)
-    writefile(clines, cfile)
+    " XXX: silent! hides function already in use error
+    silent! call writefile(hlines, hfile)
+    silent! call writefile(clines, cfile)
+    return hfile
 endfun
 
 fun! s:source_file_exists_and_not_empty(file)
