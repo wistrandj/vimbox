@@ -5,11 +5,11 @@ command! -nargs=* InitSource call s:cmd_init_source_file(<f-args>)
 
 autocmd BufWritePre <buffer> :%s/\s\+$//e
 
-nnoremap <buffer> <Leader>r :call s:run_echo()<CR>
-nnoremap <buffer> <Leader>mar :call s:run_async()<CR>
-nnoremap <buffer> <Leader>mr :call s:run_output()<CR>
-nnoremap <buffer> <leader>mc :call s:compile()<CR>
-nnoremap <buffer> <leader>mC :call s:make("clean")<CR>
+nnoremap <buffer> <Leader>r :call <SID>run_echo()<CR>
+nnoremap <buffer> <Leader>mar :call <SID>run_async()<CR>
+nnoremap <buffer> <Leader>mr :call <SID>run_output()<CR>
+nnoremap <buffer> <leader>mc :call <SID>compile()<CR>
+nnoremap <buffer> <leader>mC :call <SID>make("clean")<CR>
 
 " Open quickfix window on compile errors
 autocmd QuickFixCmdPost [^l]* nested cwindow
