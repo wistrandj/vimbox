@@ -1,5 +1,3 @@
-" TODO:
-" - use Asyncs:make if it's available
 
 command! -nargs=* Initfiles call s:cmd_init_files(<f-args>)
 command! -range -nargs=1 MoveHeader
@@ -85,8 +83,7 @@ fun! s:run_async()
 endfun
 
 
-" -----------------------------------------------------------------------------
-" Private
+" === Private =================================================================
 
 fun! s:run_C()
     let file = s:find_executable(1)
@@ -120,6 +117,8 @@ fun! s:ask_executable()
     endif
     return g:exefile
 endfun
+
+" === Functions for commands ==================================================
 
 fun! s:cmd_move_selected_lines_to_header(name, line1, line2)
     let lines = []

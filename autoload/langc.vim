@@ -1,5 +1,4 @@
-
-let s:src_folder = ''
+" === Public ==================================================================
 
 fun! langc#find_src_folder()
     if s:src_folder != ''
@@ -26,6 +25,10 @@ fun! langc#init_header_source(name)
     call langc#init_header_with(a:name, [])
     call langc#init_source_with(a:name, [])
 endfun
+
+" === Private =================================================================
+
+let s:src_folder = ''
 
 fun! s:init_file(path, lines)
     if s:source_file_exists_and_not_empty(a:path)
