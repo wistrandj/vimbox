@@ -2,6 +2,8 @@
 " - use Asyncs:make if it's available
 
 command! -nargs=* InitSource call s:cmd_init_source_file(<f-args>)
+command! -range -nargs=1 MoveHeader
+    \ call s:cmd_move_selected_lines_to_header(<f-args>, <line1>, <line2>)
 
 autocmd BufWritePre <buffer> :%s/\s\+$//e
 
@@ -117,6 +119,20 @@ fun! s:ask_executable()
         return ""
     endif
     return g:exefile
+endfun
+
+fun! s:cmd_move_selected_lines_to_header(name, line1, line2)
+    let lines = []
+    for i in range(a:line1, a:line2)
+        call add(lines, getline(i))
+    endfor
+
+    if !langc#init_header_with(a:name, lines)
+        return
+    endif
+
+    " Delete lines
+    exe "normal! " . a:line1 . "GV" a:line2 . "GD"
 endfun
 
 fun! s:cmd_init_source_file(...)
