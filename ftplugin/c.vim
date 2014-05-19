@@ -29,6 +29,7 @@ abbrev i1 int16_t
 abbrev i3 int32_t
 abbrev i6 int64_t
 
+abbrev st struct
 
 " -----------------------------------------------------------------------------
 " s:compile and s:run_ C/C++ sources
@@ -136,7 +137,7 @@ fun! s:cmd_init_source_file(...)
         return
     endif
 
-    let hfile = s:init_source_file(name)
+    let hfile = langc#init_header_source(name)
     let cfile = substitute(hfile, '.h$', '.c', '')
 
     if l:split
@@ -145,33 +146,3 @@ fun! s:cmd_init_source_file(...)
     endif
 endfun
 
-fun! s:init_source_file(name)
-    let src = isdirectory('src') ? 'src/' : ''
-    let cfile = src . a:name . ".c"
-    let hfile = src . a:name . ".h"
-    let macro = toupper(a:name . "_H")
-
-    if (s:source_file_exists_and_not_empty(cfile))
-        echoerr cfile . " already exists"
-        return
-    elseif (s:source_file_exists_and_not_empty(hfile))
-        echoerr hfile . " already exists"
-        return
-    endif
-
-    let hlines = ['#ifndef ' . macro, '#define ' . macro,
-    \             '', '', '', '#endif // ' . macro]
-    let clines = ['#include "' . substitute(hfile, '^src/', '', ''), '', '']
-
-    call writefile(hlines, hfile)
-    call writefile(clines, cfile)
-    return hfile
-endfun
-
-fun! s:source_file_exists_and_not_empty(file)
-    if !filereadable(a:file)
-        return 0
-    else
-        return !empty(readfile(a:file))
-    endif
-endfun
