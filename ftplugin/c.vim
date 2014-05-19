@@ -1,7 +1,7 @@
 " TODO:
 " - use Asyncs:make if it's available
 
-command! -nargs=* InitSource call s:cmd_init_source_file(<f-args>)
+command! -nargs=* Initfiles call s:cmd_init_files(<f-args>)
 command! -range -nargs=1 MoveHeader
     \ call s:cmd_move_selected_lines_to_header(<f-args>, <line1>, <line2>)
 
@@ -135,7 +135,7 @@ fun! s:cmd_move_selected_lines_to_header(name, line1, line2)
     exe "normal! " . a:line1 . "GV" a:line2 . "GD"
 endfun
 
-fun! s:cmd_init_source_file(...)
+fun! s:cmd_init_files(...)
     echo "cmd_init_source_file input: " . string(a:000)
     let name = ''
     let split = 1
