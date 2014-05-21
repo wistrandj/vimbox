@@ -5,10 +5,11 @@ fun! statusline#StatusLineFunction()
     let s:statusline = ""
     let git_branch = s:git()
     let git_branch = (git_branch == '') ? '' : ('[G: ' . git_branch . ' ]')
-    call s:add("(buf %n) %y %f")
+    call s:add("(buf %n) %y")
+    call s:add("%f", "ErrorMsg")
     call s:add(s:flags())
     call s:add(git_branch)
-    call s:add(s:yanked(3, 5))
+    " call s:add(s:view_regs([0, 1, 2, '-'], 5))
     call s:add("%=")
     call s:add(s:lines())
     call s:add(s:cursor_position())
@@ -21,8 +22,8 @@ fun! s:add(text, ...)
     let higrp = (a:0 > 0) ? a:1 : ''
     if !empty(higrp)
         let s:statusline .= "%#" . higrp. "#"
-        let s:statusline .= a:text . " "
-        let s:statusline .= "%#StatusLine#"
+        let s:statusline .= a:text
+        let s:statusline .= "%#StatusLine# "
     else
         let s:statusline .= a:text . " "
     endif
@@ -58,11 +59,6 @@ endfun
 
 fun! s:git()
     return git#get_current_branch()
-endfun
-
-fun! s:yanked(num, len)
-    let regs = [0, 1, 2, '-']
-    return s:view_regs(regs, a:len)
 endfun
 
 fun! s:view_regs(names, len)
