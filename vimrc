@@ -157,6 +157,7 @@ nnoremap <Leader>sc :Scratch<CR>
 nnoremap <leader>p :NERDTreeToggle<CR>
 
 " FuzzyFinder
+nnoremap <leader>fr :FufRenewCache<CR>
 nnoremap <leader>ff  :FufFile **/<CR>
 autocmd FileType fuf noremap <buffer> <C-c> <Esc>
 

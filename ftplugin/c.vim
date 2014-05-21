@@ -12,7 +12,7 @@ command! -range -nargs=1 MoveHeader
 
 autocmd BufWritePre <buffer> :%s/\s\+$//e
 
-nnoremap <C-w>a :call <SID>call s:cmd_split_alternate_file()
+nnoremap <C-w>a :call <SID>cmd_split_alternate_file()<CR>
 
 nnoremap <buffer> <Leader>r :call <SID>run_echo()<CR>
 nnoremap <buffer> <Leader>mar :call <SID>run_async()<CR>
