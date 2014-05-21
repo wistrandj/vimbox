@@ -1,4 +1,8 @@
 
+" REMOVE THIS
+nnoremap ,r :so "/home/jasu/.vim/bundle/mystuff/ftplugin/c.vim"
+
+command! Splitalt call s:cmd_split_alternate_file()
 command! -nargs=* Initfiles call s:cmd_init_files(<f-args>)
 command! -range -nargs=1 MoveHeader
     \ call s:cmd_move_selected_lines_to_header(<f-args>, <line1>, <line2>)
@@ -120,6 +124,18 @@ endfun
 
 " === Functions for commands ==================================================
 
+fun! s:cmd_split_alternate_file()
+    let file = expand("%")
+    let otherend = (match(file, '.h$') >= 0) ? '.c' : '.h'
+    let other = substitute(file, '..$', otherend, '')
+
+    if filereadable(other)
+        silent! exe "vsplit " . other
+    else
+        echoerr "Couldn't find alternate file"
+    endif
+endfun
+
 fun! s:cmd_move_selected_lines_to_header(name, line1, line2)
     let lines = []
     for i in range(a:line1, a:line2)
@@ -154,10 +170,5 @@ fun! s:cmd_init_files(...)
 
     let hfile = langc#init_header_source(name)
     let cfile = substitute(hfile, '.h$', '.c', '')
-
-    if l:split
-        silent! exe "edit " . cfile
-        silent! exe "vsplit " . hfile
-    endif
 endfun
 

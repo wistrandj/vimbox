@@ -74,13 +74,13 @@ endfunction
 " SECTION Commands
 
 command! Sep call <SID>MakeCommentSeparator()
-fun! s:MakeCommentSeparator()
+function! s:MakeCommentSeparator()
     let comment = substitute(getline('.'), '^\([^ ]*\).*', '\1', '')
     let txt = substitute(getline('.'), '^[^ ]* *\(.*\) *$', '\1', '')
     let len = len(comment) + len(txt) + 1
     let line = comment . ' === ' . txt . ' ' . repeat('=', 79 - len - 5)
     call setline('.', line)
-endfun
+endfunction
 
 " ENDSECTION
 " SECTION Mappings for autoload/
@@ -117,14 +117,14 @@ nnoremap <c-w>oo :call OpenOutput()<cr>
 nnoremap <leader>ss :exe "normal! :%s/" . expand("<cword>") . "\/\<ESC>q:kA"
 command! -nargs=? Rename :call <SID>mygrep('*', <f-args>)
 command! RenameA :call ()
-fun! s:mygrep(filepattern, ...)
+function! s:mygrep(filepattern, ...)
     if a:0 == 0
         let word = expand("<cword>")
     else
         let word = a:1
     endif
     call refactor#grep(word, a:filepattern)
-endfun
+endfunction
 
 " ENDSECTION
 
