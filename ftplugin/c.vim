@@ -1,13 +1,18 @@
 
-" REMOVE THIS
-nnoremap ,r :so "/home/jasu/.vim/bundle/mystuff/ftplugin/c.vim"
+" Open quickfix window on compile errors
+autocmd QuickFixCmdPost [^l]* nested cwindow
+autocmd QuickFixCmdPost    l* nested lwindow
+autocmd TabLeave * cclose
 
-command! Splitalt call s:cmd_split_alternate_file()
+" === Commands and mappings ===================================================
+
 command! -nargs=* Initfiles call s:cmd_init_files(<f-args>)
 command! -range -nargs=1 MoveHeader
     \ call s:cmd_move_selected_lines_to_header(<f-args>, <line1>, <line2>)
 
 autocmd BufWritePre <buffer> :%s/\s\+$//e
+
+nnoremap <C-w>a :call <SID>call s:cmd_split_alternate_file()
 
 nnoremap <buffer> <Leader>r :call <SID>run_echo()<CR>
 nnoremap <buffer> <Leader>mar :call <SID>run_async()<CR>
@@ -15,14 +20,7 @@ nnoremap <buffer> <Leader>mr :call <SID>run_output()<CR>
 nnoremap <buffer> <leader>mc :call <SID>compile()<CR>
 nnoremap <buffer> <leader>mC :call <SID>make("clean")<CR>
 
-" Open quickfix window on compile errors
-autocmd QuickFixCmdPost [^l]* nested cwindow
-autocmd QuickFixCmdPost    l* nested lwindow
-
-autocmd TabLeave * cclose
-
-
-" Abbreviations for obnoxious words
+" === Abbreviations for obnoxious words =======================================
 abbrev nlch '\0'
 
 abbrev u1 uint16_t
@@ -35,7 +33,7 @@ abbrev i6 int64_t
 
 abbrev st struct
 
-" -----------------------------------------------------------------------------
+" === Private functions =======================================================
 " s:compile and s:run_ C/C++ sources
 " NOTE: These funs depends on MyOutput (output.vim)
 
