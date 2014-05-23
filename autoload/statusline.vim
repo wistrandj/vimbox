@@ -23,7 +23,7 @@ fun! s:add(text, ...)
     if !empty(higrp)
         let s:statusline .= "%#" . higrp. "#"
         let s:statusline .= a:text
-        let s:statusline .= "%#StatusLine# "
+        let s:statusline .= "%#StatusLineNC# "
     else
         let s:statusline .= a:text . " "
     endif

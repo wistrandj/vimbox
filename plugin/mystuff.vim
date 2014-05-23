@@ -90,7 +90,7 @@ command! Lorem execute "r!cat /home/jasu/doc/data/templates/lorem"
 " === Runfile =================================================================
 
 command! Run call runfile#Run()
-command! Runout call runfile#RunFileToOutPut()
+command! Runout call runfile#RunFileToOutput()
 
 " === Matching Chars ==========================================================
 

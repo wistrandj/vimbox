@@ -23,6 +23,7 @@ nnoremap <buffer> <leader>mC :call <SID>make("clean")<CR>
 " === Abbreviations for obnoxious words =======================================
 abbrev nlch '\0'
 
+abbrev u8 uint8_t
 abbrev u1 uint16_t
 abbrev u3 uint32_t
 abbrev u6 uint64_t
@@ -39,7 +40,7 @@ abbrev st struct
 
 fun! s:make(...)
     let arg = ""
-    if a:0 > 1
+    if a:0 > 0
         let arg = a:1
     end
 

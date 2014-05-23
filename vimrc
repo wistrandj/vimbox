@@ -16,6 +16,7 @@ set history=100
 set backspace=indent,start
 
 " Files
+set t_Co=8
 set confirm " FIXME what's the alternative?
 set noswapfile
 set nobackup
