@@ -33,6 +33,7 @@ abbrev i3 int32_t
 abbrev i6 int64_t
 
 abbrev st struct
+abbrev sta static
 
 " === Private functions =======================================================
 " s:compile and s:run_ C/C++ sources
