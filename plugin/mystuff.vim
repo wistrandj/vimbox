@@ -1,31 +1,28 @@
-" SECTION Mappings
 " ==== Projects and Git =======================================================
 
 if filereadable("project.vim")
     source project.vim
 endif
 
+" GIT
 nnoremap <leader>gs :call git#status()<CR>
 nnoremap <leader>gc :call git#commit()<CR>
 
-" === Insert Something ========================================================
-
+" Insert Something
 nnoremap <expr> <leader>hh <SID>ToggleHilightSearch()
+nnoremap <leader>im :call <SID>DropRestBelow()<CR>ka
+nnoremap <leader>cm :call <SID>DropRestBelow()<CR>gccka
+nnoremap <leader>mi :call <SID>InsertBelow()<CR>
 function! s:ToggleHilightSearch()
     " <leader>hh
     let nextstate = (&hls == 0) ? "on" : "off"
     set invhls
     echo "HLS " . nextstate
 endfunction
-
-nnoremap <leader>im :call <SID>DropRestBelow()<CR>ka
-nnoremap <leader>cm :call <SID>DropRestBelow()<CR>gccka
 function! s:DropRestBelow()
     let col = col('.')
     exe "normal! i\<CR>\<ESC>0d^" . col . "i \<ESC>x"
 endfunction
-
-nnoremap <leader>mi :call <SID>InsertBelow()<CR>
 function! s:InsertBelow()
     " <leader>mi
     let column = col('.') = 1
@@ -33,8 +30,7 @@ function! s:InsertBelow()
     startinsert!
 endfunction
 
-" === Scroll with <C-y> and <C-e> " ===========================================
-
+" Scroll past a paragraph with <C-y> and <C-e>
 let s:scroll_max = 10
 let s:scroll_min = 3
 
@@ -70,9 +66,7 @@ function! s:scroll_block(dir)
     exe "normal! " . diff . key
 endfunction
 
-" ENDSECTION
-" SECTION Commands
-
+" Create a separator comment
 command! Sep call <SID>MakeCommentSeparator()
 function! s:MakeCommentSeparator()
     let comment = substitute(getline('.'), '^\([^ ]*\).*', '\1', '')
@@ -82,18 +76,15 @@ function! s:MakeCommentSeparator()
     call setline('.', line)
 endfunction
 
-" ENDSECTION
-" SECTION Mappings for autoload/
-" === Misc ====================================================================
+" Lorem ipsum...
+command! Lorem call append(line('.') , readfile("/home/jasu/doc/data/templates/lorem"))
 
-command! Lorem execute "r!cat /home/jasu/doc/data/templates/lorem"
-" === Runfile =================================================================
-
+" === Autoload ================================================================
+" Runfile
 command! Run call runfile#Run()
 command! Runout call runfile#RunFileToOutput()
 
-" === Matching Chars ==========================================================
-
+" Matching Chars
 inoremap <expr> ( matchingChars#InsertLeftParenthesis("(")
 inoremap [ []<left>
 inoremap { {}<left>
@@ -106,13 +97,10 @@ inoremap <expr> " matchingChars#InsertQuote("\"")
 
 imap <expr> <BS> matchingChars#RemoveSomething()
 
-" === Open well-known windows =================================================
-
+" Open well-known windows
 nnoremap <c-w>oo :call OpenOutput()<cr>
 
-" === Refactor ================================================================
-
-
+" Refactor
 " FIXME:
 nnoremap <leader>ss :exe "normal! :%s/" . expand("<cword>") . "\/\<ESC>q:kA"
 command! -nargs=? Rename :call <SID>mygrep('*', <f-args>)
@@ -126,5 +114,4 @@ function! s:mygrep(filepattern, ...)
     call refactor#grep(word, a:filepattern)
 endfunction
 
-" ENDSECTION
 
