@@ -1,4 +1,4 @@
-" SECTION Variables
+" === Variables ===============================================================
 filetype plugin on
 syntax on
 
@@ -17,7 +17,7 @@ set backspace=indent,start
 
 " Files
 set t_Co=8
-set confirm " FIXME what's the alternative?
+set confirm
 set noswapfile
 set nobackup
 set autowrite
@@ -69,16 +69,7 @@ set nojoinspaces
 
 set wildignore=*.o,*.obj,*.class
 
-" ENDSECTION
-" SECTION Mappings
-"
-
-" Change habits by unmapping stuff
-imap <esc> <esc>
-cmap <esc> <nop>
-map <leader><leader> <nop>
-map <leader><leader><leader> <nop>
-
+" === Mappings ================================================================
 " Windows, buffers and tabs
 nnoremap <leader>T :tabnew<CR>
 nnoremap <leader>ta :tabprev<CR>
@@ -95,8 +86,6 @@ nnoremap <C-l> :wincmd l<CR>
 " Files and external programs
 nnoremap <F1> :so $MYVIMRC<CR>
 nnoremap <Leader>w :update<CR>
-nnoremap <Leader>xp :r!xsel -p<CR>
-vnoremap <Leader>xi :w !xsel -pi<CR>
 
 " Escaping and moving cursor
 inoremap kj <Esc>l
@@ -104,11 +93,8 @@ noremap , ;
 noremap ; ,
 noremap j gj
 noremap k gk
-
-" Use scandinavian keys for something useful
 noremap ö [
 noremap ä ]
-
 noremap Ö {
 noremap Ä }
 
@@ -133,7 +119,6 @@ inoremap vvl <esc>^v$h
 
 " Insert
 nnoremap s i_<Esc>r
-nnoremap <leader>j yyp
 
 " Replace with empty line
 nnoremap dl ddko<esc>
@@ -142,8 +127,7 @@ nnoremap cl :s/.*//<CR>i
 " Align with Tabular plugin
 vnoremap <Leader>ta :Tabular /
 
-" ENDSECTION
-" SECTION Plugins and filetypes
+" === Plugins and filetypes ===================================================
 "
 
 let g:gundo_prefer_python3 = 1
@@ -167,5 +151,3 @@ autocmd BufNewFile,BufRead *.story set ft=groovy
 autocmd BufNewFile,BufRead *memo set ft=memo
 autocmd BufNewFile,BufRead kirjat set ft=kirjat
 autocmd BufNewFile,BufRead *.scl set ft=scala
-
-" ENDSECTION

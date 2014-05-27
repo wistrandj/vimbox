@@ -1,5 +1,4 @@
-" ==== Projects and Git =======================================================
-
+" === Mappings ================================================================
 if filereadable("project.vim")
     source project.vim
 endif
@@ -11,10 +10,9 @@ nnoremap <leader>gc :call git#commit()<CR>
 " Insert Something
 nnoremap <expr> <leader>hh <SID>ToggleHilightSearch()
 nnoremap <leader>im :call <SID>DropRestBelow()<CR>ka
-nnoremap <leader>cm :call <SID>DropRestBelow()<CR>gccka
 nnoremap <leader>mi :call <SID>InsertBelow()<CR>
+nmap <leader>cm :call <SID>DropRestBelow()<CR>-ccka
 function! s:ToggleHilightSearch()
-    " <leader>hh
     let nextstate = (&hls == 0) ? "on" : "off"
     set invhls
     echo "HLS " . nextstate
@@ -24,8 +22,7 @@ function! s:DropRestBelow()
     exe "normal! i\<CR>\<ESC>0d^" . col . "i \<ESC>x"
 endfunction
 function! s:InsertBelow()
-    " <leader>mi
-    let column = col('.') = 1
+    let column = col('.') - 1
     exe "normal! o\<ESC>" . column . "i "
     startinsert!
 endfunction
@@ -34,7 +31,7 @@ endfunction
 let s:scroll_max = 10
 let s:scroll_min = 3
 
-nnoremap <c-y> :call <SID>scroll_block(-1)<CR>
+nnoremap <c-y> :call <SID>scroll_block(-1)<CR>j
 nnoremap <c-e> :call <SID>scroll_block(1)<CR>
 function! s:find_blank_line(linenr, lines, by, times)
     let nr = a:linenr
