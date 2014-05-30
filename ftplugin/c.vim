@@ -27,13 +27,16 @@ abbrev u8 uint8_t
 abbrev u1 uint16_t
 abbrev u3 uint32_t
 abbrev u6 uint64_t
-
 abbrev i1 int16_t
 abbrev i3 int32_t
 abbrev i6 int64_t
 
+abbrev en enum
 abbrev st struct
 abbrev sta static
+
+abbrev ww width
+abbrev hh height
 
 " === Private functions =======================================================
 " s:compile and s:run_ C/C++ sources

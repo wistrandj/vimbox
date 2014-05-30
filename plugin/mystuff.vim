@@ -3,7 +3,7 @@ if filereadable("project.vim")
     source project.vim
 endif
 
-" GIT
+" Git
 nnoremap <leader>gs :call git#status()<CR>
 nnoremap <leader>gc :call git#commit()<CR>
 

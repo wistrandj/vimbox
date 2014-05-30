@@ -28,7 +28,7 @@ set listchars=tab:>\ ,trail:~
 set splitright
 set lazyredraw      " don't redraw while macro execution
 set scrolloff=2     " Keep a few lines always visible around cursor
-set relativenumber
+" set relativenumber
 set wildmenu
 set wildmode=list:longest,full
 set showmode
@@ -93,19 +93,17 @@ noremap , ;
 noremap ; ,
 noremap j gj
 noremap k gk
-noremap ö [
-noremap ä ]
-noremap Ö {
-noremap Ä }
+map ö [
+map ä ]
+map Ö {
+map Ä }
 
 " Search
 nnoremap <leader>hw :set invhls<CR>*#
+nnoremap <leader>hW :set hls<CR>*#
 
 " Fold
 nnoremap <Space> za
-
-" Macros and Commands
-nnoremap Q @q
 
 " Visual
 vnoremap > >gv
