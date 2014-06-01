@@ -116,7 +116,7 @@ inoremap vve <esc>`[v`]
 inoremap vvl <esc>^v$h
 
 " Insert
-nnoremap s i_<Esc>r
+nnoremap S i_<Esc>r
 
 " Replace with empty line
 nnoremap dl ddko<esc>
