@@ -49,6 +49,7 @@ fun! s:make(...)
         let arg = a:1
     end
 
+    " FIXME: s:makefile ???
     if filereadable("makefile") || filereadable("s:makefile")
         exe "make " . arg
         return 1

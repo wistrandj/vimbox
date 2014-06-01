@@ -23,12 +23,19 @@ end
 
 let g:output_loaded = 1
 
-nnoremap <leader>on :call OpenOutput()<CR>
-nnoremap <leader>oc :call CloseOutput()<CR>
+nnoremap <leader>o :call InvOutput()<CR>
 
 
 " ------------------------------------------------------------------------------
 " public interface
+
+fun! InvOutput()
+    if s:OutputWindowNumber() == -1
+        cal OpenOutput()
+    else
+        cal CloseOutput()
+    endif
+endfun
 
 fun! OpenOutput()
     if s:OutputWindowNumber() != -1

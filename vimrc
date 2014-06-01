@@ -89,6 +89,8 @@ nnoremap <Leader>w :update<CR>
 
 " Escaping and moving cursor
 inoremap kj <Esc>l
+inoremap KJ <Esc>l:echoerr "Caps is ON!"<CR>
+inoremap Kj <Esc>l
 noremap , ;
 noremap ; ,
 noremap j gj

@@ -94,9 +94,6 @@ inoremap <expr> " matchingChars#InsertQuote("\"")
 
 imap <expr> <BS> matchingChars#RemoveSomething()
 
-" Open well-known windows
-nnoremap <c-w>oo :call OpenOutput()<cr>
-
 " Refactor
 " FIXME:
 nnoremap <leader>ss :exe "normal! :%s/" . expand("<cword>") . "\/\<ESC>q:kA"
