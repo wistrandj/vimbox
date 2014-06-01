@@ -29,28 +29,25 @@ call MkMoveMap('electro')
 call MkMoveMap('hiphop', 'H')
 
 
-fun! OpenLink()
+fun! OpenYoutube()
     let url = expand("<cWORD>")
     if url =~ 'www'
         call system('luakit ' . url)
     else
-        let line = getline('.')
-        call SearchYoutube(line)
+        call OpenFirstSearchResult()
     endif
 endfun
 
-fun! YoutubeQueryURL(query)
+fun! s:youtube_query_url(query)
     let url = 'http://www.youtube.com/results?search_query='
     let query = substitute(a:query, '[ -]\+', '%20', 'g')
-    let query = substitute(a:query, '^[ a-zA-Z0-9]', '', 'g')
     return url . query
 endfun
 
 fun! OpenFirstSearchResult()
     let filterCMD = ' | grep -o "watch?v=[-a-zA-Z0-9]*" | head -n 1'
-    let searchURL = YoutubeQueryURL(getline('.'))
+    let searchURL = s:youtube_query_url(getline('.'))
     let watchURL= 'http://www.youtube.com/watch?v='
-
     let result = system('wget --quiet -O - ' . searchURL . filterCMD)
 
     if !empty(result)

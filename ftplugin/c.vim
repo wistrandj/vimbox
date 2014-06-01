@@ -12,7 +12,8 @@ command! -range -nargs=1 MoveHeader
 
 autocmd BufWritePre <buffer> :%s/\s\+$//e
 
-nnoremap <C-w>a :call <SID>cmd_split_alternate_file()<CR>
+nnoremap <C-w>a :call <SID>cmd_split_alternate_file('v')<CR>
+nnoremap <C-w>A :call <SID>cmd_split_alternate_file('')<CR>
 
 nnoremap <buffer> <Leader>r :call <SID>run_echo()<CR>
 nnoremap <buffer> <Leader>mar :call <SID>run_async()<CR>
@@ -127,13 +128,14 @@ endfun
 
 " === Functions for commands ==================================================
 
-fun! s:cmd_split_alternate_file()
+fun! s:cmd_split_alternate_file(splitmode)
+    " PARAM: splitmode may be either '' or 'v' for horizontal/vertical split
     let file = expand("%")
     let otherend = (match(file, '.h$') >= 0) ? '.c' : '.h'
     let other = substitute(file, '..$', otherend, '')
 
     if filereadable(other)
-        silent! exe "vsplit " . other
+        silent! exe a:splitmode . "split " . other
     else
         echoerr "Couldn't find alternate file"
     endif
