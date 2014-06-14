@@ -1,2 +1,2 @@
-inoremap " "
-nnoremap K :exe "help " . expand("<cword>")<CR>
+inoremap <buffer> " "
+nnoremap <buffer> K :exe "help " . expand("<cword>")<CR>

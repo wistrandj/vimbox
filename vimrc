@@ -1,3 +1,5 @@
+let g:loaded_youcompleteme = 1
+
 " === Variables ===============================================================
 filetype plugin on
 syntax on
@@ -14,6 +16,7 @@ let $VIMHOME = "/home/jasu/.vim/"
 set nocompatible
 set history=100
 set backspace=indent,start
+set mouse=a
 
 " Files
 set t_Co=8
@@ -24,11 +27,12 @@ set autowrite
 
 " View
 set list            " show ws as visible char
-set listchars=tab:>\ ,trail:~
+set listchars=tab:>\ ,trail:·
 set splitright
 set lazyredraw      " don't redraw while macro execution
+set ttyfast
 set scrolloff=2     " Keep a few lines always visible around cursor
-" set relativenumber
+set cursorline
 set wildmenu
 set wildmode=list:longest,full
 set showmode

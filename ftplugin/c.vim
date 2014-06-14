@@ -1,4 +1,7 @@
 
+let &l:colorcolumn=81
+hi ColorColumn ctermbg=8
+
 " Open quickfix window on compile errors
 autocmd QuickFixCmdPost [^l]* nested cwindow
 autocmd QuickFixCmdPost    l* nested lwindow
@@ -6,23 +9,40 @@ autocmd TabLeave * cclose
 
 " === Commands and mappings ===================================================
 
+    " COMMAND: Initfiles
+    " Creates header and source file with proper contents
 command! -nargs=* Initfiles call s:cmd_init_files(<f-args>)
+    "
+    " COMMAND: MoveHeader
+    " Create a header file with 
 command! -range -nargs=1 MoveHeader
     \ call s:cmd_move_selected_lines_to_header(<f-args>, <line1>, <line2>)
 
 autocmd BufWritePre <buffer> :%s/\s\+$//e
 
+    " Split/vertical split the alternate header/source file
 nnoremap <C-w>a :call <SID>cmd_split_alternate_file('v')<CR>
 nnoremap <C-w>A :call <SID>cmd_split_alternate_file('')<CR>
 
+    " Compile/make/run the program
 nnoremap <buffer> <Leader>r :call <SID>run_echo()<CR>
 nnoremap <buffer> <Leader>mar :call <SID>run_async()<CR>
 nnoremap <buffer> <Leader>mr :call <SID>run_output()<CR>
+nnoremap <buffer> <Leader>R :make<CR>:call <SID>run_output()<CR>
 nnoremap <buffer> <leader>mc :call <SID>compile()<CR>
 nnoremap <buffer> <leader>mC :call <SID>make("clean")<CR>
+nnoremap <buffer> <leader>mt :call <SID>make("tags")<CR>
+
+    " These are not set as <buffer> because the error may be in makefile
+nnoremap <leader>ef :cr<CR>:cn<CR>
+nnoremap <leader>en :cn<CR>
+nnoremap <leader>ep :cp<CR>
 
 " === Abbreviations for obnoxious words =======================================
-abbrev nlch '\0'
+ia nlch '\0'
+ia nl NULL
+ia ddb debug
+ia nst const
 
 abbrev u8 uint8_t
 abbrev u1 uint16_t
@@ -36,21 +56,19 @@ abbrev en enum
 abbrev st struct
 abbrev sta static
 
-abbrev ww width
-abbrev hh height
 
 " === Private functions =======================================================
 " s:compile and s:run_ C/C++ sources
 " NOTE: These funs depends on MyOutput (output.vim)
 
+    " Run make possibly with a sigle argument
 fun! s:make(...)
     let arg = ""
     if a:0 > 0
         let arg = a:1
     end
 
-    " FIXME: s:makefile ???
-    if filereadable("makefile") || filereadable("s:makefile")
+    if filereadable("makefile") || filereadable("Makefile"))
         exe "make " . arg
         return 1
     end
@@ -58,13 +76,14 @@ fun! s:make(...)
     return 0
 endfun
 
+    " Uses makefile to compile sources or just gcc -Wall <file> if it doesn't
+    " exists
 fun! s:compile()
     if s:make()
         return 1
     else
-        exe ":!clear"
-        let cmd = "gcc " . expand("%") . " -Wall -o a.out"
-        echo system(cmd)
+        exe 'set makeprg=gcc\ -Wall\ ' . expand("%")
+        make
     endif
 
     return 1

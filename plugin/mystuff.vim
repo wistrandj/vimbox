@@ -76,6 +76,14 @@ endfunction
 " Lorem ipsum...
 command! Lorem call append(line('.') , readfile("/home/jasu/doc/data/templates/lorem"))
 
+" Change current directory to the file location
+command! Cdh call <SID>cdhere()
+function! s:cdhere()
+    let path = substitute(expand("%:p"), '[^/]*$', '', '')
+    exe "cd " . path
+    pwd
+endfunction
+
 " === Autoload ================================================================
 " Runfile
 command! Run call runfile#Run()
@@ -95,8 +103,7 @@ inoremap <expr> " matchingChars#InsertQuote("\"")
 imap <expr> <BS> matchingChars#RemoveSomething()
 
 " Refactor
-" FIXME:
-nnoremap <leader>ss :exe "normal! :%s/" . expand("<cword>") . "\/\<ESC>q:kA"
+" Does these work?
 command! -nargs=? Rename :call <SID>mygrep('*', <f-args>)
 command! RenameA :call ()
 function! s:mygrep(filepattern, ...)

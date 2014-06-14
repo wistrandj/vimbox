@@ -9,8 +9,8 @@ endfun
 
 fun! MkMoveMap(category, ...)
     let key = (a:0 > 0) ? a:1 : a:category[0]
-    exe "nnoremap <leader>m" . key . " dd:call MoveTo('" . a:category . "')<cr>"
-    exe "vnoremap <leader>m" . key . " d:call MoveTo('" . a:category . "')<cr>"
+    exe "nnoremap <buffer> <leader>m" . key . " dd:call MoveTo('" . a:category . "')<cr>"
+    exe "vnoremap <buffer> <leader>m" . key . " d:call MoveTo('" . a:category . "')<cr>"
 endfun
 
 nnoremap <leader>y :call OpenFirstSearchResult()<CR>
