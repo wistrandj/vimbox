@@ -38,23 +38,27 @@ nnoremap <leader>ef :cr<CR>:cn<CR>
 nnoremap <leader>en :cn<CR>
 nnoremap <leader>ep :cp<CR>
 
+    " Include automatically header file to the top of the file
+nnoremap <leader>in :call <SID>cmd_include_new_header(1)<CR>
+nnoremap <leader>iN :call <SID>cmd_include_new_header(0)<CR>
+
 " === Abbreviations for obnoxious words =======================================
 ia nlch '\0'
 ia nl NULL
 ia ddb debug
 ia nst const
 
-abbrev u8 uint8_t
-abbrev u1 uint16_t
-abbrev u3 uint32_t
-abbrev u6 uint64_t
-abbrev i1 int16_t
-abbrev i3 int32_t
-abbrev i6 int64_t
+ia u8 uint8_t
+ia u1 uint16_t
+ia u3 uint32_t
+ia u6 uint64_t
+ia i1 int16_t
+ia i3 int32_t
+ia i6 int64_t
 
-abbrev en enum
-abbrev st struct
-abbrev sta static
+ia en enum
+ia st struct
+ia sta static
 
 
 " === Private functions =======================================================
@@ -68,7 +72,7 @@ fun! s:make(...)
         let arg = a:1
     end
 
-    if filereadable("makefile") || filereadable("Makefile"))
+    if filereadable("makefile") || filereadable("Makefile")
         exe "make " . arg
         return 1
     end
@@ -197,3 +201,72 @@ fun! s:cmd_init_files(...)
     let cfile = substitute(hfile, '.h$', '.c', '')
 endfun
 
+
+    " FUNCTION: s:include_new_header
+    " Adds an #include line for a:headername to the top of the source file
+    " PARAMETERS:
+    "   headername: name of the header
+    "   sys_header: 1 for <header.h> and 0 for "header.h"
+    " TODO:
+    "   sort include lines
+fun! s:include_new_header(headername, sys_header)
+    let cursor = getcurpos()
+
+    " Set header name and the #include line
+    let header = a:headername
+    if (header[-2:] != '.h')
+        let header = header . '.h'
+    endif
+
+    let lb = '<'
+    let rb = '>'
+    if (!a:sys_header)
+        let lb = '"'
+        let rb = '"'
+    endif
+
+    let line = '#include ' . lb . header . rb
+
+    " Find the line to put the include
+    if (search(line))
+        echo header . ' is already included'
+        call setpos('.', cursor)
+        return
+    endif
+
+    " Search the last #include from line 20 backwards
+    call cursor(20)
+    let linenum = search('#include', 'b')
+    if (!linenum)
+        let linenum = 2
+    endif
+
+    call append(linenum, line)
+
+    let cursor[1] += 1
+    call setpos('.', cursor)
+
+    echo 'Included ' . header
+endfun
+
+
+    " FUNCTION: s:cmd_init_source_file
+    " Ask user the name of header file to be included
+    " PARAMETERS:
+    "   sys_header: a param to be passed to include_new_header()
+fun! s:cmd_include_new_header(sys_header)
+    let q = "System header: "
+    if (!a:sys_header)
+        let q = "Project header: "
+    endif
+
+    let header = input(q)
+
+    " Use abbreviations for system headers
+    let a = {'a': 'assert', 'm': 'math', 'io': 'stdio', 'str': 'string', 'lib': 'stdlib', 'uni': 'unistd'}
+    if (has_key(a, header))
+        let header = a[header]
+    endif
+
+    call <SID>include_new_header(header, a:sys_header)
+endfun
