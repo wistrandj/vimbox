@@ -1,5 +1,3 @@
-let g:loaded_youcompleteme = 1
-
 " === Variables ===============================================================
 filetype plugin on
 syntax on
@@ -26,18 +24,18 @@ set nobackup
 set autowrite
 
 " View
+set cursorline
+set display=lastline
+set lazyredraw      " don't redraw while macro execution
 set list            " show ws as visible char
 set listchars=tab:>\ ,trail:·
-set splitright
-set lazyredraw      " don't redraw while macro execution
-set ttyfast
+set noshowmode
 set scrolloff=2     " Keep a few lines always visible around cursor
-set cursorline
+set showbreak=\
+set splitright
+set ttyfast
 set wildmenu
 set wildmode=list:longest,full
-set showmode
-set showbreak=\
-set display=lastline
 
 set laststatus=2
 set statusline=%!statusline#StatusLineFunction()
@@ -132,8 +130,6 @@ nnoremap cl :s/.*//<CR>i
 vnoremap <Leader>ta :Tabular /
 
 " === Plugins and filetypes ===================================================
-"
-
 let g:gundo_prefer_python3 = 1
 
 " Use pathogen to manage plugins
@@ -155,3 +151,18 @@ autocmd BufNewFile,BufRead *.story set ft=groovy
 autocmd BufNewFile,BufRead *memo set ft=memo
 autocmd BufNewFile,BufRead kirjat set ft=kirjat
 autocmd BufNewFile,BufRead *.scl set ft=scala
+
+" Easymotion
+map + <Plug>(easymotion-prefix)
+
+" YouCompleteMe
+let g:ycm_global_ycm_extra_conf =
+    \ '/home/jasu/.vim/bundle/mystuff/extra/youcompleteme_compiler_info.py'
+
+
+" === Initialize ==============================================================
+" Clear registers
+let s:a = "abcdefghijklmnopqrstuvxwxyz"
+for i in range(0, len(s:a) - 1)
+    exe 'let @' . s:a[i] . '= ""'
+endfor
