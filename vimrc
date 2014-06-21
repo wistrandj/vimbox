@@ -1,3 +1,5 @@
+nnoremap -r 0vf:hgf
+
 " === Variables ===============================================================
 filetype plugin on
 syntax on
@@ -19,6 +21,7 @@ set mouse=a
 " Files
 set t_Co=8
 set confirm
+set hidden
 set noswapfile
 set nobackup
 set autowrite
@@ -131,6 +134,13 @@ vnoremap <Leader>ta :Tabular /
 
 " === Plugins and filetypes ===================================================
 let g:gundo_prefer_python3 = 1
+"
+" Filetypes
+autocmd BufNewFile,BufRead *.story set ft=groovy
+autocmd BufNewFile,BufRead *memo set ft=memo
+autocmd BufNewFile,BufRead kirjat set ft=kirjat
+autocmd BufNewFile,BufRead *.scl set ft=scala
+
 
 " Use pathogen to manage plugins
 runtime bundle/pathogen/autoload/pathogen.vim
@@ -146,19 +156,21 @@ nnoremap <leader>fr :FufRenewCache<CR>
 nnoremap <leader>ff  :FufFile **/<CR>
 autocmd FileType fuf noremap <buffer> <C-c> <Esc>
 
-" Filetypes
-autocmd BufNewFile,BufRead *.story set ft=groovy
-autocmd BufNewFile,BufRead *memo set ft=memo
-autocmd BufNewFile,BufRead kirjat set ft=kirjat
-autocmd BufNewFile,BufRead *.scl set ft=scala
-
 " Easymotion
 map + <Plug>(easymotion-prefix)
 
 " YouCompleteMe
+let g:loaded_youcompleteme = 1
 let g:ycm_global_ycm_extra_conf =
     \ '/home/jasu/.vim/bundle/mystuff/extra/youcompleteme_compiler_info.py'
+set completeopt-=preview
+let g:ycm_add_preview_to_completeopt = 0
 
+" SnipMate
+    " SnipMate's default <tab> key is not compatible with YouCompleMe
+    " but it's disabled for now
+"ino <c-j> <c-r>=TriggerSnippet()<cr>
+"snor <c-j> <esc>i<right><c-r>=TriggerSnippet()<cr>
 
 " === Initialize ==============================================================
 " Clear registers

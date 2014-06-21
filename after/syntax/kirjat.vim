@@ -1,6 +1,4 @@
 
-nnoremap <leader><leader>r :set ft=kirjat<CR>
-
 syn match Constant "^\s\+[A-Z]\+$"
 syn match Statement "^[a-z]\+"
 syn match MoreMsg "^[a-z]\+ [0-9]\{4\}"

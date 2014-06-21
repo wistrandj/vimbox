@@ -73,9 +73,6 @@ function! s:MakeCommentSeparator()
     call setline('.', line)
 endfunction
 
-" Lorem ipsum...
-command! Lorem call append(line('.') , readfile("/home/jasu/doc/data/templates/lorem"))
-
 " Change current directory to the file location
 command! Cdh call <SID>cdhere()
 function! s:cdhere()
@@ -83,6 +80,27 @@ function! s:cdhere()
     exe "cd " . path
     pwd
 endfunction
+
+" Open temporary files
+command! -nargs=? Tfile call <SID>open_temporary_file(<f-args>)
+"   ARG: the optional string argument is used as suffix of the temp file
+function! s:open_temporary_file(...)
+    let suffix = ''
+    let file_name = ''
+
+    if (a:0 > 0)
+        let suffix = a:1
+    endif
+
+    if exists('g:mystuff_temporary_file')
+        exe 'edit ' . g:mystuff_temporary_file . suffix
+        return
+    endif
+
+    let g:mystuff_temporary_file = tempname()
+    exe 'edit ' . g:mystuff_temporary_file . suffix
+endfunction
+
 
 " === Autoload ================================================================
 " Runfile
