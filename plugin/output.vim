@@ -94,7 +94,7 @@ fun! s:SetDefaultValue(variable, value)
     end
 endfun
 
-call s:SetDefaultValue("g:output_window_size", 15)
+call s:SetDefaultValue("g:output_window_size", 7)
 call s:SetDefaultValue("g:output_window_name", "__output__")
 
 fun! s:OutputWindowNumber()

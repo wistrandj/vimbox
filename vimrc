@@ -1,4 +1,3 @@
-nnoremap -r 0vf:hgf
 
 " === Variables ===============================================================
 filetype plugin on
@@ -16,7 +15,7 @@ let $VIMHOME = "/home/jasu/.vim/"
 set nocompatible
 set history=100
 set backspace=indent,start
-set mouse=a
+" set mouse=a
 
 " Files
 set t_Co=8
@@ -91,6 +90,7 @@ nnoremap <C-l> :wincmd l<CR>
 " Files and external programs
 nnoremap <F1> :so $MYVIMRC<CR>
 nnoremap <Leader>w :update<CR>
+inoremap <C-x><C-o> <C-x><C-o><C-p>
 
 " Escaping and moving cursor
 inoremap kj <Esc>l
@@ -117,13 +117,11 @@ vnoremap > >gv
 vnoremap < <gv
 nnoremap <leader>v `[v`]
 
-inoremap vvw <esc>bve
-inoremap vvW <esc>BvE
-inoremap vve <esc>`[v`]
-inoremap vvl <esc>^v$h
-
 " Insert
 nnoremap S i_<Esc>r
+
+" Insert mode CTRL mappings
+inoremap <C-u> <esc>hviwUel
 
 " Replace with empty line
 nnoremap dl ddko<esc>
@@ -140,31 +138,32 @@ autocmd BufNewFile,BufRead *.story set ft=groovy
 autocmd BufNewFile,BufRead *memo set ft=memo
 autocmd BufNewFile,BufRead kirjat set ft=kirjat
 autocmd BufNewFile,BufRead *.scl set ft=scala
+autocmd BufRead *.tab set ft=tab
 
+" CtrlP
+nnoremap +r :CtrlPClearCache<CR>
 
 " Use pathogen to manage plugins
 runtime bundle/pathogen/autoload/pathogen.vim
 call pathogen#infect()
 
-nnoremap <Leader>sc :Scratch<CR>
+nnoremap +s :Scratch<CR>
 
 " NERDtree
-nnoremap <leader>p :NERDTreeToggle<CR>
-
-" FuzzyFinder
-nnoremap <leader>fr :FufRenewCache<CR>
-nnoremap <leader>ff  :FufFile **/<CR>
-autocmd FileType fuf noremap <buffer> <C-c> <Esc>
+nnoremap +t :NERDTreeToggle<CR>
 
 " Easymotion
-map + <Plug>(easymotion-prefix)
+    " Hide unneeded easymotion-shortcuts behind ++
+map ++ <Plug>(easymotion-prefix)
+nmap <leader>f ++f
+nmap <leader>F ++F
 
 " YouCompleteMe
-let g:loaded_youcompleteme = 1
-let g:ycm_global_ycm_extra_conf =
-    \ '/home/jasu/.vim/bundle/mystuff/extra/youcompleteme_compiler_info.py'
-set completeopt-=preview
-let g:ycm_add_preview_to_completeopt = 0
+"let g:loaded_youcompleteme = 1
+"let g:ycm_global_ycm_extra_conf =
+    "\ '/home/jasu/.vim/bundle/mystuff/extra/youcompleteme_compiler_info.py'
+" set completeopt-=preview
+"let g:ycm_add_preview_to_completeopt = 0
 
 " SnipMate
     " SnipMate's default <tab> key is not compatible with YouCompleMe

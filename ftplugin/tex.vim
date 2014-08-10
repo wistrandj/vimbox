@@ -20,8 +20,8 @@ function! OpenZathura()
     call system("zathura " . pdf)
 endfunction
 
-nnoremap <buffer> <expr> <leader>R OpenZathura()
-nnoremap <buffer> <leader>C :make<CR>
+nnoremap <buffer> <expr> <leader>mr OpenZathura()
+nnoremap <buffer> <leader>mc :make<CR>
 
 " Bold/italic words
 nnoremap <buffer> <leader>bf i{\bf<space><esc>ea}<esc>

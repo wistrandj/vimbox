@@ -1,11 +1,20 @@
+" TODO
+" - make a shortcut key for MoveHeader
+"   - use ranges: 2<key> -> moves two lines to header
+" - vmap gc <yank selected text and (c)hange it
+" - vmap gn <yank selected text>
 
 let &l:colorcolumn=81
-hi ColorColumn ctermbg=8
+hi ColorColumn ctermbg=0
 
-" Open quickfix window on compile errors
-autocmd QuickFixCmdPost [^l]* nested cwindow
-autocmd QuickFixCmdPost    l* nested lwindow
-autocmd TabLeave * cclose
+if !exists('g:loaded_mystuff_c_autoloads')
+    let g:loaded_mystuff_c_autoloads = 1
+
+    " Open quickfix window on compile errors
+    autocmd QuickFixCmdPost [^l]* nested cwindow
+    autocmd QuickFixCmdPost    l* nested lwindow
+    autocmd TabLeave * cclose
+endif
 
 " === Commands and mappings ===================================================
 
@@ -14,9 +23,9 @@ autocmd TabLeave * cclose
 command! -nargs=* Initfiles call s:cmd_init_files(<f-args>)
     "
     " COMMAND: MoveHeader
-    " Create a header file with 
-command! -range -nargs=1 MoveHeader
-    \ call s:cmd_move_selected_lines_to_header(<f-args>, <line1>, <line2>)
+    " Create a header file with
+command! -range MoveHeader
+    \ call s:cmd_move_selected_lines_to_header(<line1>, <line2>)
 
 autocmd BufWritePre <buffer> :%s/\s\+$//e
 
@@ -42,6 +51,11 @@ nnoremap <leader>ep :cp<CR>
 nnoremap <leader>in :call <SID>cmd_include_new_header(1)<CR>
 nnoremap <leader>iN :call <SID>cmd_include_new_header(0)<CR>
 
+nnoremap <leader>sxy :s/x/y<CR>
+
+    " Insert a colon after next parenthesis
+inoremap <expr> ; (getline('.')[col('.') - 1] == ')') ? "\<right>;\<left>\<esc>" : ";"
+
 " === Abbreviations for obnoxious words =======================================
 ia nlch '\0'
 ia nl NULL
@@ -56,14 +70,22 @@ ia i1 int16_t
 ia i3 int32_t
 ia i6 int64_t
 
+ia cn const
+ia un unsigned
 ia en enum
 ia st struct
 ia sta static
+ia bk break;
 
+
+" Initialize registers
+exe 'let @l="$s\<CR>{\<CR>\<ESC>ddko"'
 
 " === Private functions =======================================================
 " s:compile and s:run_ C/C++ sources
 " NOTE: These funs depends on MyOutput (output.vim)
+
+
 
     " Run make possibly with a sigle argument
 fun! s:make(...)
@@ -80,6 +102,8 @@ fun! s:make(...)
     return 0
 endfun
 
+
+
     " Uses makefile to compile sources or just gcc -Wall <file> if it doesn't
     " exists
 fun! s:compile()
@@ -94,11 +118,15 @@ fun! s:compile()
 
 endfun
 
+
+
 fun! s:run_echo()
     try
         echo s:run_C()
     endtry
 endfun
+
+
 
 fun! s:run_output()
     try
@@ -106,6 +134,8 @@ fun! s:run_output()
         call OutputText(out)
     endtry
 endfun
+
+
 
 fun! s:run_async()
     let file = s:find_executable(1)
@@ -117,6 +147,8 @@ endfun
 
 " === Private =================================================================
 
+
+
 fun! s:run_C()
     let file = s:find_executable(1)
     let out = ""
@@ -127,6 +159,9 @@ fun! s:run_C()
     echoerr "ftplugin/c.vim|runC(): Couldn't find executable"
     throw "ExecutableNotFound"
 endfun
+
+
+
 
 fun! s:find_executable(trycompile)
     if exists("g:exefile") && executable("./" . g:exefile)
@@ -141,6 +176,8 @@ fun! s:find_executable(trycompile)
 
 endfun
 
+
+
 fun! s:ask_executable()
     let g:exefile = input("Enter the name of the executable file: ")
     if !executable(g:exefile)
@@ -149,6 +186,8 @@ fun! s:ask_executable()
     endif
     return g:exefile
 endfun
+
+
 
 " === Functions for commands ==================================================
 
@@ -165,19 +204,46 @@ fun! s:cmd_split_alternate_file(splitmode)
     endif
 endfun
 
-fun! s:cmd_move_selected_lines_to_header(name, line1, line2)
+
+
+
+fun! s:aux_fix_selected_lines_before_moving(lines)
+    let lastline = a:lines[ len(a:lines) - 1 ]
+    if (lastline[-2:] == ' {')
+        let lastline = lastline[:-2] . ';'
+    else
+        let lastline = lastline . ';'
+    endif
+
+    let a:lines[ len(a:lines) - 1 ] = lastline
+    call add(a:lines, '')
+endfun
+
+
+fun! s:cmd_move_selected_lines_to_header(line1, line2)
     let lines = []
     for i in range(a:line1, a:line2)
         call add(lines, getline(i))
     endfor
 
-    if !langc#init_header_with(a:name, lines)
-        return
+    call s:aux_fix_selected_lines_before_moving(lines)
+
+    " Change to the header
+    let header = langc#alternate_file()
+    if (header[-2:] != '.h')
+        echoerr 'File ' . header . " is not header or it doesn't exists"
     endif
 
-    " Delete lines
-    exe "normal! " . a:line1 . "GV" a:line2 . "GD"
+    exe "edit " . header
+    normal! G
+    let line = search('^$', 'b')
+    call append(line, lines)
+
+    exe "edit " . langc#alternate_file()
 endfun
+
+
+
 
 fun! s:cmd_init_files(...)
     echo "cmd_init_source_file input: " . string(a:000)
@@ -200,6 +266,8 @@ fun! s:cmd_init_files(...)
     let hfile = langc#init_header_source(name)
     let cfile = substitute(hfile, '.h$', '.c', '')
 endfun
+
+
 
 
     " FUNCTION: s:include_new_header
@@ -268,5 +336,9 @@ fun! s:cmd_include_new_header(sys_header)
         let header = a[header]
     endif
 
-    call <SID>include_new_header(header, a:sys_header)
+    if !empty(header)
+        call <SID>include_new_header(header, a:sys_header)
+    endif
 endfun
+
+

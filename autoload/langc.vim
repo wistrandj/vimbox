@@ -26,6 +26,18 @@ fun! langc#init_header_source(name)
     call langc#init_source_with(a:name, [])
 endfun
 
+fun! langc#alternate_file()
+    let file = expand('%:p')
+    if (file[-2:] == '.c')
+        return l:file[:-2] . 'h'
+    elseif (file[-2:] == '.h')
+        return l:file[:-2] . 'c'
+    endif
+
+    echoerr 'This is not a C source file'
+    throw 1
+endfun
+
 " === Private =================================================================
 
 let s:src_folder = ''

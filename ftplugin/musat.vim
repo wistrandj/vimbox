@@ -13,7 +13,7 @@ fun! MkMoveMap(category, ...)
     exe "vnoremap <buffer> <leader>m" . key . " d:call MoveTo('" . a:category . "')<cr>"
 endfun
 
-nnoremap <leader>y :call OpenFirstSearchResult()<CR>
+nnoremap <CR> :call OpenFirstSearchResult()<CR>
 
 call MkMoveMap('suomi')
 call MkMoveMap('rock')

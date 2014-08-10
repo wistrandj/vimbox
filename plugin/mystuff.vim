@@ -108,7 +108,7 @@ command! Run call runfile#Run()
 command! Runout call runfile#RunFileToOutput()
 
 " Matching Chars
-inoremap <expr> ( matchingChars#InsertLeftParenthesis("(")
+inoremap ( ()<left>
 inoremap [ []<left>
 inoremap { {}<left>
 inoremap {<CR> {<CR>}<esc>ko

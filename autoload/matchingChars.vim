@@ -7,6 +7,7 @@
 " Inserting
 
 fun! matchingChars#InsertLeftParenthesis(paren)
+    " XXX: this is not in use, delete?
     let matching = get(s:matchingChars, a:paren)
     let numline = line('.')
     let line = strpart(getline('.'), col('.')-1)
