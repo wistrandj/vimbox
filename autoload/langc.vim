@@ -27,15 +27,44 @@ fun! langc#init_header_source(name)
 endfun
 
 fun! langc#alternate_file()
-    let file = expand('%:p')
-    if (file[-2:] == '.c')
-        return l:file[:-2] . 'h'
-    elseif (file[-2:] == '.h')
-        return l:file[:-2] . 'c'
+    let ext = expand("%:e")
+    let head = expand('%:h')
+    let filename = expand('%:t:r')
+
+    if ext == 'h' 
+        return s:alternate_from_header(head . '/', filename)
+    elseif ext == 'c'
+        return s:alternate_from_source(head . '/', filename)
+    else
+        echoerr "This is not a C file"
+        throw 1
     endif
 
-    echoerr 'This is not a C source file'
-    throw 1
+endfun
+
+fun! s:alternate_from_header(head, filename)
+    if a:head == '.'
+        return a:filename . '.c'
+    elseif a:head =~ "\\<include\\>"
+        let altdir = substitute(a:head, '.*\zs\<include\>', 'src', '')
+        return altdir . a:filename . '.c'
+    endif
+
+    return a:head . a:filename . '.c'
+endfun
+
+fun! s:alternate_from_source(head, filename)
+    if a:head == '.'
+        return a:filename . '.h'
+    elseif a:head =~ "\\<src\\>"
+        let altdir = substitute(a:head, '.*\zs\<src\>', 'include', '')
+        ec "altdir = " . altdir
+        if isdirectory(altdir)
+            return altdir . a:filename . '.h'
+        endif
+    endif
+
+    return a:head . a:filename . '.h'
 endfun
 
 " === Private =================================================================

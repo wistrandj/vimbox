@@ -3,4 +3,5 @@
 " syn match Identifier "^[a-zA-Z].\{-}\zs[_a-zA-Z][_a-zA-Z0-9]*\ze("
 " syn match Identifier "\(^ \|=\)\@!.\{-}\zs[a-zA-Z_][a-zA-Z0-9_]*\ze("
 
+" Match a function call/declaration
 syn match Identifier "[_a-zA-Z0-9]\+\ze("

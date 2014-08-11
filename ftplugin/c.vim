@@ -7,8 +7,8 @@
 let &l:colorcolumn=81
 hi ColorColumn ctermbg=0
 
-if !exists('g:loaded_mystuff_c_autoloads')
-    let g:loaded_mystuff_c_autoloads = 1
+if !exists('g:loaded_ftplugin_c')
+    let g:loaded_ftplugin_c = 1
 
     " Open quickfix window on compile errors
     autocmd QuickFixCmdPost [^l]* nested cwindow
@@ -194,11 +194,12 @@ endfun
 fun! s:cmd_split_alternate_file(splitmode)
     " PARAM: splitmode may be either '' or 'v' for horizontal/vertical split
     let file = expand("%")
-    let otherend = (match(file, '.h$') >= 0) ? '.c' : '.h'
-    let other = substitute(file, '..$', otherend, '')
+    "let otherend = (match(file, '.h$') >= 0) ? '.c' : '.h'
+    "let other = substitute(file, '..$', otherend, '')
+    let altfile = langc#alternate_file()
 
-    if filereadable(other)
-        silent! exe a:splitmode . "split " . other
+    if filereadable(altfile)
+        silent! exe a:splitmode . "split " . altfile
     else
         echoerr "Couldn't find alternate file"
     endif
