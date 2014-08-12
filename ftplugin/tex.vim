@@ -17,11 +17,11 @@ vnoremap <buffer> <leader>be :call AddBlockAroundSelection()<CR>
 function! OpenZathura()
     let file = getreg("%")
     let pdf = strpart(file, 0, len(file) - 3) . "pdf"
-    call system("zathura " . pdf)
+    call system("zathura " . pdf . " &")
 endfunction
 
 nnoremap <buffer> <expr> <leader>mr OpenZathura()
-nnoremap <buffer> <leader>mc :make<CR>
+nnoremap <buffer> <leader>mc :make<CR>:call OpenZathura()<CR>
 
 " Bold/italic words
 nnoremap <buffer> <leader>bf i{\bf<space><esc>ea}<esc>
