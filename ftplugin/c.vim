@@ -122,7 +122,10 @@ endfun
 
 fun! s:run_echo()
     try
-        echo s:run_C()
+        let out = s:run_C()
+        if !empty(out)
+            echo out
+        endif
     endtry
 endfun
 
@@ -131,7 +134,9 @@ endfun
 fun! s:run_output()
     try
         let out = s:run_C()
-        call OutputText(out)
+        if !empty(out)
+            call OutputText(out)
+        endif
     endtry
 endfun
 

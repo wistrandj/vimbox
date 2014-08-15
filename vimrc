@@ -1,4 +1,19 @@
 
+fun! Hassu()
+    let firstline = getline(v:foldstart)
+    let spaces = substitute(firstline, '[^ ].*$', '', '')
+    let nlines = v:foldend - v:foldstart
+    let s = printf("| (%d)", nlines)
+    return spaces . s
+endfun
+
+hi Folded ctermbg=None
+
+set foldtext=Hassu()
+set fdm=syntax
+
+set fillchars=vert:\|,fold:\ 
+
 " === Variables ===============================================================
 filetype plugin on
 syntax on
@@ -38,6 +53,9 @@ set splitright
 set ttyfast
 set wildmenu
 set wildmode=list:longest,full
+if has("gui_running")
+    colorscheme molokai
+endif
 
 set laststatus=2
 set statusline=%!statusline#StatusLineFunction()
@@ -72,6 +90,8 @@ set smartcase
 set nojoinspaces
 
 set wildignore=*.o,*.obj,*.class
+
+set path=.,./include/,/usr/include,/opt/include/
 
 " === Mappings ================================================================
 " Windows, buffers and tabs
@@ -123,9 +143,8 @@ nnoremap S i_<Esc>r
 " Insert mode CTRL mappings
 inoremap <C-u> <esc>hviwUel
 
-" Replace with empty line
-nnoremap dl ddko<esc>
-nnoremap cl :s/.*//<CR>i
+" Toggle line numbers
+nnoremap <F9> :set invnu<CR>
 
 " Align with Tabular plugin
 vnoremap <Leader>ta :Tabular /

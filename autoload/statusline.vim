@@ -6,7 +6,7 @@ fun! statusline#StatusLineFunction()
     let git_branch = s:git()
     let git_branch = (git_branch == '') ? '' : ('[G: ' . git_branch . ' ]')
     call s:add("(buf %n) %y")
-    call s:add("%f", "ErrorMsg")
+    call s:add("%f", "DiffAdd")
     call s:add(s:flags())
     call s:add(git_branch)
     " call s:add(s:view_regs([0, 1, 2, '-'], 5))
@@ -21,9 +21,7 @@ endfun
 fun! s:add(text, ...)
     let higrp = (a:0 > 0) ? a:1 : ''
     if !empty(higrp)
-        let s:statusline .= "%#" . higrp. "#"
-        let s:statusline .= a:text
-        let s:statusline .= "%#StatusLineNC# "
+        let s:statusline .= "%#" . higrp . "#" . a:text . "%*"
     else
         let s:statusline .= a:text . " "
     endif
