@@ -101,6 +101,11 @@ function! s:open_temporary_file(...)
     exe 'edit ' . g:mystuff_temporary_file . suffix
 endfunction
 
+" Change window size
+nn <left> <C-W><
+nn <right> <C-W>>
+nn <down> <C-W>+
+nn <up> <C-W>-
 
 " === Autoload ================================================================
 " Runfile
