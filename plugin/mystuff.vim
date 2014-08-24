@@ -9,8 +9,8 @@ nnoremap <leader>gc :call git#commit()<CR>
 
 " Insert Something
 nnoremap <expr> <leader>hh <SID>ToggleHilightSearch()
-nnoremap <C-i><C-m> :call <SID>DropRestBelow()<CR>ka
-nnoremap <C-m><C-i> :call <SID>InsertBelow()<CR>
+nn <leader>mi <ESC>:call <SID>DropRestBelow()<CR>ka
+nn <leader>im <ESC>:call <SID>InsertBelow()<CR>
 nmap <leader>cm :call <SID>DropRestBelow()<CR>-ccka
 function! s:ToggleHilightSearch()
     let nextstate = (&hls == 0) ? "on" : "off"
@@ -19,7 +19,7 @@ function! s:ToggleHilightSearch()
 endfunction
 function! s:DropRestBelow()
     let col = col('.')
-    exe "normal! i\<CR>\<ESC>0d^" . col . "i \<ESC>x"
+    exe "normal! i\<CR>\<ESC>0d^" . (col - 1) . "i \<ESC>"
 endfunction
 function! s:InsertBelow()
     let column = col('.') - 1
@@ -74,12 +74,7 @@ function! s:MakeCommentSeparator()
 endfunction
 
 " Change current directory to the file location
-command! Cdh call <SID>cdhere()
-function! s:cdhere()
-    let path = substitute(expand("%:p"), '[^/]*$', '', '')
-    exe "cd " . path
-    pwd
-endfunction
+command! Cdh exe "cd " . expand("%:p:h")
 
 " Open temporary files
 command! -nargs=? Tfile call <SID>open_temporary_file(<f-args>)

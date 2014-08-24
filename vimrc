@@ -65,7 +65,9 @@ hi StatusLineNC ctermfg=6
 hi MatchParen ctermbg=6 ctermfg=0
 hi VertSplit cterm=none
 hi Folded ctermfg=6 ctermbg=8
-" Folded         xxx term=standout ctermfg=4 ctermbg=7 guifg=DarkBlue guibg=LightGrey
+    " Swap statusline color when in insert mode
+autocmd InsertEnter * hi StatusLine ctermfg=6
+autocmd InsertLeave * hi StatusLine ctermfg=7
 
 set showmatch
 set matchtime=2
@@ -139,7 +141,7 @@ nnoremap <leader>v `[v`]
 
 " Insert & delete
 nnoremap S i_<Esc>r
-nnoremap X xh
+nnoremap <expr> X (col('.') == col('$') - 1) ? 'x' : 'xh'
 
 " Make the previous word UPPER CASE
 inoremap <C-u> <esc>hviwUel
@@ -148,7 +150,7 @@ inoremap <C-u> <esc>hviwUel
 nnoremap <F9> :set invnu<CR>
 
 " Align with Tabular plugin
-vnoremap <Leader>ta :Tabular /
+vnoremap <leader>ta :Tabular /
 
 " === Plugins and filetypes ===================================================
 let g:gundo_prefer_python3 = 1
@@ -177,19 +179,6 @@ nnoremap +t :NERDTreeToggle<CR>
 map ++ <Plug>(easymotion-prefix)
 nmap <leader>f ++f
 nmap <leader>F ++F
-
-" YouCompleteMe
-"let g:loaded_youcompleteme = 1
-"let g:ycm_global_ycm_extra_conf =
-    "\ '/home/jasu/.vim/bundle/mystuff/extra/youcompleteme_compiler_info.py'
-" set completeopt-=preview
-"let g:ycm_add_preview_to_completeopt = 0
-
-" SnipMate
-    " SnipMate's default <tab> key is not compatible with YouCompleMe
-    " but it's disabled for now
-"ino <c-j> <c-r>=TriggerSnippet()<cr>
-"snor <c-j> <esc>i<right><c-r>=TriggerSnippet()<cr>
 
 " === Initialize ==============================================================
 " Clear registers
