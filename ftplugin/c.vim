@@ -20,41 +20,43 @@ endif
 
     " COMMAND: Initfiles
     " Creates header and source file with proper contents
-command! -nargs=* Initfiles call s:cmd_init_files(<f-args>)
+com! -nargs=* Initfiles call s:cmd_init_files(<f-args>)
     "
     " COMMAND: MoveHeader
     " Create a header file with
-command! -range MoveHeader
+com! -range MoveHeader
     \ call s:cmd_move_selected_lines_to_header(<line1>, <line2>)
 
 autocmd BufWritePre <buffer> :%s/\s\+$//e
 
     " Split/vertical split the alternate header/source file
-nnoremap <C-w>a :call <SID>cmd_split_alternate_file('v')<CR>
-nnoremap <C-w>A :call <SID>cmd_split_alternate_file('')<CR>
+nn <C-w>a :call <SID>cmd_split_alternate_file('v')<CR>
+nn <C-w>A :call <SID>cmd_split_alternate_file('')<CR>
 
     " Compile/make/run the program
-nnoremap <buffer> <Leader>r :call <SID>run_echo()<CR>
-nnoremap <buffer> <Leader>mar :call <SID>run_async()<CR>
-nnoremap <buffer> <Leader>mr :call <SID>run_output()<CR>
-nnoremap <buffer> <Leader>R :make<CR>:call <SID>run_output()<CR>
-nnoremap <buffer> <leader>mc :call <SID>compile()<CR>
-nnoremap <buffer> <leader>mC :call <SID>make("clean")<CR>
-nnoremap <buffer> <leader>mt :call <SID>make("tags")<CR>
+nn <buffer> <Leader>r :call <SID>run_echo()<CR>
+nn <buffer> <Leader>mar :call <SID>run_async()<CR>
+nn <buffer> <Leader>mr :call <SID>run_output()<CR>
+nn <buffer> <Leader>R :make<CR>:call <SID>run_output()<CR>
+nn <buffer> <leader>mc :call <SID>compile()<CR>
+nn <buffer> <leader>mC :call <SID>make("clean")<CR>
+nn <buffer> <leader>mt :call <SID>make("tags")<CR>
+nn <buffer> <leader>mi :call <SID>make("install")<CR>
 
     " These are not set as <buffer> because the error may be in makefile
-nnoremap <leader>ef :cr<CR>:cn<CR>
-nnoremap <leader>en :cn<CR>
-nnoremap <leader>ep :cp<CR>
+nn <leader>ef :cr<CR>:cn<CR>
+nn <leader>en :cn<CR>
+nn <leader>ep :cp<CR>
 
     " Include automatically header file to the top of the file
-nnoremap <leader>in :call <SID>cmd_include_new_header(1)<CR>
-nnoremap <leader>iN :call <SID>cmd_include_new_header(0)<CR>
+nn <leader>in :call <SID>cmd_include_new_header(1)<CR>
+nn <leader>iN :call <SID>cmd_include_new_header(0)<CR>
 
-nnoremap <leader>sxy :s/x/y<CR>
+nn <leader>sxy :s/x/y<CR>
 
     " Insert a colon after next parenthesis
-inoremap <expr> ; (getline('.')[col('.') - 1] == ')') ? "\<right>;\<left>\<esc>" : ";"
+ino <expr> ; (getline('.')[col('.') - 1] == ')') ? "\<right>;\<left>\<esc>" : ";"
+ino <C-f> ();<ESC>
 
 " === Abbreviations for obnoxious words =======================================
 ia nlch '\0'

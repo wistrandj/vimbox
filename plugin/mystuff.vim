@@ -9,8 +9,8 @@ nnoremap <leader>gc :call git#commit()<CR>
 
 " Insert Something
 nnoremap <expr> <leader>hh <SID>ToggleHilightSearch()
-nnoremap <leader>im :call <SID>DropRestBelow()<CR>ka
-nnoremap <leader>mi :call <SID>InsertBelow()<CR>
+nnoremap <C-i><C-m> :call <SID>DropRestBelow()<CR>ka
+nnoremap <C-m><C-i> :call <SID>InsertBelow()<CR>
 nmap <leader>cm :call <SID>DropRestBelow()<CR>-ccka
 function! s:ToggleHilightSearch()
     let nextstate = (&hls == 0) ? "on" : "off"

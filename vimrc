@@ -1,18 +1,18 @@
 
-fun! Hassu()
-    let firstline = getline(v:foldstart)
-    let spaces = substitute(firstline, '[^ ].*$', '', '')
-    let nlines = v:foldend - v:foldstart
-    let s = printf("| (%d)", nlines)
-    return spaces . s
-endfun
+"fun! Hassu()
+    "let firstline = getline(v:foldstart)
+    "let spaces = substitute(firstline, '[^ ].*$', '', '')
+    "let nlines = v:foldend - v:foldstart
+    "let s = printf("| (%d)", nlines)
+    "return spaces . s
+"endfun
 
-hi Folded ctermbg=None
+"hi Folded ctermbg=None
 
-set foldtext=Hassu()
-set fdm=syntax
+"set foldtext=Hassu()
+"set fdm=syntax
 
-set fillchars=vert:\|,fold:\ 
+"set fillchars=vert:\|,fold:\ 
 
 " === Variables ===============================================================
 filetype plugin on
@@ -137,10 +137,11 @@ vnoremap > >gv
 vnoremap < <gv
 nnoremap <leader>v `[v`]
 
-" Insert
+" Insert & delete
 nnoremap S i_<Esc>r
+nnoremap X xh
 
-" Insert mode CTRL mappings
+" Make the previous word UPPER CASE
 inoremap <C-u> <esc>hviwUel
 
 " Toggle line numbers
