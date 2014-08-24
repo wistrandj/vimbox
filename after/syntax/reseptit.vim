@@ -1,6 +1,0 @@
-syn match Constant "           *\zs=*"
-syn match NonText "           *\zs[a-zA-Z][a-zA-Z ]*"
-syn match NonText "Ainekset:"
-syn match NonText "Ohje:"
-syn match MoreMsg "^- .*"
-syn match Special "^#.*"
