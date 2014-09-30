@@ -1,4 +1,3 @@
-
 "fun! Hassu()
     "let firstline = getline(v:foldstart)
     "let spaces = substitute(firstline, '[^ ].*$', '', '')
@@ -48,7 +47,7 @@ set list            " show ws as visible char
 set listchars=tab:>\ ,trail:·
 set noshowmode
 set scrolloff=2     " Keep a few lines always visible around cursor
-set showbreak=\
+" set showbreak=\
 set splitright
 set ttyfast
 set wildmenu
@@ -116,20 +115,18 @@ inoremap <C-x><C-o> <C-x><C-o><C-p>
 
 " Escaping and moving cursor
 inoremap kj <Esc>l
-inoremap KJ <Esc>l:echoerr "Caps is ON!"<CR>
-inoremap Kj <Esc>l
 noremap , ;
 noremap ; ,
-noremap j gj
-noremap k gk
+" noremap j gj
+" noremap k gk
 map ö [
 map ä ]
 map Ö {
 map Ä }
 
 " Search
-nnoremap <leader>hw :set invhls<CR>*#
-nnoremap <leader>hW :set hls<CR>*#
+nnoremap <leader>h :set hls<CR>*#
+nnoremap <leader>H :set nohls<CR>
 
 " Fold
 nnoremap <Space> za
@@ -182,7 +179,7 @@ nmap <leader>F ++F
 
 " === Initialize ==============================================================
 " Clear registers
-let s:a = "abcdefghijklmnopqrstuvxwxyz"
+let s:a = "abcdefghijklmnopqrstuvxwxyz0123456789\""
 for i in range(0, len(s:a) - 1)
     exe 'let @' . s:a[i] . '= ""'
 endfor

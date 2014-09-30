@@ -8,15 +8,9 @@ nnoremap <leader>gs :call git#status()<CR>
 nnoremap <leader>gc :call git#commit()<CR>
 
 " Insert Something
-nnoremap <expr> <leader>hh <SID>ToggleHilightSearch()
 nn <leader>mi <ESC>:call <SID>DropRestBelow()<CR>ka
 nn <leader>im <ESC>:call <SID>InsertBelow()<CR>
 nmap <leader>cm :call <SID>DropRestBelow()<CR>-ccka
-function! s:ToggleHilightSearch()
-    let nextstate = (&hls == 0) ? "on" : "off"
-    set invhls
-    echo "HLS " . nextstate
-endfunction
 function! s:DropRestBelow()
     let col = col('.')
     exe "normal! i\<CR>\<ESC>0d^" . (col - 1) . "i \<ESC>"
