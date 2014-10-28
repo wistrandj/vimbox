@@ -1,18 +1,3 @@
-"fun! Hassu()
-    "let firstline = getline(v:foldstart)
-    "let spaces = substitute(firstline, '[^ ].*$', '', '')
-    "let nlines = v:foldend - v:foldstart
-    "let s = printf("| (%d)", nlines)
-    "return spaces . s
-"endfun
-
-"hi Folded ctermbg=None
-
-"set foldtext=Hassu()
-"set fdm=syntax
-
-"set fillchars=vert:\|,fold:\ 
-
 " === Variables ===============================================================
 filetype plugin on
 syntax on
@@ -40,6 +25,7 @@ set nobackup
 set autowrite
 
 " View
+call matchadd('Colorcolumn', '\%81v', 100)
 set cursorline
 set display=lastline
 set lazyredraw      " don't redraw while macro execution

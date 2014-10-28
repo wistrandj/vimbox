@@ -21,7 +21,7 @@ function! OpenZathura()
 endfunction
 
 nnoremap <buffer> <expr> <leader>mr OpenZathura()
-nnoremap <buffer> <leader>mc :make<CR>:call OpenZathura()<CR>
+nnoremap <buffer> <leader>mc :make<CR>
 
 " Bold/italic words
 nnoremap <buffer> <leader>bf i{\bf<space><esc>ea}<esc>
