@@ -96,6 +96,18 @@ nn <right> <C-W>>
 nn <down> <C-W>+
 nn <up> <C-W>-
 
+" High light words when searching
+nn <silent> n n:call <SID>HLnext()<CR>
+nn <silent> N N:call <SID>HLnext()<CR>
+fun! s:HLnext()
+    let pattern = '\c\%#'.@/
+    let key = matchadd('ErrorMsg', pattern, 101)
+    redraw
+    sleep 70m
+    call matchdelete(key)
+    redraw
+endfun
+
 " === Autoload ================================================================
 " Runfile
 command! Run call runfile#Run()
@@ -126,5 +138,4 @@ function! s:mygrep(filepattern, ...)
     endif
     call refactor#grep(word, a:filepattern)
 endfunction
-
 

@@ -25,7 +25,7 @@ set nobackup
 set autowrite
 
 " View
-call matchadd('Colorcolumn', '\%81v', 100)
+call matchadd('DiffChange', '\%81v', 100)
 set cursorline
 set display=lastline
 set lazyredraw      " don't redraw while macro execution
