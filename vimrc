@@ -73,6 +73,7 @@ set synmaxcol=800   " Do not match patterns for long lines
 set gdefault        " s///g always
 set ignorecase      " Don't care about case in searches
 set smartcase
+set incsearch
 
 set nojoinspaces
 
@@ -87,6 +88,7 @@ nnoremap <leader>ta :tabprev<CR>
 nnoremap <leader>tw :tabnext<CR>
 nnoremap <leader>tc :tabclose<CR>
 
+nnoremap \e :e#<CR>
 nnoremap <leader>b :ls<CR>:b
 
 nnoremap <C-h> :wincmd h<CR>
@@ -152,10 +154,10 @@ nnoremap +r :CtrlPClearCache<CR>
 runtime bundle/pathogen/autoload/pathogen.vim
 call pathogen#infect()
 
-nnoremap +s :Scratch<CR>
+nnoremap \s :Scratch<CR>
 
 " NERDtree
-nnoremap +t :NERDTreeToggle<CR>
+nnoremap \t :NERDTreeToggle<CR>
 
 " Easymotion
     " Hide unneeded easymotion-shortcuts behind ++
