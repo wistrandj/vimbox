@@ -6,20 +6,21 @@
 
 " Inserting
 
-fun! matchingChars#InsertLeftParenthesis(paren)
-    " XXX: this is not in use, delete?
-    let matching = get(s:matchingChars, a:paren)
-    let numline = line('.')
-    let line = strpart(getline('.'), col('.')-1)
-            \ . getline(numline+1)
-            \ . getline(numline+2)
-    " if line =~ "^[^". a:paren . "]*" . matching
-    "     return a:paren
-    " endif
-    return a:paren . matching . "\<left>"
+fun! matchingChars#InsertLeft(paren)
+    let lf_ch = a:paren
+    let rg_ch = get(s:matchingChars, lf_ch, '@')
+
+    let [_, ln, cl, _] = getpos('.')
+    let line = getline(ln)
+
+    if (line[cl - 1] == '"' || line[cl - 1] == "'")
+        return lf_ch
+    endif
+
+    return lf_ch . rg_ch . "\<left>"
 endfun
 
-fun! matchingChars#InsertRightParenthesis(paren)
+fun! matchingChars#InsertRight(paren)
     " Insert right parenthesis if there is no one under cursor
     let char = strpart(getline("."), col(".") - 1, 1)
     if (char == a:paren)
@@ -34,23 +35,33 @@ fun! matchingChars#InsertQuote(quote)
         return "\<right>"
     endif
 
-    let numquotes = s:CountChars(getline('.'), a:quote)
-    if numquotes == 0 || numquotes % 2 == 0
-        return a:quote . a:quote . "\<left>"
+    if s:is_inside_quotes(a:quote)
+        return '\' . a:quote
     endif
-    return a:quote
+
+    return a:quote . a:quote . "\<left>"
 endfun
 
-fun! s:CountChars(str, ch)
-    let cnt = 0
-    for i in range(0, len(a:str))
-        if a:str[i] == a:ch
-            let cnt += 1
-        endif
-    endfor
-    return cnt
+fun! s:line_left_part()
+    return strpart(getline('.'), col('.') - 1)
 endfun
 
+fun! s:line_right_part()
+    return strpart(getline('.'), 0, col('.') - 1)
+endfun
+
+fun! s:nr_non_escaped_quotes(line, quote)
+    let line = substitute(a:line, '\\' . a:quote, '', 'g')
+    let line = substitute(line, '[^\' . a:quote . ']', '', 'g')
+    return strlen(line)
+endfun
+
+fun! s:is_inside_quotes(quote)
+    let lf_nr = s:nr_non_escaped_quotes(s:line_left_part(), a:quote)
+    let rg_nr = s:nr_non_escaped_quotes(s:line_right_part(), a:quote)
+
+    return (lf_nr % 2 == 1) && rg_nr > 0
+endfun
 
 " Removing
 
