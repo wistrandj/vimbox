@@ -37,7 +37,7 @@ fun! s:alternate_file(...)
         let folder = s:include_folder_location()
         let file = s:change_file_extension(file, 'c')
     elseif s:is_source_file(file)
-        let folder = s:source_folder_location
+        let folder = s:source_folder_location()
         let file = s:change_file_extension(file, 'h')
     else
         throw "s:alternate_file: " . file . " is not a C file"
@@ -48,76 +48,33 @@ endfun
 
 " === Public ==================================================================
 
-" fun! langc#find_src_folder()
-"     if s:src_folder != ''
-"         return s:src_folder
-"     elseif isdirectory('src')
-"         let s:src_folder = 'src/'
-"     endif
-" 
-"     return s:src_folder
-" endfun
+fun! s:create_and_init_file(name, type)
+    let contents = 0
 
-fun! langc#init_header_with(name, contents)
-    let path = langc#find_src_folder() . a:name . '.h'
-    let lines = s:make_header_file_contents(a:name, a:contents)
-    return s:create_file(path, lines)
-endfun
-fun! langc#init_source_with(name, contents)
-    let path = langc#find_src_folder() . a:name . '.c'
-    let lines = s:make_source_file_contents(a:name, a:contents)
-    call s:create_file(path, lines)
+    if a:type == "header"
+        let contents = s:empty_header(a:name)
+        let path = s:include_folder_location() . a:name . '.h'
+    elseif a:type == "source"
+        let contents = s:empty_source(a:name)
+        let path = s:source_folder_location() . a:name . '.c'
+    else
+        throw "s:init_file: Invalid a:type " . a:type
+    endif
+
+    call s:create_file(path, contents)
 endfun
 
 fun! langc#init_header_source(name)
-    call langc#init_header_with(a:name, [])
-    call langc#init_source_with(a:name, [])
+    call s:create_and_init_file(a:name, "header")
+    call s:create_and_init_file(a:name, "source")
 endfun
 
 fun! langc#alternate_file()
-    let ext = expand("%:e")
-    let head = expand('%:h')
-    let filename = expand('%:t:r')
-
-    if ext == 'h' 
-        return s:alternate_from_header(head . '/', filename)
-    elseif ext == 'c'
-        return s:alternate_from_source(head . '/', filename)
-    else
-        echoerr "This is not a C file"
-        throw 1
-    endif
-
-endfun
-
-fun! s:alternate_from_header(head, filename)
-    if a:head == '.'
-        return a:filename . '.c'
-    elseif a:head =~ "\\<include\\>"
-        let altdir = substitute(a:head, '.*\zs\<include\>', 'src', '')
-        return altdir . a:filename . '.c'
-    endif
-
-    return a:head . a:filename . '.c'
-endfun
-
-fun! s:alternate_from_source(head, filename)
-    if a:head == '.'
-        return a:filename . '.h'
-    elseif a:head =~ "\\<src\\>"
-        let altdir = substitute(a:head, '.*\zs\<src\>', 'include', '')
-        ec "altdir = " . altdir
-        if isdirectory(altdir)
-            return altdir . a:filename . '.h'
-        endif
-    endif
-
-    return a:head . a:filename . '.h'
+    let file = expand("%:r")
+    return s:alternate_file(file)
 endfun
 
 " === Private =================================================================
-
-" let s:src_folder = ''
 
 fun! s:create_file(path, lines)
     if s:file_exists_and_not_empty(a:path)
@@ -149,18 +106,3 @@ fun! s:empty_source(name)
 
     return ['#include <' . header . '>', '', '']
 endfun
-
-" fun! s:make_header_file_contents(name, contents)
-"     let macro = substitute(toupper(a:name . "_H"), '.*/', '', 'g')
-"     let lines1 = ['#ifndef ' . macro, '#define ' . macro, '']
-"     let lines2 = a:contents
-"     let lines3 = ['', '#endif // ' . macro]
-"     return extend(extend(lines1, lines2), lines3)
-" endfun
-" 
-" fun! s:make_source_file_contents(name, contents)
-"     let path = langc#find_src_folder() . a:name . '.c'
-"     let hpath = a:name . '.h'
-"     let lines = ['#include "' . hpath . '"', '']
-"     return extend(lines, a:contents)
-" endfun
