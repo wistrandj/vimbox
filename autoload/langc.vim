@@ -1,24 +1,72 @@
-" === Public ==================================================================
 
-fun! langc#find_src_folder()
-    if s:src_folder != ''
-        return s:src_folder
-    elseif isdirectory('src')
-        let s:src_folder = 'src/'
+fun! s:strip_folders(path)
+    return substitute(a:path, '.*/', '', 'g')
+endfun
+
+fun! s:include_folder_location()
+    if isdirectory("include/") | return "include/" | endif
+
+    return s:src_folder_location()
+endfun
+
+fun! s:source_folder_location()
+    if isdirectory("src/")
+        return "src/"
+    else
+        return "./"
+    endif
+endfun
+
+fun! s:is_header_file(filename)
+    return '.h' == strpart(a:filename, len(a:filename) - 2)
+endfun
+
+fun! s:is_source_file(filename)
+    return '.c' == strpart(a:filename, len(a:filename) - 2)
+endfun
+
+fun! s:change_file_extension(filename, ext)
+    return substitute(a:filename, '\.[^\.]*$', '.' . a:ext, '')
+endfun
+
+fun! s:alternate_file(...)
+    let file = substitute(bufname("%"), '.*/', '', 'g')
+    if (a:0 > 0) | let file = a:1 | endif
+
+    if s:is_header_file(file)
+        let folder = s:include_folder_location()
+        let file = s:change_file_extension(file, 'c')
+    elseif s:is_source_file(file)
+        let folder = s:source_folder_location
+        let file = s:change_file_extension(file, 'h')
+    else
+        throw "s:alternate_file: " . file . " is not a C file"
     endif
 
-    return s:src_folder
+    return folder . file
 endfun
+
+" === Public ==================================================================
+
+" fun! langc#find_src_folder()
+"     if s:src_folder != ''
+"         return s:src_folder
+"     elseif isdirectory('src')
+"         let s:src_folder = 'src/'
+"     endif
+" 
+"     return s:src_folder
+" endfun
 
 fun! langc#init_header_with(name, contents)
     let path = langc#find_src_folder() . a:name . '.h'
     let lines = s:make_header_file_contents(a:name, a:contents)
-    return s:init_file(path, lines)
+    return s:create_file(path, lines)
 endfun
 fun! langc#init_source_with(name, contents)
     let path = langc#find_src_folder() . a:name . '.c'
     let lines = s:make_source_file_contents(a:name, a:contents)
-    call s:init_file(path, lines)
+    call s:create_file(path, lines)
 endfun
 
 fun! langc#init_header_source(name)
@@ -69,10 +117,10 @@ endfun
 
 " === Private =================================================================
 
-let s:src_folder = ''
+" let s:src_folder = ''
 
-fun! s:init_file(path, lines)
-    if s:source_file_exists_and_not_empty(a:path)
+fun! s:create_file(path, lines)
+    if s:file_exists_and_not_empty(a:path)
         echoerr a:path. " already exists"
         return 0
     endif
@@ -81,25 +129,38 @@ fun! s:init_file(path, lines)
     return 1
 endfun
 
-fun! s:source_file_exists_and_not_empty(file)
+fun! s:file_exists_and_not_empty(file)
     if !filereadable(a:file)
         return 0
     else
-        return !empty(readfile(a:file))
+        return !empty(readfile(a:file), 0, 1)
     endif
 endfun
 
-fun! s:make_header_file_contents(name, contents)
-    let macro = substitute(toupper(a:name . "_H"), '.*/', '', 'g')
-    let lines1 = ['#ifndef ' . macro, '#define ' . macro, '']
-    let lines2 = a:contents
-    let lines3 = ['', '#endif // ' . macro]
-    return extend(extend(lines1, lines2), lines3)
+fun! s:empty_header(name)
+    let macro = s:strip_folders(toupper(a:name)) . '_H'
+    return
+        ['#ifndef ' . macro, '#define ' . macro, '', '', '', '#endif // ' . macro]
 endfun
 
-fun! s:make_source_file_contents(name, contents)
-    let path = langc#find_src_folder() . a:name . '.c'
-    let hpath = a:name . '.h'
-    let lines = ['#include "' . hpath . '"', '']
-    return extend(lines, a:contents)
+fun! s:empty_source(name)
+    let header = s:change_file_extension(a:name, 'h')
+    let header = s:strip_folders(a:name)
+
+    return ['#include <' . header . '>', '', '']
 endfun
+
+" fun! s:make_header_file_contents(name, contents)
+"     let macro = substitute(toupper(a:name . "_H"), '.*/', '', 'g')
+"     let lines1 = ['#ifndef ' . macro, '#define ' . macro, '']
+"     let lines2 = a:contents
+"     let lines3 = ['', '#endif // ' . macro]
+"     return extend(extend(lines1, lines2), lines3)
+" endfun
+" 
+" fun! s:make_source_file_contents(name, contents)
+"     let path = langc#find_src_folder() . a:name . '.c'
+"     let hpath = a:name . '.h'
+"     let lines = ['#include "' . hpath . '"', '']
+"     return extend(lines, a:contents)
+" endfun
