@@ -136,7 +136,7 @@ fun! s:run_output()
     try
         let out = s:run_C()
         if !empty(out)
-            call OutputText(out)
+            call output#text(out)
         endif
     endtry
 endfun

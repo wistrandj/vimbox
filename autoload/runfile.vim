@@ -41,7 +41,7 @@ endfun
 fun! runfile#RunFileToOutput()
     " NOTE: depends on outputbuffer.vim
     let out = s:RunCurrentFile()
-    call OutputText(out)
+    call output#text(out)
     call s:RunAfterCommands()
 endfun
 
@@ -88,14 +88,14 @@ fun! s:RunAfterCommands()
 endfun
 
 fun! s:Substitute(patterns)
-    call SwitchToOutputWindow()
+    call output#switch_to()
     for pat in a:patterns
         silent exe "%s/" . pat
     endfor
     wincmd p
 endfun
 fun! s:FilterCommand(cmd, patterns)
-    call SwitchToOutputWindow()
+    call output#switch_to()
     for pat in a:patterns
         silent exe a:cmd . "/" . pat . "/d"
     endfor
@@ -103,7 +103,7 @@ fun! s:FilterCommand(cmd, patterns)
 endfun
 
 fun! s:RunExplicitCommands(cmds)
-    call SwitchToOutputWindow()
+    call output#switch_to()
     exe "normal! gg0"
     for cmd in a:cmds
         silent exe cmd

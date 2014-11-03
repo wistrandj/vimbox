@@ -157,7 +157,7 @@ call pathogen#infect()
 nnoremap \s :Scratch<CR>
 
 " NERDtree
-nnoremap \t :NERDTreeToggle<CR>
+nnoremap \N :NERDTreeToggle<CR>
 
 " Easymotion
     " Hide unneeded easymotion-shortcuts behind ++

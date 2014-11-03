@@ -90,12 +90,6 @@ function! s:open_temporary_file(...)
     exe 'edit ' . g:mystuff_temporary_file . suffix
 endfunction
 
-" Change window size
-nn <left> <C-W><
-nn <right> <C-W>>
-nn <down> <C-W>+
-nn <up> <C-W>-
-
 " High light words when searching
 nn <silent> n n:call <SID>HLnext()<CR>
 nn <silent> N N:call <SID>HLnext()<CR>
@@ -109,6 +103,9 @@ fun! s:HLnext()
 endfun
 
 " === Autoload ================================================================
+" Output
+nnoremap \O :call output#toggle()<CR>
+
 " Runfile
 command! Run call runfile#Run()
 command! Runout call runfile#RunFileToOutput()

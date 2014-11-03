@@ -9,7 +9,7 @@
 " * CloseOutput() closes the window
 " * OutputText(<string>) clears the output window and shows the <strings> in it
 " * OutputAppend(<string>) appends <string> to the end of output buffer
-" * SwitchToOutputWindow() changes the window to output window
+" * output#switch_to() changes the window to output window
 "
 " All functions but CloseOutput() opens the window if it's not already open.
 "
@@ -23,22 +23,19 @@ end
 
 let g:output_loaded = 1
 
-nnoremap <leader>o :call InvOutput()<CR>
-
-
 " ------------------------------------------------------------------------------
 " public interface
 
-fun! InvOutput()
-    if s:OutputWindowNumber() == -1
-        cal OpenOutput()
+fun! output#toggle()
+    if s:window_nr() == -1
+        cal output#open()
     else
-        cal CloseOutput()
+        cal output#close()
     endif
 endfun
 
-fun! OpenOutput()
-    if s:OutputWindowNumber() != -1
+fun! output#open()
+    if s:window_nr() != -1
         return
     end
 
@@ -52,8 +49,8 @@ fun! OpenOutput()
     wincmd p
 endfun
 
-fun! CloseOutput()
-    let nr = s:OutputWindowNumber()
+fun! output#close()
+    let nr = s:window_nr()
     if nr != -1
         exe nr . " wincmd w"
         wincmd c
@@ -61,21 +58,21 @@ fun! CloseOutput()
     end
 endfun
 
-fun! OutputText(out)
-    call SwitchToOutputWindow()
+fun! output#text(out)
+    call output#switch_to()
     exe "normal! ggdGi" . a:out
     wincmd p
 endfun
 
-fun! OutputAppend(out)
-    call SwitchToOutputWindow()
+fun! output#append(out)
+    call output#switch_to()
     call append(line('$'), a:out)
     wincmd p
 endfun
 
-fun! SwitchToOutputWindow()
-    call OpenOutput()
-    exe s:OutputWindowNumber() . " wincmd w"
+fun! output#switch_to()
+    call output#open()
+    exe s:window_nr() . " wincmd w"
 endfun
 
 
@@ -83,7 +80,7 @@ endfun
 " ------------------------------------------------------------------------------
 " Private functions
 
-fun! s:SetDefaultValue(variable, value)
+fun! s:set_default_value(variable, value)
     let rval = a:value
     if (type(a:value) == 1) " String
         let rval = "\"" . a:value . "\""
@@ -94,10 +91,10 @@ fun! s:SetDefaultValue(variable, value)
     end
 endfun
 
-call s:SetDefaultValue("g:output_window_size", 7)
-call s:SetDefaultValue("g:output_window_name", "__output__")
+call s:set_default_value("g:output_window_size", 7)
+call s:set_default_value("g:output_window_name", "__output__")
 
-fun! s:OutputWindowNumber()
+fun! s:window_nr()
     return bufwinnr(g:output_window_name)
 endfun
 
