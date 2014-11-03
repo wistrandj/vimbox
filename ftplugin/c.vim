@@ -117,7 +117,6 @@ fun! s:compile()
     endif
 
     return 1
-
 endfun
 
 
@@ -210,8 +209,6 @@ endfun
 fun! s:cmd_split_alternate_file(splitmode)
     " PARAM: splitmode may be either '' or 'v' for horizontal/vertical split
     let file = expand("%")
-    "let otherend = (match(file, '.h$') >= 0) ? '.c' : '.h'
-    "let other = substitute(file, '..$', otherend, '')
     let altfile = langc#alternate_file()
 
     if filereadable(altfile)
