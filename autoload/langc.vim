@@ -1,3 +1,17 @@
+" === Public ==================================================================
+
+fun! langc#init_header_source(name)
+    call s:create_and_init_file(a:name, "header")
+    call s:create_and_init_file(a:name, "source")
+endfun
+
+fun! langc#alternate_file()
+    let file = expand("%:t")
+    return s:alternate_file(file)
+endfun
+
+
+" === Common private functions ================================================
 
 fun! s:strip_folders(path)
     return substitute(a:path, '.*/', '', 'g')
@@ -5,16 +19,15 @@ endfun
 
 fun! s:include_folder_location()
     if isdirectory("include/") | return "include/" | endif
-
-    return s:src_folder_location()
+    return s:source_folder_location()
 endfun
 
 fun! s:source_folder_location()
     if isdirectory("src/")
         return "src/"
-    else
-        return "./"
     endif
+
+    return "./"
 endfun
 
 fun! s:is_header_file(filename)
@@ -34,10 +47,10 @@ fun! s:alternate_file(...)
     if (a:0 > 0) | let file = a:1 | endif
 
     if s:is_header_file(file)
-        let folder = s:include_folder_location()
+        let folder = s:source_folder_location()
         let file = s:change_file_extension(file, 'c')
     elseif s:is_source_file(file)
-        let folder = s:source_folder_location()
+        let folder = s:include_folder_location()
         let file = s:change_file_extension(file, 'h')
     else
         throw "s:alternate_file: " . file . " is not a C file"
@@ -46,10 +59,11 @@ fun! s:alternate_file(...)
     return folder . file
 endfun
 
-" === Public ==================================================================
+" === Creation of a C file ====================================================
 
 fun! s:create_and_init_file(name, type)
-    let contents = 0
+    let path=""
+    let contents=[]
 
     if a:type == "header"
         let contents = s:empty_header(a:name)
@@ -63,18 +77,6 @@ fun! s:create_and_init_file(name, type)
 
     call s:create_file(path, contents)
 endfun
-
-fun! langc#init_header_source(name)
-    call s:create_and_init_file(a:name, "header")
-    call s:create_and_init_file(a:name, "source")
-endfun
-
-fun! langc#alternate_file()
-    let file = expand("%:r")
-    return s:alternate_file(file)
-endfun
-
-" === Private =================================================================
 
 fun! s:create_file(path, lines)
     if s:file_exists_and_not_empty(a:path)
@@ -90,19 +92,19 @@ fun! s:file_exists_and_not_empty(file)
     if !filereadable(a:file)
         return 0
     else
-        return !empty(readfile(a:file), 0, 1)
+        return !empty(readfile(a:file, 0, 1))
     endif
 endfun
 
 fun! s:empty_header(name)
     let macro = s:strip_folders(toupper(a:name)) . '_H'
-    return
-        ['#ifndef ' . macro, '#define ' . macro, '', '', '', '#endif // ' . macro]
+    let lst1 = ['#ifndef ' . macro, '#define ' . macro]
+    let lst2 = ['', '', '#endif // ' . macro]
+    return extend(lst1, lst2)
 endfun
 
 fun! s:empty_source(name)
     let header = s:change_file_extension(a:name, 'h')
     let header = s:strip_folders(a:name)
-
-    return ['#include <' . header . '>', '', '']
+    return ['#include "' . header . '.h"', '', '']
 endfun
