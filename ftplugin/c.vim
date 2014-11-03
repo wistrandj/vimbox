@@ -55,7 +55,7 @@ nn <leader>iN :call <SID>cmd_include_new_header(0)<CR>
 nn <leader>sxy :s/x/y<CR>
 
     " Insert a colon after next parenthesis
-ino <expr> ; (getline('.')[col('.') - 1] == ')') ? "\<right>;\<left>\<esc>" : ";"
+ino <expr> ; <SID>insert_semicolon()
 ino <C-f> ();<ESC>
 
 " === Abbreviations for obnoxious words =======================================
@@ -153,6 +153,15 @@ endfun
 
 
 " === Private =================================================================
+
+fun! s:insert_semicolon()
+    let line = strpart(getline('.'), col('.') - 1)
+    if line == ')'
+        return "\<right>;\<esc>"
+    else
+        return ";"
+    endif
+endfun
 
 
 
