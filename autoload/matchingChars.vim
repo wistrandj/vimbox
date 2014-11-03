@@ -1,19 +1,44 @@
-" TODO: clean the code
-" - public functions:
-"   matchingChars#InsertSomething("(")
-"   matchingChars#RemoveSomething("(")
-"
+let s:matchingChars = {'(': ')', '[': ']', '{': '}'}
+let s:parens = ['(', ')', '[', ']', '{', '}']
 
-" Inserting
+fun! s:strind(str, ch)
+    for i in range(0, len(a:str))
+        if (a:str[i] == a:ch) | return i | endif
+    endfor
+
+    return -1
+endfun
+
+fun! s:is_paren(ch)
+    return -1 != index(s:parens, a:ch)
+endfun
+
+fun! s:is_quote(ch)
+    return a:ch == '"' || a:ch == "'"
+endfun
+
+fun! s:matching_char(ch)
+    let match = get(s:matchingChars, a:ch, '@')
+    if (match != '@')
+        return match
+    else if a:ch == '"' || a:ch == "'"
+        return a:ch
+    endif
+
+    throw "s:matching_char: Invalid character " . a.ch
+endfun
+
+" === Insert parens ===========================================================
 
 fun! matchingChars#InsertLeft(paren)
     let lf_ch = a:paren
-    let rg_ch = get(s:matchingChars, lf_ch, '@')
+    let rg_ch = s:matching_char(lf_ch)
 
     let [_, ln, cl, _] = getpos('.')
     let line = getline(ln)
+    let prev_ch = line[cl - 2]
 
-    if (line[cl - 1] == '"' || line[cl - 1] == "'")
+    if cl < len(line) || (s:is_quote(line[cl - 2]))
         return lf_ch
     endif
 
@@ -29,25 +54,30 @@ fun! matchingChars#InsertRight(paren)
     return a:paren
 endfun
 
+" === Insert quotes ===========================================================
+
 fun! matchingChars#InsertQuote(quote)
-    let char = strpart(getline("."), col(".") - 1, 1)
+    let line = getline('.')
+    let char = strpart(line, col(".") - 1, 1)
     if (char == a:quote)
         return "\<right>"
     endif
 
     if s:is_inside_quotes(a:quote)
         return '\' . a:quote
+    elseif s:is_imbalanced_quotes(a:quote)
+        return a:quote
     endif
 
     return a:quote . a:quote . "\<left>"
 endfun
 
 fun! s:line_left_part()
-    return strpart(getline('.'), col('.') - 1)
+    return strpart(getline('.'), 0, col('.') - 1)
 endfun
 
 fun! s:line_right_part()
-    return strpart(getline('.'), 0, col('.') - 1)
+    return strpart(getline('.'), col('.') - 1)
 endfun
 
 fun! s:nr_non_escaped_quotes(line, quote)
@@ -63,22 +93,27 @@ fun! s:is_inside_quotes(quote)
     return (lf_nr % 2 == 1) && rg_nr > 0
 endfun
 
-" Removing
+fun! s:is_imbalanced_quotes(quote)
+    let lf_nr = s:nr_non_escaped_quotes(s:line_left_part(), a:quote)
+    let rg_nr = s:nr_non_escaped_quotes(s:line_right_part(), a:quote)
 
-let s:matchingChars = {"(": ")", "[": "]", "{": "}"}
+    return (lf_nr % 2) + (rg_nr % 2) == 1
+endfun
+
+" === Remove parens ===========================================================
 
 fun! s:RemoveParenthesis(left)
-    let numline = line('.')
-    let line = strpart(getline(numline), col('.')-2)
-           \ . getline(numline + 1)
-           \ . getline(numline + 2)
-    let matching = get(s:matchingChars, a:left, '@')
-
-    if (line =~ "^" . a:left . " *" . matching)
-        return "\<esc>da" . a:left . "a"
+    let ch = strpart(getline('.'), col('.') - 2, 2)
+    if len(ch) == 2
+        if s:is_paren(ch[0]) && ch[1] == s:matching_char(ch[0])
+            return "\<right>\<BS>\<BS>"
+        endif
     endif
+
     return "\<BS>"
 endfun
+
+" === Remove quotes ===========================================================
 
 fun! s:RemoveQuotes(left)
     let line = strpart(getline('.'), col('.') - 2)
@@ -93,6 +128,8 @@ fun! s:RemoveQuotes(left)
     endif
     return "\<BS>"
 endfun
+
+" === Remove parens and quotes ================================================
 
 fun! matchingChars#RemoveSomething()
     let ch = strpart(getline('.'), col('.')-2, 1)
