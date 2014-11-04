@@ -51,8 +51,10 @@ hi MatchParen ctermbg=6 ctermfg=0
 hi VertSplit cterm=none
 hi Folded ctermfg=6 ctermbg=8
     " Swap statusline color when in insert mode
-autocmd InsertEnter * hi StatusLine ctermfg=6
-autocmd InsertLeave * hi StatusLine ctermfg=7
+" autocmd InsertEnter * hi StatusLine ctermfg=6
+" autocmd InsertLeave * hi StatusLine ctermfg=7
+autocmd InsertEnter * echohl StatusLineNC | echo "-- INSERT --" | echohl None
+autocmd InsertLeave * echo ""
 
 set showmatch
 set matchtime=2
