@@ -1,9 +1,3 @@
-" TODO
-" - make a shortcut key for MoveHeader
-"   - use ranges: 2<key> -> moves two lines to header
-" - vmap gc <yank selected text and (c)hange it
-" - vmap gn <yank selected text>
-
 let &l:colorcolumn=81
 hi ColorColumn ctermbg=0
 
@@ -210,7 +204,6 @@ endfun
 
 fun! s:cmd_split_alternate_file(splitmode)
     " PARAM: splitmode may be either '' or 'v' for horizontal/vertical split
-    let file = expand("%")
     let altfile = langc#alternate_file()
 
     if filereadable(altfile)
