@@ -1,2 +1,2 @@
-let g:cext= 'cpp'
-let g:hext = 'hpp'
+let g:cext= '.cpp'
+let g:hext = '.hpp'

@@ -272,8 +272,7 @@ fun! s:cmd_init_files(...)
         return
     endif
 
-    let hfile = langc#init_header_source(name)
-    let cfile = substitute(hfile, '.h$', '.c', '')
+    call langc#init_header_source(name)
 
     " Reload CtrlP's cache if it's loaded
     if exists("g:loaded_ctrlp") | CtrlPClearCache | endif

@@ -1,6 +1,6 @@
-if !exists(g:cext)
-    let g:cext = 'c'
-    let g:hext = 'h'
+if !exists("g:cext")
+    let g:cext = '.c'
+    let g:hext = '.h'
 endif
 
 " === Public ==================================================================
@@ -100,6 +100,10 @@ fun! s:empty_header(name)
     let lst1 = ['#ifndef ' . macro, '#define ' . macro]
     let lst2 = ['', '', '#endif // ' . macro]
     return extend(lst1, lst2)
+endfun
+
+fun! s:change_file_extension(name, ext)
+    return substitute(a:name, '[^\.\/]*$', a:ext, '')
 endfun
 
 fun! s:empty_source(name)
