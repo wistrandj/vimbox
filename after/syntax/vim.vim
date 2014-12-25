@@ -5,13 +5,6 @@ syntax region vimFoldFunc
 \    transparent
 \    fold
 
-syntax region vimFoldSection
-\    start="\" SECTION"
-\    end="\" ENDSECTION"
-\    keepend
-\    transparent
-\    fold
-
 set foldmethod=syntax
 
 set foldtext=MyFoldText()

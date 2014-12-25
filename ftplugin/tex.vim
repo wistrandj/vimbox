@@ -2,6 +2,7 @@
 "
 
 set tw=80
+let s:pdf_file = ""
 
 function! AddBlockAroundSelection() range
     " FIXME
@@ -15,9 +16,20 @@ endfunction
 vnoremap <buffer> <leader>be :call AddBlockAroundSelection()<CR>
 
 function! OpenZathura()
-    let file = getreg("%")
-    let pdf = strpart(file, 0, len(file) - 3) . "pdf"
-    call system("zathura " . pdf . " &")
+    if (!filereadable(s:pdf_file))
+        let found = split(system('find -name "*pdf" -maxdepth 2'))
+
+        if empty(found)
+            echoerr "Couldn't find PDF file"
+            return
+        elseif len(found)
+            echo "Multiple PDF files! Choosing the first one"
+        endif
+
+        let s:pdf_file = found[0]
+    endif
+
+    call system("zathura " . s:pdf_file . " &")
 endfunction
 
 nnoremap <buffer> <expr> <leader>mr OpenZathura()

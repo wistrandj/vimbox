@@ -1,14 +1,6 @@
 let s:matchingChars = {'(': ')', '[': ']', '{': '}'}
 let s:parens = ['(', ')', '[', ']', '{', '}']
 
-fun! s:strind(str, ch)
-    for i in range(0, len(a:str))
-        if (a:str[i] == a:ch) | return i | endif
-    endfor
-
-    return -1
-endfun
-
 fun! s:is_paren(ch)
     return -1 != index(s:parens, a:ch)
 endfun

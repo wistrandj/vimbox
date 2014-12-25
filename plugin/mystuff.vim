@@ -93,14 +93,46 @@ endfunction
 " High light words when searching
 nn <silent> n n:call <SID>HLnext()<CR>
 nn <silent> N N:call <SID>HLnext()<CR>
-fun! s:HLnext()
+function! s:HLnext()
     let pattern = '\c\%#'.@/
     let key = matchadd('ErrorMsg', pattern, 101)
     redraw
     sleep 70m
     call matchdelete(key)
     redraw
-endfun
+endfunction
+
+" Expand visual block to consecutive lines with same char on same col
+    " FIXME: snaps always (?) the the first non-ws character of the line
+    " TODO: Could this check indentation level
+function! s:consecutive_lines_with_char_on_column(ch, line, col, dir)
+    let next = a:line
+    let line = a:line
+    let end = 1
+    if (a:dir == 1)
+        let end = line('$')
+    endif
+
+    while line != end + a:dir
+        let next = line + a:dir
+
+        if getline(next)[a:col - 1] != a:ch
+            break
+        endif
+
+        let line = next
+    endwhile
+
+    return line
+endfunction
+function! s:expand_visual_block()
+    let ch = getline('.')[col('.') - 1]
+    let first = s:consecutive_lines_with_char_on_column(ch, line('.'), col('.'), -1)
+    let last = s:consecutive_lines_with_char_on_column(ch, line('.'), col('.'), 1)
+
+    exe "norm! \<C-v>" . first . "Go" . last . "G"
+endfunction
+nn <leader>gve :call <SID>expand_visual_block()<CR>
 
 " === Autoload ================================================================
 " Output
@@ -121,7 +153,7 @@ inoremap <expr> ) matchingChars#InsertRight(")")
 inoremap <expr> ] matchingChars#InsertRight("]")
 inoremap <expr> } matchingChars#InsertRight("}")
 inoremap <expr> " matchingChars#InsertQuote("\"")
-inoremap <expr> ' matchingChars#InsertQuote("'")
+" inoremap <expr> ' matchingChars#InsertQuote("'")
 
 imap <expr> <BS> matchingChars#RemoveSomething()
 

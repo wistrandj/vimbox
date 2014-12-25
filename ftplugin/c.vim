@@ -38,6 +38,7 @@ nn <buffer> <Leader>r :call <SID>run_echo()<CR>
 nn <buffer> <Leader>mar :call <SID>run_async()<CR>
 nn <buffer> <Leader>mr :call <SID>run_output()<CR>
 nn <buffer> <Leader>R :make<CR>:call <SID>run_output()<CR>
+    " NOTE: This is also defined in ftplugin/make.vim
 nn <buffer> <leader>mc :call <SID>compile()<CR>
 nn <buffer> <leader>mC :call <SID>make("clean")<CR>
 nn <buffer> <leader>mt :call <SID>make("tags")<CR>
@@ -79,6 +80,7 @@ ia st struct
 ia sta static
 ia bk break;
 
+ia cchar const char
 
 " Initialize registers
 exe 'let @l="$s\<CR>{\<CR>\<ESC>ddko"'
@@ -279,6 +281,9 @@ fun! s:cmd_init_files(...)
 
     let hfile = langc#init_header_source(name)
     let cfile = substitute(hfile, '.h$', '.c', '')
+
+    " Reload CtrlP's cache if it's loaded
+    if exists("g:loaded_ctrlp") | CtrlPClearCache | endif
 endfun
 
 
@@ -331,6 +336,27 @@ fun! s:include_new_header(headername, sys_header)
     echo 'Included ' . header
 endfun
 
+fun! s:abbrev_sys_header(header)
+    " Use abbreviations for system headers
+    let a = {'a': 'assert', 'm': 'math', 'io': 'stdio', 'str': 'string', 'lib': 'stdlib', 'uni': 'unistd'}
+    if (has_key(a, a:header))
+        return a[a:header]
+    endif
+
+    return a:header
+endfun
+
+
+fun! s:include_list_of_headers(headers, sys_headers)
+    for head in a:headers
+        let name = head
+        if a:sys_headers
+            let name = s:abbrev_sys_header(head)
+        endif
+
+        call s:include_new_header(name, a:sys_headers)
+    endfor
+endfun
 
     " FUNCTION: s:cmd_init_source_file
     " Ask user the name of header file to be included
@@ -342,17 +368,9 @@ fun! s:cmd_include_new_header(sys_header)
         let q = "Project header: "
     endif
 
-    let header = input(q)
+    let headers = split(input(q), ',')
 
-    " Use abbreviations for system headers
-    let a = {'a': 'assert', 'm': 'math', 'io': 'stdio', 'str': 'string', 'lib': 'stdlib', 'uni': 'unistd'}
-    if (has_key(a, header))
-        let header = a[header]
-    endif
-
-    if !empty(header)
-        call <SID>include_new_header(header, a:sys_header)
-    endif
+    call s:include_list_of_headers(headers, a:sys_header)
 endfun
 
 

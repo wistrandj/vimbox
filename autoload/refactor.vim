@@ -15,7 +15,7 @@ fun! refactor#grep(word, filepattern)
     call OutputText(lines)
 
     call SwitchToOutputWindow()
-    set ft=qf
+    set ft=qf " quickfix window's filetype
 endfun
 
 fun! s:readChanges()

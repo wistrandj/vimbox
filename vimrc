@@ -25,7 +25,8 @@ set nobackup
 set autowrite
 
 " View
-call matchadd('DiffChange', '\%81v', 100)
+     " this can be swapped on/off with keys "\hc"
+let s:hlcol80 = matchadd('DiffChange', '\%81v', 100)
 set cursorline
 set display=lastline
 set lazyredraw      " don't redraw while macro execution
@@ -124,7 +125,6 @@ nnoremap <Space> za
 " Visual
 vnoremap > >gv
 vnoremap < <gv
-nnoremap <leader>v `[v`]
 
 " Insert & delete
 nnoremap S i_<Esc>r
@@ -138,6 +138,27 @@ nnoremap <F9> :set invnu<CR>
 
 " Align with Tabular plugin
 vnoremap <leader>ta :Tabular /
+
+" Invert hilight of column 80
+nnoremap \hc :call InvHLcol80()<CR>
+fun! InvHLcol80()
+    if s:hlcol80 == -1
+        let s:hlcol80 = matchadd('DiffChange', '\%81v', 100)
+    else
+        call matchdelete(s:hlcol80)
+        let s:hlcol80 = -1
+    endif
+endfun
+
+" Add quotes/parens/brackets till the end of line
+nnoremap gs' i'<ESC>A'<ESC>
+nnoremap gs" i"<ESC>A"<ESC>
+nnoremap gs( i(<ESC>A)<ESC>
+nnoremap gs) i(<ESC>A)<ESC>
+nnoremap gs[ i[<ESC>A]<ESC>
+nnoremap gs] i[<ESC>A]<ESC>
+nnoremap gs{ i{<ESC>A}<ESC>
+nnoremap gs} i{<ESC>A}<ESC>
 
 " === Plugins and filetypes ===================================================
 let g:gundo_prefer_python3 = 1
@@ -156,9 +177,11 @@ nnoremap +r :CtrlPClearCache<CR>
 runtime bundle/pathogen/autoload/pathogen.vim
 call pathogen#infect()
 
+nnoremap \t :TlistToggle<CR>
 nnoremap \s :Scratch<CR>
 
 " NERDtree
+let NERDTreeDirArrows = 0
 nnoremap \N :NERDTreeToggle<CR>
 
 " Easymotion
