@@ -168,12 +168,12 @@ nnoremap gs} i{<ESC>A}<ESC>%
 set rtp+=~/.vim/bundle/Vundle
 call vundle#begin()
     Plugin 'a'
-    Plugin 'asynccommand'
-    Plugin 'autotag'
+    Plugin 'AsyncCommand'
+    Plugin 'AutoTag'
     Plugin 'ctrlp.vim'
     Plugin 'easymotion'
     Plugin 'fugitive'
-    Plugin 'gundo'
+    Plugin 'Gundo'
     Plugin 'L9'
     Plugin 'mystuff'
     Plugin 'mytypes'
@@ -183,11 +183,12 @@ call vundle#begin()
     Plugin 'rainbowparenthesis'
     Plugin 'repeat'
     Plugin 'scratch'
-    Plugin 'snipmate'
+    Plugin 'snipMate'
     Plugin 'surround'
     Plugin 'syntastic'
     Plugin 'tabular'
     Plugin 'taglist'
+    Plugin 'taglist.vim'
     Plugin 'Vundle'
 call vundle#end()
 
