@@ -179,7 +179,7 @@ call vundle#begin()
     Plugin 'mytypes'
     Plugin 'nerdcommenter'
     Plugin 'nerdtree'
-    Plugin 'pathogen'
+    " Plugin 'pathogen'
     Plugin 'rainbowparenthesis'
     Plugin 'repeat'
     Plugin 'scratch'
