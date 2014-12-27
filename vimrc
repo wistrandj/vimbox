@@ -1,5 +1,5 @@
 " === Variables ===============================================================
-filetype plugin on
+filetype plugin indent on
 syntax on
 
 " Use these keys for mappings
@@ -153,16 +153,56 @@ endfun
 " Add quotes/parens/brackets till the end of line
 nnoremap gs' i'<ESC>A'<ESC>
 nnoremap gs" i"<ESC>A"<ESC>
-nnoremap gs( i(<ESC>A)<ESC>
-nnoremap gs) i(<ESC>A)<ESC>
-nnoremap gs[ i[<ESC>A]<ESC>
-nnoremap gs] i[<ESC>A]<ESC>
-nnoremap gs{ i{<ESC>A}<ESC>
-nnoremap gs} i{<ESC>A}<ESC>
+nnoremap gs( i(<ESC>A)<ESC>%
+nnoremap gs) i(<ESC>A)<ESC>%
+nnoremap gs[ i[<ESC>A]<ESC>%
+nnoremap gs] i[<ESC>A]<ESC>%
+nnoremap gs{ i{<ESC>A}<ESC>%
+nnoremap gs} i{<ESC>A}<ESC>%
 
 " === Plugins and filetypes ===================================================
+" Use pathogen to manage plugins
+    " TODO Try Vundle instead of Pathogen
+"           runtime bundle/pathogen/autoload/pathogen.vim
+"           call pathogen#infect()
+set rtp+=~/.vim/bundle/Vundle
+call vundle#begin()
+    Plugin 'a'
+    Plugin 'asynccommand'
+    Plugin 'autotag'
+    Plugin 'ctrlp.vim'
+    Plugin 'easymotion'
+    Plugin 'fugitive'
+    Plugin 'gundo'
+    Plugin 'L9'
+    Plugin 'mystuff'
+    Plugin 'mytypes'
+    Plugin 'nerdcommenter'
+    Plugin 'nerdtree'
+    Plugin 'pathogen'
+    Plugin 'rainbowparenthesis'
+    Plugin 'repeat'
+    Plugin 'scratch'
+    Plugin 'snipmate'
+    Plugin 'surround'
+    Plugin 'syntastic'
+    Plugin 'tabular'
+    Plugin 'taglist'
+    Plugin 'Vundle'
+call vundle#end()
+
 let g:gundo_prefer_python3 = 1
-"
+
+nnoremap <F5> :SyntasticCheck<CR>
+let g:syntastic_cpp_config_file = 'syntastic_config'
+let g:syntastic_check_on_open = 1
+let g:syntastic_enable_signs = 1
+let s:pkg = system('pkg-config --cflags gtkmm-3.0')
+" let g:syntastic_c_check_header = 1
+" let g:syntastic_c_include_dirs = ['/opt/include/a']
+let g:syntastic_cpp_checkers = ['gcc']
+let g:syntastic_cpp_compiler_options = '-I/usr/include/gtkmm-3.0'
+
 " Filetypes
 autocmd BufNewFile,BufRead *.story set ft=groovy
 autocmd BufNewFile,BufRead *memo set ft=memo
@@ -172,10 +212,6 @@ autocmd BufRead *.tab set ft=tab
 
 " CtrlP
 nnoremap +r :CtrlPClearCache<CR>
-
-" Use pathogen to manage plugins
-runtime bundle/pathogen/autoload/pathogen.vim
-call pathogen#infect()
 
 nnoremap \t :TlistToggle<CR>
 nnoremap \s :Scratch<CR>

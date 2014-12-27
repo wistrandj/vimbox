@@ -94,7 +94,7 @@ fun! s:file_exists_and_not_empty(file)
 endfun
 
 fun! s:empty_header(name)
-    let postfix = '_' . toupper(g:hext)
+    let postfix = '_' . substitute(toupper(g:hext), '\.', '', '')
 
     let macro = s:strip_folders(toupper(a:name)) . postfix
     let lst1 = ['#ifndef ' . macro, '#define ' . macro]
