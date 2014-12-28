@@ -1,5 +1,5 @@
 " === Variables ===============================================================
-filetype plugin indent on
+filetype off " for Vundle
 syntax on
 
 " Use these keys for mappings
@@ -167,6 +167,7 @@ nnoremap gs} i{<ESC>A}<ESC>%
 "           call pathogen#infect()
 set rtp+=~/.vim/bundle/Vundle
 call vundle#begin()
+    Plugin 'Vundle'
     Plugin 'a'
     Plugin 'AsyncCommand'
     Plugin 'AutoTag'
@@ -185,24 +186,31 @@ call vundle#begin()
     Plugin 'scratch'
     Plugin 'snipMate'
     Plugin 'surround'
-    Plugin 'syntastic'
+    " Plugin 'syntastic'
+    Plugin 'YouCompleteMe'
     Plugin 'tabular'
-    Plugin 'taglist'
     Plugin 'taglist.vim'
-    Plugin 'Vundle'
 call vundle#end()
+filetype plugin indent on
 
 let g:gundo_prefer_python3 = 1
 
-nnoremap <F5> :SyntasticCheck<CR>
-let g:syntastic_cpp_config_file = 'syntastic_config'
-let g:syntastic_check_on_open = 1
-let g:syntastic_enable_signs = 1
-let s:pkg = system('pkg-config --cflags gtkmm-3.0')
-" let g:syntastic_c_check_header = 1
-" let g:syntastic_c_include_dirs = ['/opt/include/a']
-let g:syntastic_cpp_checkers = ['gcc']
-let g:syntastic_cpp_compiler_options = '-I/usr/include/gtkmm-3.0'
+if 1 " YouCompleteMe
+    let g:ycm_global_extra_conf='~/.vim/bundle/mystuff/extra/ycm_extra_conf.py'
+    nn <F5> :YcmForceCompileAndDiagnostics\<CR>
+    nn <F8> :exe "edit " . g:ycm_global_extra_conf<CR>
+    hi YcmErrorSection cterm=reverse
+
+elseif exists("g:loaded_syntastic_plugin")
+    nnoremap <F5> :SyntasticCheck<CR>
+    let g:syntastic_cpp_checkers=['clang_tidy']
+    " === OK ===
+    " These settings work only with gcc checker
+    let g:syntastic_cpp_config_file = 'config'
+    " let g:syntastic_cpp_include_dirs = ['/usr/include/gtkmm-3.0/']
+    " let b:syntastic_cpp_cflags = '-I/usr/include/gtkmm-3.0'
+endif
+
 
 " Filetypes
 autocmd BufNewFile,BufRead *.story set ft=groovy
