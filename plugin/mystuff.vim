@@ -10,10 +10,14 @@ nnoremap <leader>Gc :call git#commit()<CR>
 " Insert Something
 nn <leader>mi <ESC>:call <SID>DropRestBelow()<CR>ka
 nn <leader>im <ESC>:call <SID>InsertBelow()<CR>
-nmap <leader>cm :call <SID>DropRestBelow()<CR>-ccka
+nmap <leader>mc :call <SID>DropRestBelow()<CR>j-ccka
 function! s:DropRestBelow()
-    let col = col('.')
-    exe "normal! i\<CR>\<ESC>0d^" . (col - 1) . "i \<ESC>"
+    let col = col('.') - 1
+    let line = getline('.')
+    let init = strpart(line, 0, col)
+    let rest = repeat(' ', col) . strpart(line, col)
+    call append('.', rest)
+    call setline('.', init)
 endfunction
 function! s:InsertBelow()
     let column = col('.') - 1
