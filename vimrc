@@ -200,6 +200,10 @@ if 1 " YouCompleteMe
     nn <F5> :YcmForceCompileAndDiagnostics\<CR>
     nn <F8> :exe "edit " . g:ycm_global_extra_conf<CR>
     hi YcmErrorSection cterm=reverse
+    let g:ycm_filetype_whitelist = {'c':1, 'cpp':1}
+
+    " Snipmate's trigger key
+    ino <C-e>s <C-r>=TriggerSnippet()<CR>
 
 elseif exists("g:loaded_syntastic_plugin")
     nnoremap <F5> :SyntasticCheck<CR>

@@ -4,8 +4,8 @@ if filereadable("project.vim")
 endif
 
 " Git
-nnoremap <leader>gs :call git#status()<CR>
-nnoremap <leader>gc :call git#commit()<CR>
+nnoremap <leader>Gs :call git#status()<CR>
+nnoremap <leader>Gc :call git#commit()<CR>
 
 " Insert Something
 nn <leader>mi <ESC>:call <SID>DropRestBelow()<CR>ka
@@ -24,7 +24,6 @@ endfunction
 " Scroll past a paragraph with <C-y> and <C-e>
 let s:scroll_max = 10
 let s:scroll_min = 3
-
 nnoremap <c-y> :call <SID>scroll_block(-1)<CR>j
 nnoremap <c-e> :call <SID>scroll_block(1)<CR>
 function! s:find_blank_line(linenr, lines, by, times)
@@ -105,34 +104,34 @@ endfunction
 " Expand visual block to consecutive lines with same char on same col
     " FIXME: snaps always (?) the the first non-ws character of the line
     " TODO: Could this check indentation level
-function! s:consecutive_lines_with_char_on_column(ch, line, col, dir)
-    let next = a:line
-    let line = a:line
-    let end = 1
-    if (a:dir == 1)
-        let end = line('$')
+nn <leader>v :call <SID>expand_visual_block()<CR>
+function! s:evb_is_char_at(line, col, ch)
+    return a:ch == getline(a:line)[a:col]
+endfunction
+function! s:evb_find_range(linenr, col, dir)
+    if a:linenr < 1 || line('$') < a:linenr
+        echoerr "s:find_line_with_diff...: Invalid arguments"
     endif
 
-    while line != end + a:dir
-        let next = line + a:dir
+    let i = a:linenr
+    let ch =  getline(a:linenr)[a:col]
 
-        if getline(next)[a:col - 1] != a:ch
-            break
-        endif
-
-        let line = next
+    while s:evb_is_char_at(i, a:col, ch)
+        let i += a:dir
     endwhile
-
-    return line
+    return i - a:dir
+endfunction
+function! s:expand_visual_block_range(linenr, col)
+    let a = s:evb_find_range(a:linenr, a:col, -1)
+    let b = s:evb_find_range(a:linenr, a:col, 1)
+    return [a, b]
 endfunction
 function! s:expand_visual_block()
-    let ch = getline('.')[col('.') - 1]
-    let first = s:consecutive_lines_with_char_on_column(ch, line('.'), col('.'), -1)
-    let last = s:consecutive_lines_with_char_on_column(ch, line('.'), col('.'), 1)
-
-    exe "norm! \<C-v>" . first . "Go" . last . "G"
+    let linenr = line('.')
+    let col = col('.')
+    let [a,b] = s:expand_visual_block_range(linenr, col)
+    exe "norm! \<C-v>" . a . "Go" . b . "G"
 endfunction
-nn <leader>gve :call <SID>expand_visual_block()<CR>
 
 " === Autoload ================================================================
 " Output
