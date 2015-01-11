@@ -1,3 +1,5 @@
+nn <CR> 0vf:hgf
+
 " === Variables ===============================================================
 filetype off " for Vundle
 syntax on
@@ -187,7 +189,7 @@ call vundle#begin()
     Plugin 'snipMate'
     Plugin 'surround'
     " Plugin 'syntastic'
-    Plugin 'YouCompleteMe'
+    " Plugin 'YouCompleteMe'
     Plugin 'tabular'
     Plugin 'taglist.vim'
 call vundle#end()
@@ -195,7 +197,7 @@ filetype plugin indent on
 
 let g:gundo_prefer_python3 = 1
 
-if 1 " YouCompleteMe
+if 0 " YouCompleteMe
     let g:ycm_global_extra_conf='~/.vim/bundle/mystuff/extra/ycm_extra_conf.py'
     nn <F5> :YcmForceCompileAndDiagnostics\<CR>
     nn <F8> :exe "edit " . g:ycm_global_extra_conf<CR>

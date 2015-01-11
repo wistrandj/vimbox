@@ -293,7 +293,7 @@ fun! s:include_new_header(headername, sys_header)
 
     " Set header name and the #include line
     let header = a:headername
-    if (header[-2:] != '.h')
+    if (header[-2:] != '.h') && &ft != 'cpp'
         let header = header . '.h'
     endif
 
@@ -342,7 +342,7 @@ endfun
 fun! s:include_list_of_headers(headers, sys_headers)
     for head in a:headers
         let name = head
-        if a:sys_headers
+        if a:sys_headers && &ft != 'cpp'
             let name = s:abbrev_sys_header(head)
         endif
 

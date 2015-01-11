@@ -4,13 +4,13 @@ if filereadable("project.vim")
 endif
 
 " Git
-nnoremap <leader>Gs :call git#status()<CR>
-nnoremap <leader>Gc :call git#commit()<CR>
+nnoremap _Gs :call git#status()<CR>
+nnoremap _Gc :call git#commit()<CR>
 
 " Insert Something
 nn <leader>mi <ESC>:call <SID>DropRestBelow()<CR>ka
 nn <leader>im <ESC>:call <SID>InsertBelow()<CR>
-nmap <leader>mc :call <SID>DropRestBelow()<CR>j-ccka
+nmap <leader>mm :call <SID>DropRestBelow()<CR>j-ccka
 function! s:DropRestBelow()
     let col = col('.') - 1
     let line = getline('.')
