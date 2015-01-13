@@ -1,5 +1,3 @@
-nn <CR> 0vf:hgf
-
 " === Variables ===============================================================
 filetype off " for Vundle
 syntax on
@@ -10,7 +8,8 @@ map + <nop>
 let mapleader = "-"
 
 " Environment
-let $VIMHOME = "/home/jasu/.vim/"
+let $VIMHOME = $HOME . "/.vim/"
+let $MYSTUFF = $VIMHOME . "bundle/mystuff/"
 
 " Misc
 set nocompatible
@@ -93,7 +92,6 @@ nnoremap <leader>ta :tabprev<CR>
 nnoremap <leader>tw :tabnext<CR>
 nnoremap <leader>tc :tabclose<CR>
 
-nnoremap \e :e#<CR>
 nnoremap <leader>b :ls<CR>:b
 
 nnoremap <C-h> :wincmd h<CR>
@@ -102,9 +100,15 @@ nnoremap <C-k> :wincmd k<CR>
 nnoremap <C-l> :wincmd l<CR>
 
 " Files and external programs
-nnoremap <F1> :so $MYVIMRC<CR>
+nnoremap <F1> :call <SID>OpenFiletypeVimFile()<CR>
+nnoremap <F2> :so $MYVIMRC<CR>
+nnoremap <F3> :exe $MYSTUFF . "plugin/mystuff.vim"<CR>
 nnoremap <Leader>w :update<CR>
 inoremap <C-x><C-o> <C-x><C-o><C-p>
+fun! s:OpenFiletypeVimFile()
+    let file = $MYSTUFF . 'ftplugin/' . &ft . '.vim'
+    exe "edit " . file
+endfun
 
 " Escaping and moving cursor
 inoremap kj <Esc>l
@@ -118,8 +122,8 @@ map Ö {
 map Ä }
 
 " Search
-nnoremap <leader>h :set hls<CR>*#
-nnoremap <leader>H :set nohls<CR>
+nnoremap <F8> :set invhls<CR>
+nnoremap g* :set hls<CR>#*
 
 " Fold
 nnoremap <Space> za
@@ -163,10 +167,6 @@ nnoremap gs{ i{<ESC>A}<ESC>%
 nnoremap gs} i{<ESC>A}<ESC>%
 
 " === Plugins and filetypes ===================================================
-" Use pathogen to manage plugins
-    " TODO Try Vundle instead of Pathogen
-"           runtime bundle/pathogen/autoload/pathogen.vim
-"           call pathogen#infect()
 set rtp+=~/.vim/bundle/Vundle
 call vundle#begin()
     Plugin 'Vundle'
@@ -178,20 +178,19 @@ call vundle#begin()
     Plugin 'fugitive'
     Plugin 'Gundo'
     Plugin 'L9'
-    Plugin 'mystuff'
-    Plugin 'mytypes'
     Plugin 'nerdcommenter'
     Plugin 'nerdtree'
-    " Plugin 'pathogen'
     Plugin 'rainbowparenthesis'
     Plugin 'repeat'
     Plugin 'scratch'
     Plugin 'snipMate'
     Plugin 'surround'
-    " Plugin 'syntastic'
-    " Plugin 'YouCompleteMe'
     Plugin 'tabular'
     Plugin 'taglist.vim'
+
+    Plugin 'mystuff'
+    Plugin 'mytypes'
+    Plugin 'marks'
 call vundle#end()
 filetype plugin indent on
 
