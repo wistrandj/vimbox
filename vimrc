@@ -31,8 +31,8 @@ let s:hlcol80 = matchadd('DiffChange', '\%81v', 100)
 set cursorline
 set display=lastline
 set lazyredraw      " don't redraw while macro execution
-set list            " show ws as visible char
-set listchars=tab:>\ ,trail:·
+" set list            " show ws as visible char
+" set listchars=tab:>\ ,trail:·
 set noshowmode
 set scrolloff=2     " Keep a few lines always visible around cursor
 " set showbreak=\
@@ -40,6 +40,7 @@ set splitright
 set ttyfast
 set wildmenu
 set wildmode=list:longest,full
+set conceallevel=2
 if has("gui_running")
     colorscheme molokai
 endif
@@ -171,7 +172,7 @@ set rtp+=~/.vim/bundle/Vundle
 call vundle#begin()
     Plugin 'Vundle'
     Plugin 'a'
-    Plugin 'AsyncCommand'
+    " Plugin 'AsyncCommand'
     Plugin 'AutoTag'
     Plugin 'ctrlp.vim'
     Plugin 'easymotion'

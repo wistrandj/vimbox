@@ -138,9 +138,6 @@ function! s:expand_visual_block()
 endfunction
 
 " === Autoload ================================================================
-" Output
-nnoremap \O :call output#toggle()<CR>
-
 " Runfile
 command! Run call runfile#Run()
 command! Runout call runfile#RunFileToOutput()
