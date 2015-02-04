@@ -97,6 +97,7 @@ endfunction
 nn <silent> n n:call <SID>HLnext()<CR>
 nn <silent> N N:call <SID>HLnext()<CR>
 function! s:HLnext()
+    " TODO don't wait and redraw if user have hit 'n' two times rapidly
     let pattern = '\c\%#'.@/
     let key = matchadd('ErrorMsg', pattern, 101)
     redraw

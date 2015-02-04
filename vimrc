@@ -7,7 +7,7 @@ map - <nop>
 map + <nop>
 let mapleader = "-"
 
-" Environment
+" "Environment
 let $VIMHOME = $HOME . "/.vim/"
 let $MYSTUFF = $VIMHOME . "bundle/mystuff/"
 
@@ -31,8 +31,8 @@ let s:hlcol80 = matchadd('DiffChange', '\%81v', 100)
 set cursorline
 set display=lastline
 set lazyredraw      " don't redraw while macro execution
-" set list            " show ws as visible char
-" set listchars=tab:>\ ,trail:·
+set list            " show ws as visible char
+set listchars=tab:>\ ,trail:·
 set noshowmode
 set scrolloff=2     " Keep a few lines always visible around cursor
 " set showbreak=\
@@ -101,9 +101,9 @@ nnoremap <C-k> :wincmd k<CR>
 nnoremap <C-l> :wincmd l<CR>
 
 " Files and external programs
-nnoremap <F1> :call <SID>OpenFiletypeVimFile()<CR>
 nnoremap <F2> :so $MYVIMRC<CR>
 nnoremap <F3> :exe $MYSTUFF . "plugin/mystuff.vim"<CR>
+nnoremap <F4> :call <SID>OpenFiletypeVimFile()<CR>
 nnoremap <Leader>w :update<CR>
 inoremap <C-x><C-o> <C-x><C-o><C-p>
 fun! s:OpenFiletypeVimFile()
