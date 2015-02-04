@@ -8,6 +8,8 @@ if !exists('g:loaded_ftplugin_c')
     autocmd QuickFixCmdPost [^l]* nested cwindow
     autocmd QuickFixCmdPost    l* nested lwindow
     autocmd TabLeave * cclose
+else
+    finish
 endif
 
 " === Commands and mappings ===================================================
@@ -28,15 +30,15 @@ nn <C-w>a :call <SID>cmd_split_alternate_file('v')<CR>
 nn <C-w>A :call <SID>cmd_split_alternate_file('')<CR>
 
     " Compile/make/run the program
-nn <buffer> <Leader>r :call <SID>run_echo()<CR>
-nn <buffer> <Leader>mar :call <SID>run_async()<CR>
-nn <buffer> <Leader>mr :call <SID>run_output()<CR>
-nn <buffer> <Leader>R :make<CR>:call <SID>run_output()<CR>
+nn <Leader>r :call <SID>run_echo()<CR>
+nn <Leader>mar :call <SID>run_async()<CR>
+nn <Leader>mr :call <SID>run_output()<CR>
+nn <Leader>R :make<CR>:call <SID>run_output()<CR>
     " NOTE: This is also defined in ftplugin/make.vim
-nn <buffer> <leader>mc :call <SID>compile()<CR>
-nn <buffer> <leader>mC :call <SID>make("clean")<CR>
-nn <buffer> <leader>mt :call <SID>make("tags")<CR>
-nn <buffer> <leader>mi :call <SID>make("install")<CR>
+nn <leader>mc :call <SID>compile()<CR>
+nn <leader>mC :call <SID>make("clean")<CR>
+nn <leader>mt :call <SID>make("tags")<CR>
+nn <leader>mi :call <SID>make("install")<CR>
 
     " These are not set as <buffer> because the error may be in makefile
 nn <leader>ef :cr<CR>:cn<CR>
