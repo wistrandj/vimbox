@@ -1,4 +1,5 @@
 " === Log stuff ===============================================================
+" TODO: remove Loggin stuff
 let s:log = []
 function! Log(...)
     if a:0 == 0
@@ -14,8 +15,6 @@ function! Log(...)
 endfunction
 command! -nargs=? Log call Log(<args>)
 command! CL let s:log = []
-
-" === Make ====================================================================
 
 " === Get errors ==============================================================
 
@@ -95,7 +94,6 @@ endfunction
 
 " === Highlighting ============================================================
 
-" Global
 let s:error_list = {}
 let s:hlmode_is_on = 0
 
@@ -131,10 +129,9 @@ endfunction
 function! SetHLMode(newerrors)
     if !empty(a:newerrors)
         call SetHLModeOn(a:newerrors)
-    else 
+    else
         call SetHLModeOff()
     endif
-
 endfunction
 
 function! SetHLModeOn(newerrors)
@@ -159,6 +156,8 @@ function! SetHLModeOff()
 
     let s:error_list = {}
     let s:hlmode_is_on = 0
+    let s:nr_errors = 0
+    let s:nr_errors_fixed = 0
 endfunction
 
 function! EnterBuffer()
@@ -175,6 +174,47 @@ function! LeaveBuffer()
     call clearmatches()
 endfunction
 
+" === Error bar ===============================================================
+
+let s:nr_errors = 0
+let s:nr_errors_fixed = 0
+comm! MF call PrintErrorInfo()
+
+function! Nr2float(nr)
+    return 0.0 + a:nr
+endfunction
+
+function! SetNrErrors(nrerrors)
+    if a:nrerrors == 0
+        let s:nr_errors_fixed = s:nr_errors
+    elseif a:nrerrors >= s:nr_errors
+        let s:nr_errors = a:nrerrors
+        let s:nr_errors_fixed = 0
+    else
+        let s:nr_errors_fixed = s:nr_errors - a:nrerrors
+    endif
+endfunction
+
+function! BarDimension()
+    let width = 20
+    let n = width
+    if (s:nr_errors > 0 && s:nr_errors_fixed < s:nr_errors)
+        let f = Nr2float(s:nr_errors_fixed) / s:nr_errors
+        let n = float2nr(width * f)
+    endif
+    return [n, width - n]
+endfunction
+
+function! StatuslineErrorInfo()
+    if s:nr_errors == 0
+        return ""
+    endif
+    let [n, e] = BarDimension()
+    let msg1 = "%#GoodColor#" . repeat('#', n) . "%*"
+    let msg2 = "%#BadColor#" . repeat('#', e) . "%*"
+    return "Errors: " . msg1 . msg2 . " (" . s:nr_errors_fixed . "/" . s:nr_errors . ")"
+endfunction
+
 " === Running make ============================================================
 
 function! BeforeMake()
@@ -185,11 +225,12 @@ function! AfterMake()
     call HLErrors()
 endfunction
 
-" FIXME: These two doesn't seem to work when running 'make'
 au QuickfixCmdPre * call BeforeMake()
 au QuickfixCmdPost * call AfterMake()
 
-nn <F1> :call EnterBuffer()<CR>
-nn <F5> :source /home/jasu/.vim/bundle/mystuff/plugin/make.vim<CR>
+" TODO: Add a highlight group maybe?
+" XXX: background color is hardcoded as the same as the statusline's
+hi GoodColor ctermfg=DarkGreen ctermbg=White
+hi BadColor ctermfg=DarkRed ctermbg=White
 
-
+call statusline#CustomText(function("StatuslineErrorInfo"))

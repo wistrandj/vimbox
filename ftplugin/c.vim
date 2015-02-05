@@ -1,3 +1,8 @@
+" FIXME: something in the last commit made .c-files to hang on start of the
+" Vim
+"  * WTF if there is a `finish` command in this file (anywhere), it'll not
+"    hang
+
 let &l:colorcolumn=81
 hi ColorColumn ctermbg=0
 
@@ -95,7 +100,8 @@ fun! s:make(...)
     end
 
     if filereadable("makefile") || filereadable("Makefile")
-        exe "make " . arg
+        exe "silent make " . arg
+        redraw! " CLI Vim's UI breaks with 'silent' command for some reason
         return 1
     end
 
@@ -366,5 +372,3 @@ fun! s:cmd_include_new_header(sys_header)
 
     call s:include_list_of_headers(headers, a:sys_header)
 endfun
-
-

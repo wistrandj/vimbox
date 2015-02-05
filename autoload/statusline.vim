@@ -1,5 +1,6 @@
 
 let s:statusline = ""
+" let s:custom_function
 
 fun! statusline#StatusLineFunction()
     let s:statusline = ""
@@ -10,10 +11,22 @@ fun! statusline#StatusLineFunction()
     call s:add(s:flags())
     call s:add(git_branch)
     " call s:add(s:view_regs([0, 1, 2, '-'], 5))
+    if exists("s:custom_function")
+        call s:add(s:custom_function())
+    endif
     call s:add("%=")
     call s:add(s:lines())
     call s:add(s:cursor_position())
     return s:statusline
+endfun
+
+fun! statusline#CustomText(fn)
+    if type(a:fn) != type(function("tr"))
+        echoerr "statusline#CustomText: Argument must be a funcref that returns a string"
+        return
+    endif
+
+    let s:custom_function = a:fn
 endfun
 
 " === Simple interface for building statusline ================================
