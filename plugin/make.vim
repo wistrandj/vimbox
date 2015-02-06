@@ -15,61 +15,42 @@ function! Log(...)
 endfunction
 command! -nargs=? Log call Log(<args>)
 command! CL let s:log = []
+"
+" FIXME
+"  * Error markes are moved if you switch buffer
 
 " === Get errors ==============================================================
 
-function! GetErrors()
-    let s:copy_values = ['bufnr', 'lnum', 'col', 'text']
-    let list = getqflist()
-    let out = []
+function! s:SortErrorsByBuffer(errors)
+    let out = {}
+    for err in a:errors
+        let buf = string(err['bufnr'])
+        unlet err['bufnr']
+        call s:FixSemicolonError(err)
+        let buferrors = get(out, buf, [])
 
-    for elem in list
-        if !elem['valid']
-            continue
-        endif
-
-        let new_elem = {}
-        for val in s:copy_values
-            let new_elem[val] = elem[val]
-        endfor
-
-        call insert(out, new_elem, len(out))
+        call insert(buferrors, err, len(buferrors))
+        let out[buf] = buferrors
     endfor
 
     return out
 endfunction
 
-function! FilterBufferErrors(errlist, ...)
-    let nr = bufnr('.')
-    if (a:0 > 0)
-        let nr = a:1
-    endif
-    let local = filter(a:errlist, 'v:val["bufnr"] == ' . nr)
-
-    return local
-endfunction
-
-function! ErrorsByBuffer(errlist)
-    let dict = {}
-    for err in a:errlist
-        let buf = err['bufnr']
-        if !has_key(dict, string(buf))
-            let dict[buf] = []
-        endif
-
-        let err2 = copy(err)
-        unlet err2['bufnr']
-        call insert(dict[buf], err2, len(dict[buf]))
+function! GetErrors()
+    let copy_values = {'bufnr':1, 'lnum':1, 'col':1, 'text':1}
+    let list = getqflist()
+    call filter(list, 'v:val["valid"] != 0')
+    for err in list
+        call filter(err, 'has_key(copy_values, v:key)')
     endfor
-
-    return dict
+    return s:SortErrorsByBuffer(list)
 endfunction
 
 function! ClearErrors()
     call clearmatches()
 endfunction
 
-function! FixSemicolonError(err)
+function! s:FixSemicolonError(err)
     if a:err['text'] !~ "expected .;. before"
         return
     endif
@@ -95,10 +76,9 @@ endfunction
 " === Highlighting ============================================================
 
 let s:error_list = {}
-let s:hlmode_is_on = 0
+let s:hlmode_status = 0
 
 function! HLSingleError(err)
-    call FixSemicolonError(a:err)
     let line = a:err['lnum']
     let col = a:err['col']
     let color = GetColor(a:err)
@@ -118,8 +98,7 @@ endfunction
 
 function! HLErrors()
     let savecursor = getcurpos()
-    let errs = GetErrors()
-    let berrs = ErrorsByBuffer(errs)
+    let berrs = GetErrors()
     call SetHLMode(berrs)
 
     call setpos('.', savecursor)
@@ -134,8 +113,16 @@ function! SetHLMode(newerrors)
     endif
 endfunction
 
+function! s:CountErrors(errors)
+    let size = 0
+    for buferrors in keys(a:errors)
+        let size += len(a:errors[buferrors])
+    endfor
+    return size
+endfunction
+
 function! SetHLModeOn(newerrors)
-    if !s:hlmode_is_on
+    if !s:hlmode_status
         augroup MakeHLMode
             au!
             au BufEnter * call EnterBuffer()
@@ -144,25 +131,26 @@ function! SetHLModeOn(newerrors)
     endif
 
     let s:error_list = a:newerrors
-    let s:hlmode_is_on = 1
+    let s:hlmode_status = 1
+    call SetNrErrors(s:CountErrors(a:newerrors))
 endfunction
 
 function! SetHLModeOff()
-    if s:hlmode_is_on
+    if s:hlmode_status
         augroup MakeHLMode
             au!
         augroup END
     endif
 
     let s:error_list = {}
-    let s:hlmode_is_on = 0
+    let s:hlmode_status = 0
     let s:nr_errors = 0
     let s:nr_errors_fixed = 0
 endfunction
 
 function! EnterBuffer()
     let buf = bufnr('%')
-    if !s:hlmode_is_on || !has_key(s:error_list, buf) || buf == -1
+    if !s:hlmode_status || !has_key(s:error_list, buf) || buf == -1
         return
     endif
 
@@ -179,6 +167,10 @@ endfunction
 let s:nr_errors = 0
 let s:nr_errors_fixed = 0
 comm! MF call PrintErrorInfo()
+
+fun! PrintErrorInfo()
+    return string(s:nr_errors) . "/" . string(s:nr_errors_fixed)
+endfun
 
 function! Nr2float(nr)
     return 0.0 + a:nr
@@ -234,3 +226,5 @@ hi GoodColor ctermfg=DarkGreen ctermbg=White
 hi BadColor ctermfg=DarkRed ctermbg=White
 
 call statusline#CustomText(function("StatuslineErrorInfo"))
+
+nn <F1> "/home/jasu/.vim/bundle/mystuff/plugin/make.vim"
