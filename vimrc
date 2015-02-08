@@ -191,6 +191,7 @@ call vundle#begin()
 
     Plugin 'mystuff'
     Plugin 'mytypes'
+    Plugin 'makefix'
     Plugin 'marks'
 call vundle#end()
 filetype plugin indent on
