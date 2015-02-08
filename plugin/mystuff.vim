@@ -107,35 +107,30 @@ function! s:HLnext()
 endfunction
 
 " Expand visual block to consecutive lines with same char on same col
-    " FIXME: snaps always (?) the the first non-ws character of the line
-    " TODO: Could this check indentation level
 nn <leader>v :call <SID>expand_visual_block()<CR>
-function! s:evb_is_char_at(line, col, ch)
-    return a:ch == getline(a:line)[a:col]
-endfunction
-function! s:evb_find_range(linenr, col, dir)
-    if a:linenr < 1 || line('$') < a:linenr
-        echoerr "s:find_line_with_diff...: Invalid arguments"
+function! s:evb_block_range()
+    let cl = col('.')
+    let pat = '^\(.\{' . (cl - 1) . '\}' . getline('.')[cl - 1] . '\)\@!'
+
+    let a = search(pat, 'Wbn') + 1
+    let b = search(pat, 'Wn') - 1
+
+    if b == -1
+        let b = line('$')
     endif
 
-    let i = a:linenr
-    let ch =  getline(a:linenr)[a:col]
-
-    while s:evb_is_char_at(i, a:col, ch)
-        let i += a:dir
-    endwhile
-    return i - a:dir
-endfunction
-function! s:expand_visual_block_range(linenr, col)
-    let a = s:evb_find_range(a:linenr, a:col, -1)
-    let b = s:evb_find_range(a:linenr, a:col, 1)
     return [a, b]
 endfunction
 function! s:expand_visual_block()
-    let linenr = line('.')
-    let col = col('.')
-    let [a,b] = s:expand_visual_block_range(linenr, col)
-    exe "norm! \<C-v>" . a . "Go" . b . "G"
+    let [start, end] = s:evb_block_range()
+    let sol=&startofline
+    set nostartofline
+
+    exe "normal! " . start . "G\<C-V>" . end . "G"
+
+    if sol
+        set startofline
+    endif
 endfunction
 
 " === Autoload ================================================================
@@ -145,10 +140,10 @@ command! Runout call runfile#RunFileToOutput()
 
 " Matching Chars
 " inoremap ( ()<left>
-inoremap <expr> ( matchingChars#InsertLeft('(')
-inoremap <expr> [ matchingChars#InsertLeft('[')
-inoremap <expr> { matchingChars#InsertLeft('{')
-inoremap {<CR> {<CR><CR>}<UP>
+    inoremap <expr> ( matchingChars#InsertLeft('(')
+    inoremap <expr> [ matchingChars#InsertLeft('[')
+    inoremap <expr> { matchingChars#InsertLeft('{')
+    inoremap {<CR> {<CR><CR>}<UP>
 
 inoremap <expr> ) matchingChars#InsertRight(")")
 inoremap <expr> ] matchingChars#InsertRight("]")
