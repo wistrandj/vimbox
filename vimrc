@@ -92,6 +92,7 @@ nnoremap <leader>T :tabnew<CR>
 nnoremap <leader>ta :tabprev<CR>
 nnoremap <leader>tw :tabnext<CR>
 nnoremap <leader>tc :tabclose<CR>
+nnoremap <leader>to :tabonly<CR>
 
 nnoremap <leader>b :ls<CR>:b
 
@@ -101,22 +102,15 @@ nnoremap <C-k> :wincmd k<CR>
 nnoremap <C-l> :wincmd l<CR>
 
 " Files and external programs
-nnoremap <F2> :so $MYVIMRC<CR>
-nnoremap <F3> :exe $MYSTUFF . "plugin/mystuff.vim"<CR>
-nnoremap <F4> :call <SID>OpenFiletypeVimFile()<CR>
 nnoremap <Leader>w :update<CR>
 inoremap <C-x><C-o> <C-x><C-o><C-p>
-fun! s:OpenFiletypeVimFile()
-    let file = $MYSTUFF . 'ftplugin/' . &ft . '.vim'
-    exe "edit " . file
-endfun
 
 " Escaping and moving cursor
 inoremap kj <Esc>l
 noremap , ;
 noremap ; ,
-" noremap j gj
-" noremap k gk
+noremap j gj
+noremap k gk
 map ö [
 map ä ]
 map Ö {
@@ -135,13 +129,12 @@ vnoremap < <gv
 
 " Insert & delete
 nnoremap S i_<Esc>r
-nnoremap <expr> X (col('.') == col('$') - 1) ? 'x' : 'xh'
 
 " Make the previous word UPPER CASE
 inoremap <C-u> <esc>hviwUel
 
 " Toggle line numbers
-nnoremap <F9> :set invnu<CR>
+nnoremap <F9> :set invnumber<CR>
 
 " Align with Tabular plugin
 vnoremap <leader>ta :Tabular /
@@ -198,27 +191,6 @@ filetype plugin indent on
 
 let g:gundo_prefer_python3 = 1
 
-if 0 " YouCompleteMe
-    let g:ycm_global_extra_conf='~/.vim/bundle/mystuff/extra/ycm_extra_conf.py'
-    nn <F5> :YcmForceCompileAndDiagnostics\<CR>
-    nn <F8> :exe "edit " . g:ycm_global_extra_conf<CR>
-    hi YcmErrorSection cterm=reverse
-    let g:ycm_filetype_whitelist = {'c':1, 'cpp':1}
-
-    " Snipmate's trigger key
-    ino <C-e>s <C-r>=TriggerSnippet()<CR>
-
-elseif exists("g:loaded_syntastic_plugin")
-    nnoremap <F5> :SyntasticCheck<CR>
-    let g:syntastic_cpp_checkers=['clang_tidy']
-    " === OK ===
-    " These settings work only with gcc checker
-    let g:syntastic_cpp_config_file = 'config'
-    " let g:syntastic_cpp_include_dirs = ['/usr/include/gtkmm-3.0/']
-    " let b:syntastic_cpp_cflags = '-I/usr/include/gtkmm-3.0'
-endif
-
-
 " Filetypes
 autocmd BufNewFile,BufRead *.story set ft=groovy
 autocmd BufNewFile,BufRead *memo set ft=memo
@@ -227,14 +199,16 @@ autocmd BufNewFile,BufRead *.scl set ft=scala
 autocmd BufRead *.tab set ft=tab
 
 " CtrlP
-nnoremap +r :CtrlPClearCache<CR>
+nnoremap <leader>scc :CtrlPClearCache<CR>
 
-nnoremap \t :TlistToggle<CR>
-nnoremap \s :Scratch<CR>
+nnoremap <leader>st :TlistToggle<CR>
+nnoremap <leader>ss :Scratch<CR>
+nnoremap <leader>sS :split<CR>:Scratch<CR>
+nnoremap <leader>sV :vsplit<CR>:Scratch<CR>
 
 " NERDtree
 let NERDTreeDirArrows = 0
-nnoremap \N :NERDTreeToggle<CR>
+nnoremap <leader>sn :NERDTreeToggle<CR>
 
 " Easymotion
     " Hide unneeded easymotion-shortcuts behind ++
