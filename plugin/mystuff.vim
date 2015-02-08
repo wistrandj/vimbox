@@ -61,17 +61,23 @@ function! s:scroll_block(dir)
 endfunction
 
 " Create a separator comment
-command! Sep call <SID>MakeCommentSeparator()
-function! s:MakeCommentSeparator()
-    let comment = substitute(getline('.'), '^\([^ ]*\).*', '\1', '')
-    let txt = substitute(getline('.'), '^[^ ]* *\(.*\) *$', '\1', '')
-    let len = len(comment) + len(txt) + 1
-    let line = comment . ' === ' . txt . ' ' . repeat('=', 79 - len - 5)
+nn <leader>S :call <SID>ToggleCommentSeparator()<CR>
+function! s:ToggleCommentSeparator()
+    let line = getline('.')
+    if line =~ "^.*=== .* =*$"
+        let line = substitute(line, '^\(\s*\S*\)\s*=== \(.*\) =*$', '\1 \2', '')
+    else
+        let comment = substitute(line, '^\([^ ]*\).*', '\1', '')
+        let txt = substitute(line, '^[^ ]* *\(.*\) *$', '\1', '')
+        let len = len(comment) + len(txt) + 1
+        let line = comment . ' === ' . txt . ' ' . repeat('=', 79 - len - 5)
+    endif
+
     call setline('.', line)
 endfunction
 
 " Change current directory to the file location
-command! Cdh exe "cd " . expand("%:p:h")
+command! CDH exe "cd " . expand("%:p:h")
 
 " Open temporary files
 command! -nargs=? Tfile call <SID>open_temporary_file(<f-args>)
@@ -96,12 +102,13 @@ endfunction
 " High light words when searching
 nn <silent> n n:call <SID>HLnext()<CR>
 nn <silent> N N:call <SID>HLnext()<CR>
+let s:find_time = reltime()
 function! s:HLnext()
-    " TODO don't wait and redraw if user have hit 'n' two times rapidly
     let pattern = '\c\%#'.@/
-    let key = matchadd('ErrorMsg', pattern, 101)
+    let key = matchadd('ErrorMsg', pattern)
+
     redraw
-    sleep 70m
+    sleep 100m
     call matchdelete(key)
     redraw
 endfunction
