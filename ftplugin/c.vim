@@ -13,8 +13,8 @@ hi ColorColumn ctermbg=0
 
 
 " Open quickfix window on compile errors
-autocmd QuickFixCmdPost [^l]* nested cwindow
-autocmd QuickFixCmdPost    l* nested lwindow
+" autocmd QuickFixCmdPost [^l]* nested cwindow
+" autocmd QuickFixCmdPost    l* nested lwindow
 autocmd TabLeave * cclose
 autocmd BufWritePre <buffer> :%s/\s\+$//e
 

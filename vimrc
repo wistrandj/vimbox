@@ -204,8 +204,7 @@ nnoremap <leader>scc :CtrlPClearCache<CR>
 
 nnoremap <leader>st :TlistToggle<CR>
 nnoremap <leader>ss :Scratch<CR>
-nnoremap <leader>sS :split<CR>:Scratch<CR>
-nnoremap <leader>sV :vsplit<CR>:Scratch<CR>
+nnoremap <leader>sS :Scratch<CR>
 
 " NERDtree
 let NERDTreeDirArrows = 0
