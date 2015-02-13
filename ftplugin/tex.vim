@@ -23,7 +23,7 @@ function! OpenZathura()
             echoerr "Couldn't find PDF file"
             return
         elseif len(found)
-            echo "Multiple PDF files! Choosing the first one"
+            echom "Multiple PDF files! Choosing the first one"
         endif
 
         let s:pdf_file = found[0]
