@@ -14,6 +14,7 @@ fun! statusline#StatusLineFunction()
     if exists("s:custom_function")
         call s:add(s:custom_function())
     endif
+    call s:add(MakefixStatusline())
     call s:add("%=")
     call s:add(s:lines())
     call s:add(s:cursor_position())

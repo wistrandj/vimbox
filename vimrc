@@ -1,3 +1,5 @@
+
+
 " === Variables ===============================================================
 filetype off " for Vundle
 syntax on
@@ -7,7 +9,7 @@ map - <nop>
 map + <nop>
 let mapleader = "-"
 
-" "Environment
+" Environment
 let $VIMHOME = $HOME . "/.vim/"
 let $MYSTUFF = $VIMHOME . "bundle/mystuff/"
 
@@ -24,6 +26,7 @@ set hidden
 set noswapfile
 set nobackup
 set autowrite
+autocmd BufRead help set readonly
 
 " View
      " this can be swapped on/off with keys "\hc"
@@ -49,13 +52,12 @@ set laststatus=2
 set statusline=%!statusline#StatusLineFunction()
 
 " Colours
+hi SignColumn ctermbg=Darkgrey
 hi StatusLineNC ctermfg=6
 hi MatchParen ctermbg=6 ctermfg=0
 hi VertSplit cterm=none
 hi Folded ctermfg=6 ctermbg=8
     " Swap statusline color when in insert mode
-" autocmd InsertEnter * hi StatusLine ctermfg=6
-" autocmd InsertLeave * hi StatusLine ctermfg=7
 autocmd InsertEnter * echohl StatusLineNC | echo "-- INSERT --" | echohl None
 autocmd InsertLeave * echo ""
 
@@ -84,7 +86,7 @@ set nojoinspaces
 
 set wildignore=*.o,*.obj,*.class
 
-set path=.,./include/,/usr/include,/opt/include/
+set path=.,include/,/usr/include,/usr/local/include/,/opt/include/
 
 " === Mappings ================================================================
 " Windows, buffers and tabs
@@ -117,9 +119,16 @@ map ä ]
 map Ö {
 map Ä }
 
-" Search
+" Search and replace
 nnoremap <F8> :set invhls<CR>
-nnoremap g* :set hls<CR>#*
+nnoremap g* :set hls<CR>*``
+nnoremap g# :set hls<CR>#``
+function! s:ReplaceWord(type)
+    let pat = escape(tolower(expand(a:type)), '*+/')
+    call feedkeys(':%s/' . pat . '/')
+endfunction
+nnoremap gcw :call <SID>ReplaceWord('<cword>')<CR>
+nnoremap gcW :call <SID>ReplaceWord('<cWORD>')<CR>
 
 " Fold
 nnoremap <Space> za
@@ -187,8 +196,11 @@ call vundle#begin()
     Plugin 'mytypes'
     Plugin 'makefix'
     Plugin 'marks'
+    " Plugin 'vim-airline'
 call vundle#end()
 filetype plugin indent on
+
+" let g:airline_section_c = "%{MakefixStatusline('airline')}"
 
 let g:gundo_prefer_python3 = 1
 
@@ -203,7 +215,6 @@ autocmd BufRead *.tab set ft=tab
 nnoremap <leader>scc :CtrlPClearCache<CR>
 
 nnoremap <leader>st :TlistToggle<CR>
-nnoremap <leader>ss :Scratch<CR>
 nnoremap <leader>sS :Scratch<CR>
 
 " NERDtree
