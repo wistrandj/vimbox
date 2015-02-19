@@ -96,8 +96,6 @@ nnoremap <leader>tw :tabnext<CR>
 nnoremap <leader>tc :tabclose<CR>
 nnoremap <leader>to :tabonly<CR>
 
-nnoremap <leader>b :ls<CR>:b
-
 nnoremap <C-h> :wincmd h<CR>
 nnoremap <C-j> :wincmd j<CR>
 nnoremap <C-k> :wincmd k<CR>
@@ -109,6 +107,12 @@ nnoremap <Leader>w :update<CR>
 inoremap <C-x><C-o> <C-x><C-o><C-p>
 
 " Escaping and moving cursor
+function! s:JumpInView(f)
+    let h = winheight(0) - &scrolloff
+    let first = line('.') - winline() + &scrolloff
+    let line = first + float2nr(a:f * h)
+    call feedkeys(line . 'G')
+endfunction
 inoremap kj <Esc>l
 noremap , ;
 noremap ; ,
@@ -118,6 +122,8 @@ map ö [
 map ä ]
 map Ö {
 map Ä }
+nn gj :call <SID>JumpInView(0.75)<CR>
+nn gk :call <SID>JumpInView(0.25)<CR>
 
 " Search and replace
 nnoremap <F8> :set invhls<CR>
