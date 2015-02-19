@@ -3,6 +3,7 @@
 
 set tw=80
 let s:pdf_file = ""
+compiler tex
 
 function! AddBlockAroundSelection() range
     " FIXME
@@ -33,7 +34,7 @@ function! OpenZathura()
 endfunction
 
 nnoremap <buffer> <expr> <leader>mr OpenZathura()
-nnoremap <buffer> <leader>mc :make<CR>
+nnoremap <buffer> <leader>mc :silent make<CR>:redraw!<CR>
 
 " Bold/italic words
 nnoremap <buffer> <leader>bf i{\bf<space><esc>ea}<esc>

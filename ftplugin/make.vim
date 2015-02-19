@@ -1,3 +1,3 @@
 " NOTE: This is also defined in ftplugin/c.vim
-nnoremap <leader>mc :make<CR>
-nnoremap <leader>mC :make clean<CR>
+nnoremap <leader>mc :silent make<CR>:redraw!<CR>
+nnoremap <leader>mC :silent make clean<CR>:redraw!<CR>

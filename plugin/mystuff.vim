@@ -102,7 +102,6 @@ endfunction
 " High light words when searching
 nn <silent> n n:call <SID>HLnext()<CR>
 nn <silent> N N:call <SID>HLnext()<CR>
-let s:find_time = reltime()
 function! s:HLnext()
     let pattern = '\c\%#'.@/
     let key = matchadd('ErrorMsg', pattern)
