@@ -1,3 +1,5 @@
+syntax clear
+
 syn match Title '\\\w*'
 syn match Title '{\\[^}]*}'
 syn match LineNr '^\s*\\\w*{[^}]\+}'
