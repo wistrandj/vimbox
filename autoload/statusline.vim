@@ -4,13 +4,10 @@ let s:statusline = ""
 
 fun! statusline#StatusLineFunction()
     let s:statusline = ""
-    let git_branch = s:git()
-    let git_branch = (git_branch == '') ? '' : ('[G: ' . git_branch . ' ]')
     call s:add("(buf %n) %y")
     call s:add("%f", "DiffAdd")
     call s:add(s:flags())
-    call s:add(git_branch)
-    " call s:add(s:view_regs([0, 1, 2, '-'], 5))
+    call s:add('%{git#statusline()}')
     if exists("s:custom_function")
         call s:add(s:custom_function())
     endif
@@ -67,10 +64,6 @@ endfun
 
 fun! s:flags()
     return "[%M%R%H%W]"
-endfun
-
-fun! s:git()
-    return git#get_current_branch()
 endfun
 
 fun! s:view_regs(names, len)
