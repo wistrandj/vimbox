@@ -1,21 +1,12 @@
-" TEMP
-comm! Update call <SID>update_status()
-comm! Test call <SID>echo_status()
-
-function! Raw()
-    echo "statusline: " . s:build_statusline_info()
-    for key in keys(s:status)
-        echo printf("%s: %s", key, string(s:status[key]))
-    endfor
-endfunction
-comm! Raw call Raw()
 
 " === Variables ===============================================================
 
-let s:git_available = 0
-let s:git_folder = ''
-let s:git_folder_searched = 0
 let s:branch = ''
+let s:colors = {
+    \'modified'  : 'MoreMsg',
+    \'untracked' : 'Linenr',
+    \'new'       : 'Comment',
+    \'deleted'   : 'WarningMsg'}
 
 let s:status = {}
 function! s:reset_status()
@@ -33,25 +24,6 @@ function! git#commit()
     call s:echo_status()
     let msg = input("Commit message: ")
     echo system('git commit -am "'. msg . '"')
-endfunction
-
-function! git#git_available()
-    return git#find_git_folder() != ''
-endfunction
-function! git#find_git_folder()
-    if s:git_folder_searched
-        return s:git_folder
-    endif
-
-    let s:git_folder_searched = 1
-
-    let res = s:do_search()
-    if res != ''
-        let s:git_available = 1
-        let s:git_folder = res
-    endif
-
-    return res
 endfunction
 
 function! s:build_statusline_info()
@@ -79,6 +51,8 @@ endfunction
 " === private =================================================================
 
 function! s:echo_file_list(key, list, color)
+    if len(list) == 0 | return | endif
+
     let len = len(a:list)
     echo printf('%s: ', a:key)
 
@@ -93,19 +67,40 @@ function! s:echo_file_list(key, list, color)
     echon printf('%s', a:list[len - 1])
     echohl None
 endfunction
+
+function! s:echo_file_list_long(key, list, color)
+    if len(a:list) == 0 | return | endif
+
+    let initlen = len(a:key) + 2
+    let init = repeat(' ', initlen)
+
+    echo printf('%s: ', a:key)
+    exe 'echohl ' . a:color
+    echon a:list[0]
+    echohl None
+
+    for i in range(1, len(a:list) - 1)
+        exe "echohl " . a:color
+        echo printf('%s%s', init, a:list[i])
+        echohl None
+    endfor
+endfunction
 function! s:echo_status()
-    let colors = {
-        \'modified'  : 'MoreMsg',
-        \'untracked' : 'Linenr',
-        \'new'       : 'Comment',
-        \'deleted'   : 'WarningMsg'}
+    let ok = 0
 
     for key in keys(s:status)
         let list = s:status[key]
         if !empty(list)
-            call s:echo_file_list(key, list, colors[key])
+            let ok = 1
+            call s:echo_file_list_long(key, list, s:colors[key])
         endif
     endfor
+
+    if ok
+        echo "Type 'git commit -m' to continue"
+    else
+        echo 'You have not done anything 8-)'
+    endif
 endfunction
 
 function! s:git_porcelain_type(type)
@@ -155,24 +150,3 @@ function! s:update_status()
 endfunction
 
 call s:update_status()
-
-function! s:do_search()
-    let path = getcwd()
-    while path != ''
-        if s:has_git_folder(path)
-            return path . "/.git"
-        else
-            let path = s:extract_parent_folder(path)
-        endif
-    endwhile
-
-    return ''
-endfunction
-
-function! s:has_git_folder(path)
-    return isdirectory(a:path . "/.git")
-endfunction
-
-function! s:extract_parent_folder(path)
-    return substitute(a:path, '\/[^\/]\+$', '', '')
-endfunction
