@@ -109,8 +109,9 @@ inoremap <C-x><C-o> <C-x><C-o><C-p>
 " Escaping and moving cursor
 function! s:JumpInView(f)
     let h = winheight(0) - &scrolloff
-    let first = line('.') - winline() + &scrolloff
-    let line = first + float2nr(a:f * h)
+    let top = line('.') - winline() + &scrolloff
+    let bottom = (top + h > line('$')) ? line('$') : top + h
+    let line = top + float2nr(a:f * (bottom - top))
     call feedkeys(line . 'G')
 endfunction
 inoremap kj <Esc>l
