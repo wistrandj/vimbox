@@ -1,9 +1,9 @@
 
-let s:statusline = ""
+let s:statusline = []
 " let s:custom_function
 
-fun! statusline#StatusLineFunction()
-    let s:statusline = ""
+function! statusline#StatusLineFunction()
+    let s:statusline = []
     call s:add("(buf %n) %y")
     call s:add("%f", "DiffAdd")
     call s:add(s:flags())
@@ -15,32 +15,33 @@ fun! statusline#StatusLineFunction()
     call s:add("%=")
     call s:add(s:lines())
     call s:add(s:cursor_position())
-    return s:statusline
-endfun
 
-fun! statusline#CustomText(fn)
+    return join(reverse(s:statusline), ' ')
+endfunction
+
+function! statusline#CustomText(fn)
     if type(a:fn) != type(function("tr"))
         echoerr "statusline#CustomText: Argument must be a funcref that returns a string"
         return
     endif
 
     let s:custom_function = a:fn
-endfun
+endfunction
 
 " === Simple interface for building statusline ================================
 
-fun! s:add(text, ...)
+function! s:add(text, ...)
     let higrp = (a:0 > 0) ? a:1 : ''
     if !empty(higrp)
-        let s:statusline .= "%#" . higrp . "#" . a:text . "%*"
+        call insert(s:statusline, printf('%%#%s#%s%%*', higrp, a:text))
     else
-        let s:statusline .= a:text . " "
+        call insert(s:statusline, a:text)
     endif
-endfun
+endfunction
 
 " === Building block ==========================================================
 
-fun! s:cursor_position()
+function! s:cursor_position()
     if (line('w0') == 1 && line('w$') == line('$'))
         return "[All]"
     end
@@ -56,26 +57,26 @@ fun! s:cursor_position()
 
     let current = line('.') / winh + 1
     return "[" . current . "/" . pages ."]"
-endfun
+endfunction
 
-fun! s:lines()
+function! s:lines()
     return col('.') . "'" . line('.') . "/" . line('$')
-endfun
+endfunction
 
-fun! s:flags()
+function! s:flags()
     return "[%M%R%H%W]"
-endfun
+endfunction
 
-fun! s:view_regs(names, len)
+function! s:view_regs(names, len)
     let s = ""
     let regs = map(a:names, 's:strip_reg(getreg(v:val), a:len)')
     for i in range(0, len(regs) - 1)
         let s .= (0 < i && i < len(regs) ? ',': '') . regs[i]
     endfor
     return '[' . s . ']'
-endfun
+endfunction
 
-fun! s:strip_reg(line, len)
+function! s:strip_reg(line, len)
     let fst = match(a:line, "[^ ]")
     let lst = fst + a:len
 
@@ -85,4 +86,4 @@ fun! s:strip_reg(line, len)
 
     let s = a:line[(l:fst):(l:lst)]
     return substitute(s, "[^a-zA-Z0-9 ]", '', '')
-endfun
+endfunction
