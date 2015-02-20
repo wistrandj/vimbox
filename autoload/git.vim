@@ -5,6 +5,7 @@
 
 " === Variables ===============================================================
 
+let s:git_available = 0
 let s:branch = ''
 let s:colors = {
     \'modified'  : 'MoreMsg',
@@ -48,6 +49,10 @@ function! s:build_statusline_info()
     return s
 endfunction
 function! git#statusline()
+    if !s:git_available
+        return ''
+    endif
+
     let info = s:build_statusline_info()
     if empty(info)
         return printf('[G: %s]', s:branch)
@@ -150,8 +155,14 @@ function! s:update_branch()
     endfor
 endfunction
 function! s:update_status()
-    call s:update_files()
     call s:update_branch()
+
+    if v:shell_error != 0
+        let s:git_available = 0
+        return
+    endif
+
+    call s:update_files()
 endfunction
 
 call s:update_status()
