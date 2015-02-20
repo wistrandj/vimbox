@@ -1,4 +1,8 @@
 
+" FIXME
+"  * a file can be modified after 'git add' etc.
+"    -> the statusline doesn't know how to show all combinations
+
 " === Variables ===============================================================
 
 let s:branch = ''
@@ -45,7 +49,11 @@ function! s:build_statusline_info()
 endfunction
 function! git#statusline()
     let info = s:build_statusline_info()
-    return printf('[G: %s %s]', s:branch, info)
+    if empty(info)
+        return printf('[G: %s]', s:branch)
+    else
+        return printf('[G: %s %s]', s:branch, info)
+    endif
 endfunction
 
 " === private =================================================================
@@ -110,16 +118,13 @@ function! s:git_porcelain_type(type)
 
     if a:type[0] == '?'
         return 'untracked'
-    elseif a:type[0] == 'A'
-        return 'new'
     elseif a:type[1] == 'M'
         return 'modified'
     elseif a:type[1] == 'D'
         return 'deleted'
+    else
+        return 'new'
     endif
-
-    echoerr 'Git (git_porcelain_type): Invalid type ' . a:type
-    return ''
 endfunction
 function! s:update_files()
     call s:reset_status()
