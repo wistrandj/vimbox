@@ -1,3 +1,13 @@
+" TEMP
+comm! Update call <SID>update_status()
+comm! Test call <SID>echo_status()
+
+function! Raw()
+    for key in keys(s:status)
+        echo printf("%s: %s", key, string(s:status[key]))
+    endfor
+endfunction
+comm! Raw call Raw()
 
 " === Variables ===============================================================
 
@@ -6,38 +16,61 @@ let s:git_folder = ""
 let s:git_folder_searched = 0
 let s:git_branch = ""
 
+let s:status = {}
+function! s:reset_status()
+    let s:status = {'modified': [], 'untracked': [], 'new': [], 'deleted': []}
+endfunction
+call s:reset_status()
+au BufWritePost * silent! call s:update_status()
+
 " === Public Functions ========================================================
 
-fun! git#status()
-    echo system("git status")
-endfun
+function! git#status()
+    call s:echo_status()
+endfunction
 
-fun! git#commit()
-    " XXX: Does not show newly added files
-    let untracked = s:untracked_files()
-    let modified = s:modified_files()
+function! s:echo_file_list(key, list, color)
+    let len = len(a:list)
+    echo printf('%s: ', a:key)
 
-    if len(untracked) > 0
-        let msg = 'Working tree has untracked files'
-        call s:echo_coloured_file_list(msg, untracked, "String")
-    endif
+    for i in range(0, len - 2)
+        exe "echohl " . a:color
+        echon a:list[i]
+        echohl None
+        echon ', '
+    endfor
 
-    if len(modified) == 0
-        echo "Tracked files are up to date!"
-        return
-    endif
+    exe "echohl " . a:color
+    echon printf('%s', a:list[len - 1])
+    echohl None
+endfunction
 
-    let msg = "Modified files"
-    call s:echo_coloured_file_list(msg, modified, "Question")
+function! s:echo_status()
+    let colors = {
+        \'modified'  : 'MoreMsg',
+        \'untracked' : 'Linenr',
+        \'new'       : 'Comment',
+        \'deleted'   : 'WarningMsg'}
+
+    for key in keys(s:status)
+        let list = s:status[key]
+        if !empty(list)
+            call s:echo_file_list(key, list, colors[key])
+        endif
+    endfor
+endfunction
+
+function! git#commit()
+    call s:echo_status()
     let msg = input("Commit message: ")
     echo system('git commit -am "'. msg . '"')
-endfun
+endfunction
 
-fun! git#git_available()
+function! git#git_available()
     return git#find_git_folder() != ""
-endfun
+endfunction
 
-fun! git#get_current_branch()
+function! git#get_current_branch()
     if !empty(s:git_branch)
         return s:git_branch
     elseif s:git_folder_searched
@@ -54,9 +87,9 @@ fun! git#get_current_branch()
     else
         return ""
     endif
-endfun
+endfunction
 
-fun! git#find_git_folder()
+function! git#find_git_folder()
     if s:git_folder_searched
         return s:git_folder
     endif
@@ -70,11 +103,47 @@ fun! git#find_git_folder()
     endif
 
     return res
-endfun
+endfunction
 
 " === private =================================================================
 
-fun! s:do_search()
+function! s:git_porcelain_type(type)
+    if len(a:type) < 2
+        return ''
+    endif
+
+    if a:type[0] == '?'
+        return 'untracked'
+    elseif a:type[0] == 'A'
+        return 'new'
+    elseif a:type[1] == 'M'
+        return 'modified'
+    elseif a:type[1] == 'D'
+        return 'deleted'
+    endif
+
+    echoerr 'Git (git_porcelain_type): Invalid type ' . a:type
+    return ''
+endfunction
+
+function! s:update_status()
+    call s:reset_status()
+    let output = system("git status --porcelain")
+
+    for line in split(output, '\n')
+        let type = strpart(line, 0, 2)
+        let file = strpart(line, 3)
+
+        let key = s:git_porcelain_type(type)
+        if !empty(key)
+            let files = s:status[key]
+            call insert(files, file, len(files))
+        endif
+    endfor
+endfunction
+call s:update_status()
+
+function! s:do_search()
     let path = getcwd()
     while path != ""
         if s:has_git_folder(path)
@@ -85,49 +154,12 @@ fun! s:do_search()
     endwhile
 
     return ""
-endfun
+endfunction
 
-fun! s:echo_colour(msg, colour)
-    exe "echohl " . a:colour
-    echo a:msg
-    echohl None
-endfun
-fun! s:echon_colour(msg, colour)
-    exe "echohl " . a:colour
-    echon a:msg
-    echohl None
-endfun
-
-fun! s:echo_coloured_file_list(msg, files, colour)
-    echon a:msg . ": "
-
-    for i in range(0, len(a:files) - 1)
-        call s:echon_colour(a:files[i], a:colour)
-        if (i < len(a:files) - 1)
-            echon ', '
-        else
-            echo ""
-        endif
-    endfor
-endfun
-
-fun! s:untracked_files()
-    return s:ls_files('--others')
-endfun
-
-fun! s:modified_files()
-    return s:ls_files('--modified')
-endfun
-
-fun! s:ls_files(options)
-    let files = system('git ls-files --exclude-standard ' . a:options)
-    return split(files, '\n')
-endfun
-
-fun! s:has_git_folder(path)
+function! s:has_git_folder(path)
     return isdirectory(a:path . "/.git")
-endfun
+endfunction
 
-fun! s:extract_parent_folder(path)
+function! s:extract_parent_folder(path)
     return substitute(a:path, '\/[^\/]\+$', '', '')
-endfun
+endfunction
