@@ -1,5 +1,4 @@
 
-
 " === Variables ===============================================================
 filetype off " for Vundle
 syntax on
@@ -185,7 +184,6 @@ call vundle#begin()
     " Plugin 'AsyncCommand'
     Plugin 'AutoTag'
     Plugin 'ctrlp.vim'
-    Plugin 'easymotion'
     Plugin 'fugitive'
     Plugin 'Gundo'
     Plugin 'L9'
@@ -221,18 +219,16 @@ autocmd BufRead *.tab set ft=tab
 " CtrlP
 nnoremap <leader>scc :CtrlPClearCache<CR>
 
+" Scratch buffer
+comm! SC Scratch
+comm! SCS split | Scratch
+comm! SCV vsplit | Scratch
+
 nnoremap <leader>st :TlistToggle<CR>
-nnoremap <leader>sS :Scratch<CR>
 
 " NERDtree
 let NERDTreeDirArrows = 0
 nnoremap <leader>sn :NERDTreeToggle<CR>
-
-" Easymotion
-    " Hide unneeded easymotion-shortcuts behind ++
-map ++ <Plug>(easymotion-prefix)
-nmap <leader>f ++f
-nmap <leader>F ++F
 
 " === Initialize ==============================================================
 " Clear registers
