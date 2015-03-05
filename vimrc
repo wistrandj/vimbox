@@ -37,7 +37,8 @@ set list            " show ws as visible char
 set listchars=tab:>\ ,trail:·
 set noshowmode
 set scrolloff=2     " Keep a few lines always visible around cursor
-" set showbreak=\
+set breakindent
+set showbreak=\ -
 set splitright
 set ttyfast
 set wildmenu
@@ -181,7 +182,6 @@ set rtp+=~/.vim/bundle/Vundle
 call vundle#begin()
     Plugin 'Vundle'
     Plugin 'a'
-    " Plugin 'AsyncCommand'
     Plugin 'AutoTag'
     Plugin 'ctrlp.vim'
     Plugin 'fugitive'
@@ -196,16 +196,15 @@ call vundle#begin()
     Plugin 'surround'
     Plugin 'tabular'
     Plugin 'taglist.vim'
+    Plugin 'ag'
 
+    " My plugins
     Plugin 'mystuff'
     Plugin 'mytypes'
     Plugin 'makefix'
     Plugin 'marks'
-    " Plugin 'vim-airline'
 call vundle#end()
 filetype plugin indent on
-
-" let g:airline_section_c = "%{MakefixStatusline('airline')}"
 
 let g:gundo_prefer_python3 = 1
 
