@@ -1,6 +1,7 @@
+let g:makefix_highlight = 0
 
 " === Variables ===============================================================
-filetype off " for Vundle
+filetype off " for V_undle
 syntax on
 
 " Use these keys for mappings
@@ -187,8 +188,8 @@ call vundle#begin()
     Plugin 'fugitive'
     Plugin 'Gundo'
     Plugin 'L9'
-    Plugin 'nerdcommenter'
     Plugin 'nerdtree'
+    Plugin 'nerdcommenter'
     Plugin 'rainbowparenthesis'
     Plugin 'repeat'
     Plugin 'scratch'

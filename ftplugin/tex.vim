@@ -33,6 +33,8 @@ function! OpenZathura()
     call system("zathura " . s:pdf_file . " &")
 endfunction
 
+inoremap $ $$<left>
+
 nnoremap <buffer> <expr> <leader>mr OpenZathura()
 nnoremap <buffer> <leader>mc :silent make<CR>:redraw!<CR>
 
