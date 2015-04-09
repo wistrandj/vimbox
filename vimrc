@@ -183,9 +183,9 @@ set rtp+=~/.vim/bundle/Vundle
 call vundle#begin()
     Plugin 'Vundle'
     Plugin 'a'
-    Plugin 'AutoTag'
+    " Plugin 'AutoTag'
     Plugin 'ctrlp.vim'
-    Plugin 'fugitive'
+    " Plugin 'fugitive'
     Plugin 'Gundo'
     Plugin 'L9'
     Plugin 'nerdtree'
@@ -196,7 +196,7 @@ call vundle#begin()
     Plugin 'snipMate'
     Plugin 'surround'
     Plugin 'tabular'
-    Plugin 'taglist.vim'
+    " Plugin 'taglist.vim'
     Plugin 'ag'
 
     " My plugins
@@ -217,7 +217,7 @@ autocmd BufNewFile,BufRead *.scl set ft=scala
 autocmd BufRead *.tab set ft=tab
 
 " CtrlP
-nnoremap <leader>scc :CtrlPClearCache<CR>
+comm! CR :CtrlPClearCache
 
 " Scratch buffer
 comm! SC Scratch
