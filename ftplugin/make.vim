@@ -9,7 +9,7 @@ function! s:PKG(input, lib)
         return ''
     endif
 
-    return out
+    return join(split(out))
 endfunction
 
 function! s:PKGAppend(arg)
@@ -24,7 +24,16 @@ function! s:PKGAppend(arg)
 
     if !empty(out)
          call setline(line('.'), line . ' ' . out)
+         echo printf("|%s|", line . ' ' . out)
     endif
 endfunction
 
-command! -nargs=1 PKG call <SID>PKGAppend(<f-args>)
+function! s:PKGCompletionFunc(arglead, cmdline, cursorpos)
+    let last_arg=substitute(a:arglead, ".*\(\w*\)$", '\1', '')
+    let pkgfiles = split(glob('/usr/lib/pkgconfig/*'))
+    call filter(pkgfiles, 'v:val =~? "' . last_arg . '"')
+    call map(pkgfiles, 'substitute(v:val, ".*\/\\(.*\\).pc", "\\1", "")')
+    return pkgfiles
+endfunction
+
+command! -nargs=1 -complete=customlist,s:PKGCompletionFunc PKG call <SID>PKGAppend(<f-args>)

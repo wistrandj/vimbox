@@ -69,6 +69,7 @@ set matchtime=2
 set autoindent
 set smartindent
 set shiftround
+set nocindent
 
 " Tabs
 set expandtab       " tabs = spaces
