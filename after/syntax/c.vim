@@ -12,15 +12,19 @@ syn keyword flow break case default do if else for goto return switch while
 " Types
 hi ctypes ctermfg=green
 syn keyword ctypes int short unsigned signed float double char void
+syn match ctypes "u\?int\d\+_t"
 " Modifiers
 hi cmodifiers ctermfg=darkred
 syn keyword cmodifiers static volatile const extern register 
 " Data
 hi cdata ctermfg=darkblue
-syn keyword cdata enum struct union
+syn keyword cdata enum struct union typedef
 " Include
 hi cinclude ctermfg=darkmagenta
 hi cincludeFile ctermfg=red
+hi link cmacro cinclude
+syn match cmacro "^#.*"
+" syn region cmacro start="^#.*\\$" end="\(\\\n\)"
 syn match cinclude "#include .*" contains=cincludeFile
 syn match cincludeFile "<.*>" containedin=cinclude contained
 syn match cincludeFile "\".*\"" containedin=cinclude contained
@@ -32,7 +36,7 @@ hi logicchar ctermfg=darkyellow
 syn match logicchar "||\|&&\|=\|<\|>"
 
 " Struct & Union members
-hi structMember ctermfg=darkgrey
+hi structMember ctermfg=blue
 hi structMemberName ctermfg=blue
 syn match structMember "\(->\|\.\)\w\+" contains=structMemberName
 syn match structMemberName "\(->\|\.\)\zs\w\+" containedin=structMember contained
@@ -43,6 +47,7 @@ syn keyword variable NULL
 syn match variable "\d\+[fL]\?"
 syn match variable "\d\+\.\d*[fL]\?"
 syn match variable "\".*\""
+syn match variable "'.'"
 
 " Function call
 hi fn ctermfg=cyan
@@ -51,8 +56,8 @@ hi fnParen ctermfg=darkmagenta
 hi fnParenMini ctermfg=magenta
 hi fnArg ctermfg=blue
 hi fnComma ctermfg=yellow
-syn match fn "\w*\ze(.*)" contains=fnParenMini,fnParen
-syn match fn1 "\w*\ze(.*)" contains=fnParenMini,fnParen contained
+syn match fn "\w\+\ze(.*)" contains=fnParenMini,fnParen
+syn match fn1 "\w\+\ze(.*)" contains=fnParenMini,fnParen contained
 syn match fnParen "(.*)" contained contains=ALL
 syn match fnComma "," contained containedin=fn
 syn match fnparenMini "()"

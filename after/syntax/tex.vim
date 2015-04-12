@@ -8,9 +8,10 @@ syn keyword Todo TODO
 syn match Title '\\\w*'
 syn match Title '{\\[^}]*}'
 " ^\cmd{abc}
-syn match LineNr '^\s*\\\w*{[^}]\+}'
+syn match LineNr '\s*\\\w*{[^}]\+}'
 
 syn match Concealed '\\item' conceal cchar=*
+syn match Concealed '\\subitem' conceal cchar=-
 
 set concealcursor=nvi
 

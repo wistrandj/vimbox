@@ -31,7 +31,6 @@ autocmd BufRead help set readonly
 " View
      " this can be swapped on/off with keys "\hc"
 let s:hlcol80 = matchadd('DiffChange', '\%81v', 100)
-set cursorline
 set display=lastline
 set lazyredraw      " don't redraw while macro execution
 set list            " show ws as visible char

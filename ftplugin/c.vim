@@ -91,13 +91,13 @@ function! s:make(...)
     let arg = ""
     if a:0 > 0
         let arg = a:1
-    end
+    endif
 
     if filereadable("makefile") || filereadable("Makefile")
         exe "silent make " . arg
         redraw! " CLI Vim's UI breaks with 'silent' command for some reason
         return 1
-    end
+    endif
 
     return 0
 endfunction
