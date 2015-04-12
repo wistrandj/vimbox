@@ -1,6 +1,8 @@
 nnoremap <F1> :source "/home/jasu/.vim/bundle/mystuff/after/syntax/c.vim"<CR>
 
 syn clear
+let b:current_syntax = 'c'
+
 " These two should belong to function call block but these are low priority
 hi fnWord ctermfg=white
 syn match fnWord "\w\+" containedin=fnParen contained
