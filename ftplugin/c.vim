@@ -253,8 +253,8 @@ function! s:cmd_init_files(...)
 endfunction
 
 
-
-    " NOTE: These functions are for including new headers
+" === Include headers with completion =========================================
+"   TODO add abbreviations
 function! s:skip_headers(pattern)
     " TODO Skip lines that match a:pattern
     return line('.')
@@ -314,8 +314,10 @@ function! s:include_n_headers(sys_header, ...)
         call s:include_header(name, a:sys_header)
     endfor
 endfunction
+command! -nargs=+ -complete=customlist,<SID>std_completion Std call <SID>include_n_headers(1, <f-args>)
 command! -nargs=+ -complete=file_in_path Header call <SID>include_n_headers(1, <f-args>)
 command! -nargs=+ -complete=customlist,<SID>complete_include Include call <SID>include_n_headers(0, <f-args>)
+nn <leader>is :call feedkeys(":Std ")<CR>
 nn <leader>in :call feedkeys(":Header ")<CR>
 nn <leader>ii :call feedkeys(":Include ")<CR>
 function! s:complete_include(arg, cmdline, curpos)
@@ -324,14 +326,32 @@ function! s:complete_include(arg, cmdline, curpos)
     call map(xs, 'substitute(v:val, "^include\/", "", "")')
     return xs
 endfunction
-
-    " TODO: use abbreviations for inclusion of headers ^^^
-function! s:abbrev_sys_header(header)
-    " Use abbreviations for system headers
-    let a = {'a': 'assert', 'm': 'math', 'io': 'stdio', 'str': 'string', 'lib': 'stdlib', 'uni': 'unistd'}
-    if (has_key(a, a:header))
-        return a[a:header]
+function! s:std_completion(arg, cmdline, curpos)
+    if &ft == 'c'
+        return s:c_complete_list
+    elseif &ft == 'cpp'
+        return s:cpp_complete_list
     endif
-
-    return a:header
 endfunction
+
+let s:c_complete_list =
+\["ctype.h", "errno.h", "fenv.h", "float.h", "inttypes.h", "iso646.h",
+\"limits.h", "locale.h", "math.h", "setjmp.h", "signal.h", "stdarg.h",
+\"stdbool.h", "stddef.h", "stdint.h", "stdio.h", "stdlib.h", "string.h",
+\"tgmath.h", "time.h", "uchar.h", "wchar.h", "wctype.h"]
+
+let s:cpp_complete_list =
+\["ctype.h", "errno.h", "fenv.h", "float.h", "inttypes.h", "iso646.h",
+\"limits.h", "locale.h", "math.h", "setjmp.h", "signal.h", "stdarg.h",
+\"stdbool.h", "stddef.h", "stdint.h", "stdio.h", "stdlib.h", "string.h",
+\"tgmath.h", "time.h", "uchar.h", "wchar.h", "wctype.h",
+\"cctype", "cerrno", "cfenv", "cfloat", "cinttypes", "ciso646", "climits",
+\"clocale", "cmath", "csetjmp", "csignal", "cstdarg", "cstdbool", "cstddef",
+\"cstdint", "cstdio", "cstdlib", "cstring", "ctgmath", "ctime", "cuchar",
+\"cwchar", "cwctype", "array", "bitset", "deque", "forward_list", "list",
+\"map", "queue", "set", "stack", "unordered_map", "unordered_set", "vector",
+\"atomic", "condition_variable", "future", "mutex", "thread", "algorithm",
+\"chrono", "codecvt", "complex", "exception", "functional", "initializer_list",
+\"iterator", "limits", "locale", "memory", "new", "numeric", "random",
+\"ratio", "regex", "stdexcept", "string", "system_error", "tuple", "typeindex",
+\"typeinfo", "type_traits", "utility", "valarray"]
