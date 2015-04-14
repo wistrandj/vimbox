@@ -49,10 +49,6 @@ nn <leader>ef :cr<CR>:cn<CR>
 nn <leader>en :cn<CR>
 nn <leader>ep :cp<CR>
 
-    " Include automatically header file to the top of the file
-nn <leader>in :call <SID>cmd_include_new_header(1)<CR>
-nn <leader>iN :call <SID>cmd_include_new_header(0)<CR>
-
     " Insert a colon after next parenthesis
 ino <expr> ; <SID>insert_semicolon()
 
@@ -256,53 +252,76 @@ function! s:cmd_init_files(...)
     if exists("g:loaded_ctrlp") | CtrlPClearCache | endif
 endfunction
 
-    " FUNCTION: s:include_new_header
-    " Adds an #include line for a:headername to the top of the source file
-    " PARAMETERS:
-    "   headername: name of the header
-    "   sys_header: 1 for <header.h> and 0 for "header.h"
-    " TODO:
-    "   sort include lines
-function! s:include_new_header(headername, sys_header)
-    let cursor = getcurpos()
 
-    " Set header name and the #include line
-    let header = a:headername
-    if (header[-2:] != '.h') && &ft != 'cpp'
-        let header = header . '.h'
+
+    " NOTE: These functions are for including new headers
+function! s:skip_headers(pattern)
+    " TODO Skip lines that match a:pattern
+    return line('.')
+endfunction
+function! s:find_line_for_header()
+    let pattern = "#include \".*\""
+    let lnum = search(pattern)
+    if lnum == 0
+        return 1
+    endif
+    return s:skip_headers("#include <.*>")
+endfunction
+function! s:find_line_for_sys_header()
+    let pattern="#include <.*>"
+    let lnum = search(pattern)
+    if lnum != 0
+        return lnum + 1
     endif
 
-    let lb = '<'
-    let rb = '>'
-    if (!a:sys_header)
-        let lb = '"'
-        let rb = '"'
+    " Add system headers after regular headers
+    let lnum = search("#include \".*\"")
+    if lnum == 0
+        return 1
     endif
-
-    let line = '#include ' . lb . header . rb
-
-    " Find the line to put the include
-    if (search(line))
-        echo header . ' is already included'
-        call setpos('.', cursor)
+    return s:skip_headers(pattern)
+endfunction
+function! s:add_header_to_line(headerline, lnum)
+    if (0 != search(a:headerline, 'n'))
+        echo a:headerline . " is already included!"
         return
     endif
-
-    " Search the last #include from line 20 backwards
-    call cursor(20)
-    let linenum = search('#include', 'b')
-    if (!linenum)
-        let linenum = 2
+    echo "Adding after line num " . a:lnum
+    call append(a:lnum, a:headerline)
+endfunction
+function! s:include_header(name, sys_header)
+    let pos = getcurpos()
+    call cursor(1, 1)
+    if a:sys_header
+        let lnum = s:find_line_for_sys_header()
+        let l = '<'
+        let r = '>'
+    else
+        let lnum = s:find_line_for_header()
+        let l = '"'
+        let r = '"'
     endif
 
-    call append(linenum, line)
+    if lnum < 0 || line('$') < lnum
+        let lnum = 1
+    endif
 
-    let cursor[1] += 1
-    call setpos('.', cursor)
-
-    echo 'Included ' . header
+    let line = '#include ' . l . a:name . r
+    call s:add_header_to_line(line, lnum - 1)
+    call cursor(pos)
+endfunction
+command! -nargs=1 -complete=file_in_path Header call <SID>include_header(<f-args>, 1)
+command! -nargs=1 -complete=customlist,<SID>complete_include Include call <SID>include_header(<f-args>, 0)
+nn <leader>in :call feedkeys(":Header ")<CR>
+nn <leader>ii :call feedkeys(":Include ")<CR>
+function! s:complete_include(arg, cmdline, curpos)
+    let xs = split(glob('**/*.h*'))
+    call filter(xs, 'v:val =~ a:arg')
+    call map(xs, 'substitute(v:val, "^include\/", "", "")')
+    return xs
 endfunction
 
+    " TODO: use abbreviations for inclusion of headers ^^^
 function! s:abbrev_sys_header(header)
     " Use abbreviations for system headers
     let a = {'a': 'assert', 'm': 'math', 'io': 'stdio', 'str': 'string', 'lib': 'stdlib', 'uni': 'unistd'}
@@ -311,30 +330,4 @@ function! s:abbrev_sys_header(header)
     endif
 
     return a:header
-endfunction
-
-function! s:include_list_of_headers(headers, sys_headers)
-    for head in a:headers
-        let name = head
-        if a:sys_headers && &ft != 'cpp'
-            let name = s:abbrev_sys_header(head)
-        endif
-
-        call s:include_new_header(name, a:sys_headers)
-    endfor
-endfunction
-
-    " FUNCTION: s:cmd_init_source_file
-    " Ask user the name of header file to be included
-    " PARAMETERS:
-    "   sys_header: a param to be passed to include_new_header()
-function! s:cmd_include_new_header(sys_header)
-    let q = "System header: "
-    if (!a:sys_header)
-        let q = "Project header: "
-    endif
-
-    let headers = split(input(q), ',')
-
-    call s:include_list_of_headers(headers, a:sys_header)
 endfunction
