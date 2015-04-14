@@ -24,12 +24,15 @@ syn keyword cdata enum struct union typedef
 " Include
 hi cinclude ctermfg=darkmagenta
 hi cincludeFile ctermfg=red
+hi badContinuation ctermbg=red
 hi link cmacro cinclude
 syn match cmacro "^#.*"
-" syn region cmacro start="^#.*\\$" end="\(\\\n\)"
+syn region cmacro start="^#define.*\\\n" skip="\\$" end="$"
 syn match cinclude "#include .*" contains=cincludeFile
 syn match cincludeFile "<.*>" containedin=cinclude contained
 syn match cincludeFile "\".*\"" containedin=cinclude contained
+
+syn region cmacro start="#if 0" end="#endif"
 
 " Single chars
 hi ptrchar ctermfg=red
@@ -48,7 +51,7 @@ hi variable ctermfg=darkred
 syn keyword variable NULL
 syn match variable "\d\+[fL]\?"
 syn match variable "\d\+\.\d*[fL]\?"
-syn match variable "\".*\""
+syn match variable "\"\(\(\\\"\)\|[^"]\)*\""
 syn match variable "'.'"
 
 " Function call
