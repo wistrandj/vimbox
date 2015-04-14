@@ -286,7 +286,6 @@ function! s:add_header_to_line(headerline, lnum)
         echo a:headerline . " is already included!"
         return
     endif
-    echo "Adding after line num " . a:lnum
     call append(a:lnum, a:headerline)
 endfunction
 function! s:include_header(name, sys_header)
@@ -310,8 +309,13 @@ function! s:include_header(name, sys_header)
     call s:add_header_to_line(line, lnum - 1)
     call cursor(pos)
 endfunction
-command! -nargs=1 -complete=file_in_path Header call <SID>include_header(<f-args>, 1)
-command! -nargs=1 -complete=customlist,<SID>complete_include Include call <SID>include_header(<f-args>, 0)
+function! s:include_n_headers(sys_header, ...)
+    for name in a:000
+        call s:include_header(name, a:sys_header)
+    endfor
+endfunction
+command! -nargs=+ -complete=file_in_path Header call <SID>include_n_headers(1, <f-args>)
+command! -nargs=+ -complete=customlist,<SID>complete_include Include call <SID>include_n_headers(0, <f-args>)
 nn <leader>in :call feedkeys(":Header ")<CR>
 nn <leader>ii :call feedkeys(":Include ")<CR>
 function! s:complete_include(arg, cmdline, curpos)
