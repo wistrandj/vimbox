@@ -370,6 +370,12 @@ function! s:find_nth_match(str, pat, n)
     endwhile
     return s
 endfunction
+function! s:split_three(str, n, m)
+    let a = strpart(a:str, 0, a:n + 1)
+    let b = strpart(a:str, a:n + 1, a:m - a:n - 1)
+    let c = strpart(a:str, a:m)
+    return [a, b, c]
+endfunction
 function! s:show_function_tag(tag, hlarg)
     echohl MoreMsg
     echo a:tag["name"]
@@ -381,13 +387,13 @@ function! s:show_function_tag(tag, hlarg)
     endif
 
     let args = a:tag["signature"]
-    let m1 = s:find_nth_match(args, ',', a:hlarg) + 1
-    let m2 = stridx(args, ',', m1)
-    echon strpart(args, 0, m1 + 1)
-    echohl Search
-    echon strpart(args, m1 + 1, m2 - m1 - 1)
-    echohl Constant
-    echon strpart(args, m2)
+    let m = s:find_nth_match(args, ',', a:hlarg) + 1
+    let n = stridx(args, ",", m)
+    if (n == -1)
+        let n = stridx(args, ")", m)
+    endif
+    let [a, b, c] = s:split_three(args, m, n)
+    echon a | echohl Search | echon b | echohl Constant | echon c | echohl None
 endfunction
 function! s:show_struct_tag(tag)
     echo a:tag
@@ -397,8 +403,6 @@ function! s:tag_info(word)
     if empty(tags)
         echo "No tags found"
         return {}
-    elseif len(tags) > 1
-        " echo "Multiple tags found! nr: "
     endif
     return tags[0]
 endfunction
@@ -428,7 +432,8 @@ endfunction
 function! s:read_arg()
     let areg = getreg("a")
     let pos = getcurpos()
-    exe "norm! vi)\"ay\<ESC>"
+    exe "norm! i@@@\<ESC>vi)\"ay\<ESC>"
+    silent undo
     let left = getpos("'<")
     let right = getpos("'>")
     let args = getreg("a")
@@ -437,19 +442,26 @@ function! s:read_arg()
 
     return [pos, left, right, args]
 endfunction
+function! s:nr_arg(args)
+    let args = substitute(a:args, '@@@.*', '', '')
+    let commas = substitute(args, '[^,]', '', 'g')
+    return len(commas)
+endfunction
 function! s:show_function_tag_with_arguments()
     let [pos, left, right, args] = s:read_arg()
 
     if (left == right)
         call s:show_tag()
         call setpos('.', pos)
+        exe "norm! \<ESC>"
+        echo "err!"
         return
     endif
 
     let func = s:get_function_name()
     let tag = s:tag_info(func)
     if !empty(tag)
-        call s:show_function_tag(tag, 3)
+        call s:show_function_tag(tag, s:nr_arg(args))
     endif
     call setpos('.', pos)
 endfunction
