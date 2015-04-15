@@ -224,8 +224,6 @@ comm! SC Scratch
 comm! SCS split | Scratch
 comm! SCV vsplit | Scratch
 
-nnoremap <leader>st :TlistToggle<CR>
-
 " NERDtree
 let NERDTreeDirArrows = 0
 nnoremap <leader>sn :NERDTreeToggle<CR>

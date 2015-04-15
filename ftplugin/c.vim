@@ -289,7 +289,7 @@ function! s:add_header_to_line(headerline, lnum)
     call append(a:lnum, a:headerline)
 endfunction
 function! s:include_header(name, sys_header)
-    let pos = getcurpos()
+    let pos = getpos('.')
     call cursor(1, 1)
     if a:sys_header
         let lnum = s:find_line_for_sys_header()
@@ -307,7 +307,10 @@ function! s:include_header(name, sys_header)
 
     let line = '#include ' . l . a:name . r
     call s:add_header_to_line(line, lnum - 1)
-    call cursor(pos)
+    let pos[1] = pos[1] + 1
+    call setpos('.', pos)
+    echo ""
+    echo line
 endfunction
 function! s:include_n_headers(sys_header, ...)
     for name in a:000
@@ -340,12 +343,8 @@ let s:c_complete_list =
 \"stdbool.h", "stddef.h", "stdint.h", "stdio.h", "stdlib.h", "string.h",
 \"tgmath.h", "time.h", "uchar.h", "wchar.h", "wctype.h"]
 
-let s:cpp_complete_list =
-\["ctype.h", "errno.h", "fenv.h", "float.h", "inttypes.h", "iso646.h",
-\"limits.h", "locale.h", "math.h", "setjmp.h", "signal.h", "stdarg.h",
-\"stdbool.h", "stddef.h", "stdint.h", "stdio.h", "stdlib.h", "string.h",
-\"tgmath.h", "time.h", "uchar.h", "wchar.h", "wctype.h",
-\"cctype", "cerrno", "cfenv", "cfloat", "cinttypes", "ciso646", "climits",
+let s:cpp_complete_list = s:c_complete_list +
+\["cctype", "cerrno", "cfenv", "cfloat", "cinttypes", "ciso646", "climits",
 \"clocale", "cmath", "csetjmp", "csignal", "cstdarg", "cstdbool", "cstddef",
 \"cstdint", "cstdio", "cstdlib", "cstring", "ctgmath", "ctime", "cuchar",
 \"cwchar", "cwctype", "array", "bitset", "deque", "forward_list", "list",
@@ -355,3 +354,102 @@ let s:cpp_complete_list =
 \"iterator", "limits", "locale", "memory", "new", "numeric", "random",
 \"ratio", "regex", "stdexcept", "string", "system_error", "tuple", "typeindex",
 \"typeinfo", "type_traits", "utility", "valarray"]
+
+" === Show tags ===============================================================
+" Show the tag under cursor
+nn <leader>st :call <SID>show_tag()<CR>
+function! s:find_nth_match(str, pat, n)
+    let i = 0
+    let s = -1
+    while (i < a:n)
+        let s = stridx(a:str, a:pat, s + 1)
+        let i += 1
+        if (s == -1)
+            break
+        endif
+    endwhile
+    return s
+endfunction
+function! s:show_function_tag(tag, hlarg)
+    echohl MoreMsg
+    echo a:tag["name"]
+    echohl Constant
+    if (a:hlarg < 0)
+        echon a:tag["signature"]
+        echohl None
+        return
+    endif
+
+    let args = a:tag["signature"]
+    let m1 = s:find_nth_match(args, ',', a:hlarg) + 1
+    let m2 = stridx(args, ',', m1)
+    echon strpart(args, 0, m1 + 1)
+    echohl Search
+    echon strpart(args, m1 + 1, m2 - m1 - 1)
+    echohl Constant
+    echon strpart(args, m2)
+endfunction
+function! s:show_struct_tag(tag)
+    echo a:tag
+endfunction
+function! s:tag_info(word)
+    let tags = taglist(a:word)
+    if empty(tags)
+        echo "No tags found"
+        return {}
+    elseif len(tags) > 1
+        " echo "Multiple tags found! nr: "
+    endif
+    return tags[0]
+endfunction
+function! s:show_tag()
+    let word = expand("<cword>")
+    let tag = s:tag_info(word)
+    if empty(tag)
+        return
+    elseif has_key(tag, "signature")
+        call s:show_function_tag(tag, -1)
+    else
+        call s:show_struct_tag(tag)
+    end
+endfunction
+
+" Show the function tag and hilight current argument
+nn <leader>sf :call <SID>show_function_tag_with_arguments()<CR>
+function! s:get_function_name()
+    let pos = getcurpos()
+    let left = getpos("'<")
+    let left[2] = left[2] - 2
+    call setpos('.', left)
+    let word = expand("<cword>")
+    call cursor(pos)
+    return word
+endfunction
+function! s:read_arg()
+    let areg = getreg("a")
+    let pos = getcurpos()
+    exe "norm! vi)\"ay\<ESC>"
+    let left = getpos("'<")
+    let right = getpos("'>")
+    let args = getreg("a")
+    call setreg("a", areg)
+    call setpos('.', pos)
+
+    return [pos, left, right, args]
+endfunction
+function! s:show_function_tag_with_arguments()
+    let [pos, left, right, args] = s:read_arg()
+
+    if (left == right)
+        call s:show_tag()
+        call setpos('.', pos)
+        return
+    endif
+
+    let func = s:get_function_name()
+    let tag = s:tag_info(func)
+    if !empty(tag)
+        call s:show_function_tag(tag, 3)
+    endif
+    call setpos('.', pos)
+endfunction
