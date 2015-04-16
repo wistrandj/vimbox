@@ -331,10 +331,19 @@ function! s:complete_include(arg, cmdline, curpos)
 endfunction
 function! s:std_completion(arg, cmdline, curpos)
     if &ft == 'c'
-        return s:c_complete_list
+        let list = s:c_complete_list
     elseif &ft == 'cpp'
-        return s:cpp_complete_list
+        let list = s:cpp_complete_list
     endif
+
+    let ret = []
+    let pat = "^" . a:arg
+    for elem in list
+        if (elem =~ pat)
+            call insert(ret, elem)
+        endif
+    endfor
+    return reverse(ret)
 endfunction
 
 let s:c_complete_list =
