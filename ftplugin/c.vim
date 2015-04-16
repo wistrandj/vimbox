@@ -386,6 +386,13 @@ function! s:show_function_tag(tag, hlarg)
         return
     endif
 
+    if (!has_key(a:tag, "signature"))
+        " NOTE: This shouldn't happen
+        echoerr "ERROR!"
+        call s:show_struct_tag(a:tag)
+        return
+    endif
+
     let args = a:tag["signature"]
     let m = s:find_nth_match(args, ',', a:hlarg) + 1
     let n = stridx(args, ",", m)
@@ -420,35 +427,75 @@ endfunction
 
 " Show the function tag and hilight current argument
 nn <leader>sf :call <SID>show_function_tag_with_arguments()<CR>
-function! s:get_function_name()
-    let pos = getcurpos()
-    let left = getpos("'<")
-    let left[2] = left[2] - 2
-    call setpos('.', left)
-    let word = expand("<cword>")
-    call cursor(pos)
-    return word
+function! s:poscmp(p1, p2)
+    let [_,ln1, cl1,_,_] = a:p1
+    let [_,ln2, cl2,_,_] = a:p2
+    if (ln1 < ln2)
+        return -1
+    elseif (ln1 == ln2)
+        return 1
+    endif
+
+    if (cl1 < cl2)
+        return -1
+    elseif (cl1 == cl2)
+        return 1
+    endif
+
+    return 0
+endfunction
+function! s:find_parenthesis()
+    let depth = 3
+    let pos=getcurpos()
+    let ln = pos[1]
+    while (depth > 0)
+        let depth -= 1
+        let r = search('(', 'b', ln - 5)
+        if (r == 0)
+            break
+        endif
+
+        let left = getcurpos()
+        norm! %
+        let right = getcurpos()
+        if (s:poscmp(right, pos) >= 0)
+            return [left, right]
+        endif
+    endwhile
+
+    return []
+endfunction
+function! s:nr_arg(left, pos)
+    call setpos('.', a:pos)
+    let commas = 0
+    let pos = a:pos
+    while (0 < s:poscmp(pos, a:left))
+        let r = search(',', 'b')
+        if (r == 0)
+            break
+        endif
+        let pos = getcurpos()
+        let commas += 1
+    endwhile
+    return commas - 1
 endfunction
 function! s:read_arg()
-    let areg = getreg("a")
     let pos = getcurpos()
-    exe "norm! i@@@\<ESC>vi)\"ay\<ESC>"
-    silent undo
-    let left = getpos("'<")
-    let right = getpos("'>")
-    let args = getreg("a")
-    call setreg("a", areg)
-    call setpos('.', pos)
+    let paren = s:find_parenthesis()
+    if empty(paren)
+        return []
+    endif
+    let [left, right] = paren
+    let namepos = copy(left)
+    let namepos[2] -= 1
+    call setpos('.', namepos)
+    let fnname = expand("<cword>")
 
-    return [pos, left, right, args]
-endfunction
-function! s:nr_arg(args)
-    let args = substitute(a:args, '@@@.*', '', '')
-    let commas = substitute(args, '[^,]', '', 'g')
-    return len(commas)
+    return [fnname, left, right, s:nr_arg(left, pos)]
 endfunction
 function! s:show_function_tag_with_arguments()
-    let [pos, left, right, args] = s:read_arg()
+    let pos = getcurpos()
+    let [func, left, right, nr] = s:read_arg()
 
     if (left == right)
         call s:show_tag()
@@ -458,10 +505,9 @@ function! s:show_function_tag_with_arguments()
         return
     endif
 
-    let func = s:get_function_name()
     let tag = s:tag_info(func)
     if !empty(tag)
-        call s:show_function_tag(tag, s:nr_arg(args))
+        call s:show_function_tag(tag, nr)
     endif
     call setpos('.', pos)
 endfunction
