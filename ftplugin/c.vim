@@ -37,12 +37,9 @@ nn <C-w>A :call <SID>cmd_split_alternate_file('')<CR>
 nn <Leader>r :call <SID>run_echo()<CR>
 nn <Leader>mar :call <SID>run_async()<CR>
 nn <Leader>mr :call <SID>run_output()<CR>
-nn <Leader>R :make<CR>:call <SID>run_output()<CR>
     " NOTE: This is also defined in ftplugin/make.vim
 nn <leader>mc :call <SID>compile()<CR>
-nn <leader>mC :call <SID>make("clean")<CR>
 nn <leader>mt :call <SID>make("tags")<CR>
-nn <leader>mi :call <SID>make("install")<CR>
 
     " These are not set as <buffer> because the error may be in makefile
 nn <leader>ef :cr<CR>:cn<CR>
@@ -352,171 +349,16 @@ let s:c_complete_list =
 \"stdbool.h", "stddef.h", "stdint.h", "stdio.h", "stdlib.h", "string.h",
 \"tgmath.h", "time.h", "uchar.h", "wchar.h", "wctype.h"]
 
-let s:cpp_complete_list = s:c_complete_list +
-\["cctype", "cerrno", "cfenv", "cfloat", "cinttypes", "ciso646", "climits",
-\"clocale", "cmath", "csetjmp", "csignal", "cstdarg", "cstdbool", "cstddef",
-\"cstdint", "cstdio", "cstdlib", "cstring", "ctgmath", "ctime", "cuchar",
-\"cwchar", "cwctype", "array", "bitset", "deque", "forward_list", "list",
+let s:cpp_complete_list =
+\["cassert", "cctype", "cerrno", "cfenv", "cfloat", "cinttypes", "ciso646",
+\"climits", "clocale", "cmath", "csetjmp", "csignal", "cstdarg", "cstdbool",
+\"cstddef", "cstdint", "cstdio", "cstdlib", "cstring", "ctgmath", "ctime",
+\"cuchar", "cwchar", "cwctype", "array", "deque", "forward_list", "list",
 \"map", "queue", "set", "stack", "unordered_map", "unordered_set", "vector",
-\"atomic", "condition_variable", "future", "mutex", "thread", "algorithm",
-\"chrono", "codecvt", "complex", "exception", "functional", "initializer_list",
-\"iterator", "limits", "locale", "memory", "new", "numeric", "random",
-\"ratio", "regex", "stdexcept", "string", "system_error", "tuple", "typeindex",
-\"typeinfo", "type_traits", "utility", "valarray"]
-
-" === Show tags ===============================================================
-" Show the tag under cursor
-nn <leader>st :call <SID>show_tag()<CR>
-function! s:find_nth_match(str, pat, n)
-    let i = 0
-    let s = -1
-    while (i < a:n)
-        let s = stridx(a:str, a:pat, s + 1)
-        let i += 1
-        if (s == -1)
-            break
-        endif
-    endwhile
-    return s
-endfunction
-function! s:split_three(str, n, m)
-    let a = strpart(a:str, 0, a:n + 1)
-    let b = strpart(a:str, a:n + 1, a:m - a:n - 1)
-    let c = strpart(a:str, a:m)
-    return [a, b, c]
-endfunction
-function! s:show_function_tag(tag, hlarg)
-    echohl MoreMsg
-    echo a:tag["name"]
-    echohl Constant
-    if (a:hlarg < 0)
-        echon a:tag["signature"]
-        echohl None
-        return
-    endif
-
-    if (!has_key(a:tag, "signature"))
-        " NOTE: This shouldn't happen
-        echoerr "ERROR!"
-        call s:show_struct_tag(a:tag)
-        return
-    endif
-
-    let args = a:tag["signature"]
-    let m = s:find_nth_match(args, ',', a:hlarg) + 1
-    let n = stridx(args, ",", m)
-    if (n == -1)
-        let n = stridx(args, ")", m)
-    endif
-    let [a, b, c] = s:split_three(args, m, n)
-    echon a | echohl Search | echon b | echohl Constant | echon c | echohl None
-endfunction
-function! s:show_struct_tag(tag)
-    echo a:tag
-endfunction
-function! s:tag_info(word)
-    let tags = taglist(a:word)
-    if empty(tags)
-        echo "No tags found"
-        return {}
-    endif
-    return tags[0]
-endfunction
-function! s:show_tag()
-    let word = expand("<cword>")
-    let tag = s:tag_info(word)
-    if empty(tag)
-        return
-    elseif has_key(tag, "signature")
-        call s:show_function_tag(tag, -1)
-    else
-        call s:show_struct_tag(tag)
-    end
-endfunction
-
-" Show the function tag and hilight current argument
-nn <leader>sf :call <SID>show_function_tag_with_arguments()<CR>
-function! s:poscmp(p1, p2)
-    let [_,ln1, cl1,_,_] = a:p1
-    let [_,ln2, cl2,_,_] = a:p2
-    if (ln1 < ln2)
-        return -1
-    elseif (ln1 == ln2)
-        return 1
-    endif
-
-    if (cl1 < cl2)
-        return -1
-    elseif (cl1 == cl2)
-        return 1
-    endif
-
-    return 0
-endfunction
-function! s:find_parenthesis()
-    let depth = 3
-    let pos=getcurpos()
-    let ln = pos[1]
-    while (depth > 0)
-        let depth -= 1
-        let r = search('(', 'b', ln - 5)
-        if (r == 0)
-            break
-        endif
-
-        let left = getcurpos()
-        norm! %
-        let right = getcurpos()
-        if (s:poscmp(right, pos) >= 0)
-            return [left, right]
-        endif
-    endwhile
-
-    return []
-endfunction
-function! s:nr_arg(left, pos)
-    call setpos('.', a:pos)
-    let commas = 0
-    let pos = a:pos
-    while (0 < s:poscmp(pos, a:left))
-        let r = search(',', 'b')
-        if (r == 0)
-            break
-        endif
-        let pos = getcurpos()
-        let commas += 1
-    endwhile
-    return commas - 1
-endfunction
-function! s:read_arg()
-    let pos = getcurpos()
-    let paren = s:find_parenthesis()
-    if empty(paren)
-        return []
-    endif
-    let [left, right] = paren
-    let namepos = copy(left)
-    let namepos[2] -= 1
-    call setpos('.', namepos)
-    let fnname = expand("<cword>")
-
-    return [fnname, left, right, s:nr_arg(left, pos)]
-endfunction
-function! s:show_function_tag_with_arguments()
-    let pos = getcurpos()
-    let [func, left, right, nr] = s:read_arg()
-
-    if (left == right)
-        call s:show_tag()
-        call setpos('.', pos)
-        exe "norm! \<ESC>"
-        echo "err!"
-        return
-    endif
-
-    let tag = s:tag_info(func)
-    if !empty(tag)
-        call s:show_function_tag(tag, nr)
-    endif
-    call setpos('.', pos)
-endfunction
+\"fstream", "iomanip", "ios", "iosfwd", "iostream", "istream", "ostream",
+\"sstream", "streambuf", "atomic", "condition_variable", "future", "mutex",
+\"thread", "algorithm", "bitset", "chrono", "codecvt", "complex", "exception",
+\"functional", "initializer_list", "iterator", "limits", "locale", "memory",
+\"new", "numeric", "random", "ratio", "regex", "stdexcept", "string",
+\"system_error", "tuple", "typeindex", "typeinfo", "type_traits", "utility",
+\"valarray"]

@@ -5,7 +5,7 @@ let s:statusline = []
 function! statusline#StatusLineFunction()
     let s:statusline = []
     call s:add("(buf %n) %y")
-    call s:add("%f", "DiffAdd")
+    call s:add("%f")
     call s:add(s:flags())
     call s:add('%{git#statusline()}')
     if exists("s:custom_function")

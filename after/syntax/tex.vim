@@ -4,22 +4,30 @@ syntax clear
 syn match Comment '% .*' contains=Todo
 syn keyword Todo TODO
 
-" Commands: \cmd
+" Commands
 syn match Title '\\\w*'
 syn match Title '{\\[^}]*}'
-" ^\cmd{abc}
-syn match LineNr '\s*\\\w*{[^}]\+}'
-
+syn match LineNr '\s*\\\w*\*\?{[^}]\+}'
 syn match Concealed '\\item' conceal cchar=*
 syn match Concealed '\\subitem' conceal cchar=-
-
 set concealcursor=nvi
 
-" Math mode
+" === Math mode ===============================================================
 hi MathMode ctermfg=darkgreen
-hi MathModeRegion ctermfg=green
-hi MathModeRegionBlock ctermfg=darkgreen
-syn match MathMode '\$[^$]*\$'
+hi MathModeRegion ctermfg=darkgray
+hi MathModeRegionBlock ctermfg=gray
+hi MathDollar cterm=none ctermfg=yellow
+syn match MathDollar '\$' contained
+syn match MathMode '\$[^$]*\$' contains=MathDollar
+
+" Items in mathmode
+hi LabelMatch ctermfg=red
+hi NoticeThisChar ctermfg=red
+hi AlignAmpersand ctermfg=blue
+syn match LabelMatch "\\label{.*}"
+syn match NoticeThisChar "\(=\|<\|>\|\\leq\|\\geq\|\\neq\|\\\w*arrow\)"
+syn match AlignAmpersand '&\|\\\\' containedin=MathModeRegionBlock
+
 
 syn region MathModeRegion
     \ start='\\begin{equation\*\?}'
@@ -29,21 +37,16 @@ syn region MathModeRegionBlock
     \ start='\\begin{equation\*\?}\zs'
     \ end='\ze\\end{equation\*\?}'
     \ containedin=MathModeRegion
-    \ contains=Comment
-
-hi AlignAmpersand ctermfg=blue
-syn match AlignAmpersand '&\|\\\\' containedin=MathModeRegionBlock
-
+    \ contains=Comment,LabelMatch,NoticeThisChar
 syn region MathModeRegion
-    \ start='\\begin{align\*\?}'
+    \ start='\\begin{\(align\)\*\?}'
     \ end='\\end{align\*\?}'
     \ contains=MathModeRegionBlock
 syn region MathModeRegionBlock
     \ start='\\begin{align\*\?}\zs'
     \ end='\ze\\end{align\*\?}'
     \ containedin=MathModeRegion
-    \ contains=Comment,AlignAmpersand
-" These could be combined v^
+    \ contains=Comment,AlignAmpersand,LabelMatch,NoticeThisChar
 syn region MathModeRegion
     \ start='\\begin{matrix\*\?}'
     \ end='\\end{matrix\*\?}'
@@ -52,6 +55,4 @@ syn region MathModeRegionBlock
     \ start='\\begin{matrix\*\?}\zs'
     \ end='\ze\\end{matrix\*\?}'
     \ containedin=MathModeRegion
-    \ contains=Comment,matrixAmpersand
-
-" Tabular
+    \ contains=Comment,matrixAmpersand,LabelMatch,NoticeThisChar

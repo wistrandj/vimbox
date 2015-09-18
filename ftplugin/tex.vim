@@ -1,6 +1,16 @@
 " MyStuff: tex plugin
 "
 
+" Ignore `overfull \hbox` errors with makefix
+" fun! s:IgnoreOverfullHboxErrors(err)
+"     if a:err['text'] =~ "Overfull"
+"         echom "Ignoring an error with text " . a:err['text']
+"         let a:err['remove'] = 1
+"     endif
+" endfun
+" au VimEnter * call MakefixCustomFunction(function("s:IgnoreOverfullHboxErrors"))
+
+
 set tw=80
 let s:pdf_file = ""
 compiler tex
@@ -36,7 +46,8 @@ endfunction
 inoremap $ $$<left>
 
 nnoremap <buffer> <expr> <leader>mr OpenZathura()
-nnoremap <buffer> <leader>mc :silent make<CR>:redraw!<CR>
+nnoremap <buffer> <leader>mc :silent make<CR>
+au QuickFixCmdPost <buffer> redraw!
 
 " Bold/italic words
 nnoremap <buffer> <leader>bf i{\bf<space><esc>ea}<esc>

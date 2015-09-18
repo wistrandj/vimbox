@@ -6,6 +6,7 @@ endif
 " === Public ==================================================================
 
 fun! langc#init_header_source(name)
+    call s:decide_extension()
     call s:create_and_init_file(a:name, "header")
     call s:create_and_init_file(a:name, "source")
 endfun
@@ -16,6 +17,16 @@ endfun
 
 
 " === Common private functions ================================================
+
+fun! s:decide_extension()
+    if &ft == 'cpp'
+        let g:cext = '.cpp'
+        let g:hext = '.hpp'
+    else
+        let g:cext = '.c'
+        let g:hext = '.h'
+    endif
+endfun
 
 fun! s:is_header_file(filename)
     return (-1 != match(a:filename, '\.h'))

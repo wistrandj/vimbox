@@ -25,40 +25,38 @@ function! s:InsertBelow()
     startinsert!
 endfunction
 
-" Scroll past a paragraph with <C-y> and <C-e>
-let s:scroll_max = 10
-let s:scroll_min = 3
-nnoremap <c-y> :call <SID>scroll_block(-1)<CR>j
-nnoremap <c-e> :call <SID>scroll_block(1)<CR>
-function! s:find_blank_line(linenr, lines, by, times)
-    let nr = a:linenr
-    let i = 0
+" Vertical insert mode
+function! s:HilightColumn(group, column, from, to)
+    let [from, to] = [a:from, a:to]
+    let to = a:to
+    let from = (a:to - a:from > 8) ? a:to - 8 : a:from
 
-    while (i < a:times && 1 < nr && nr < a:lines)
-        if getline(nr) =~ "^\s*$"
-            return nr
+    let pos_list = map(range(from, to), '[v:val, a:column, 1]')
+    return matchaddpos(a:group, pos_list)
+endfunction
+function! s:HilightColumn_VerticalR(group1, group2, startline)
+    let [_, line, col, _] = getpos('.')
+    let id1 = s:HilightColumn(a:group1, col, a:startline, line)
+    let id2 =  matchaddpos(a:group2, [[line, col, 1]])
+    redraw!
+    call matchdelete(id1)
+    call matchdelete(id2)
+endfunction
+function! s:VerticalR()
+    let [group1, group2] = ['ErrorMsg', 'StatusLine']
+    let [_, startline, _, _] = getpos('.')
+    call s:HilightColumn_VerticalR(group1, group2, startline)
+
+    while 1
+        let key = getchar()
+        if (key == "\<ESC>")
+            break
         endif
-        let nr += a:by
-        let i += 1
+        exe 'normal! r' . nr2char(key) . 'j'
+        call s:HilightColumn_VerticalR(group1, group2, startline)
     endwhile
-    return nr
 endfunction
-function! s:scroll_block(dir)
-    " NOTE: quotes or ' with \<C-y> ?
-    let winedge = line('w0')
-    let key = "\<C-y>"
-    if (a:dir > 0)
-        let key = "\<C-e>"
-        let winedge = line('w$')
-    endif
-
-    let blank = s:find_blank_line(winedge + a:dir, line('$'), a:dir, s:scroll_max)
-    let diff = abs(blank - winedge)
-    let diff = (diff < s:scroll_min) ? s:scroll_min : diff
-    let diff = (diff > s:scroll_max) ? s:scroll_max : diff
-
-    exe "normal! " . diff . key
-endfunction
+nnoremap <leader>R :call <SID>VerticalR()<CR>
 
 " Create a separator comment
 nn <leader>S :call <SID>ToggleCommentSeparator()<CR>

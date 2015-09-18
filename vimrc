@@ -1,3 +1,20 @@
+function! Grep(pattern)
+    " TODO
+    let lines = []
+    if (mode() == 'v')
+        let a = getpos("'<")[1]
+        let b = getpos("'>")[1]
+        let lines = getline(a, b)
+        normal! <ESC>'>
+    endif
+
+    " exe "read ! grep -o " . a:pattern . " %"
+    " normal! V
+    " call setpos('.', getpos("'."))
+    " " exe ":'<,'>!sort | uniq"
+endfunction
+command! -nargs=1 Grep call Grep(<f-args>)
+
 let g:makefix_highlight = 0
 
 " === Variables ===============================================================
@@ -30,15 +47,14 @@ autocmd BufRead help set readonly
 
 " View
      " this can be swapped on/off with keys "\hc"
-let s:hlcol80 = matchadd('DiffChange', '\%81v', 100)
 set display=lastline
 set lazyredraw      " don't redraw while macro execution
-set list            " show ws as visible char
-set listchars=tab:>\ ,trail:·
+" set list            " show ws as visible char
+" set listchars=tab:>\ ,trail:·
 set noshowmode
 set scrolloff=2     " Keep a few lines always visible around cursor
 set breakindent
-set showbreak=\ -
+set showbreak=^
 set splitright
 set ttyfast
 set wildmenu
@@ -52,14 +68,9 @@ set laststatus=2
 set statusline=%!statusline#StatusLineFunction()
 
 " Colours
-hi SignColumn ctermbg=Darkgrey
-hi StatusLineNC ctermfg=6
-hi MatchParen ctermbg=6 ctermfg=0
-hi VertSplit cterm=none
-hi Folded ctermfg=6 ctermbg=8
-    " Swap statusline color when in insert mode
-autocmd InsertEnter * echohl StatusLineNC | echo "-- INSERT --" | echohl None
-autocmd InsertLeave * echo ""
+" Swap statusline color when in insert mode
+" autocmd InsertEnter * echohl StatusLineNC | echo "-- INSERT --" | echohl None
+" autocmd InsertLeave * echo ""
 
 set showmatch
 set matchtime=2
@@ -90,6 +101,8 @@ set wildignore=*.o,*.obj,*.class
 set path=.,include/,/usr/include,/usr/local/include/,/opt/include/
 
 " === Mappings ================================================================
+nnoremap <CR> ``
+
 " Windows, buffers and tabs
 nnoremap <leader>T :tabnew<CR>
 nnoremap <leader>ta :tabprev<CR>
@@ -109,11 +122,12 @@ inoremap <C-x><C-o> <C-x><C-o><C-p>
 
 " Escaping and moving cursor
 function! s:JumpInView(f)
-    let h = winheight(0) - &scrolloff
-    let top = line('.') - winline() + &scrolloff
-    let bottom = (top + h > line('$')) ? line('$') : top + h
+    let top = line('w0') + &scrolloff
+    let bottom = line('w$') - &scrolloff
     let line = top + float2nr(a:f * (bottom - top))
-    call feedkeys(line . 'G')
+    let pos = getcurpos()
+    let pos[1] = line
+    call setpos('.', pos)
 endfunction
 inoremap kj <Esc>l
 noremap , ;
@@ -160,11 +174,11 @@ vnoremap <leader>ta :Tabular /
 " Invert hilight of column 80
 nnoremap \hc :call InvHLcol80()<CR>
 fun! InvHLcol80()
-    if s:hlcol80 == -1
-        let s:hlcol80 = matchadd('DiffChange', '\%81v', 100)
-    else
+    if exists("s:hlcol80")
         call matchdelete(s:hlcol80)
-        let s:hlcol80 = -1
+        unlet s:hlcol80
+    else
+        let s:hlcol80 = matchadd('DiffChange', '\%81v', 100)
     endif
 endfun
 
@@ -179,13 +193,11 @@ nnoremap gs{ i{<ESC>A}<ESC>%
 nnoremap gs} i{<ESC>A}<ESC>%
 
 " === Plugins and filetypes ===================================================
-set rtp+=~/.vim/bundle/Vundle
+set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#begin()
     Plugin 'Vundle'
     Plugin 'a'
-    " Plugin 'AutoTag'
     Plugin 'ctrlp.vim'
-    " Plugin 'fugitive'
     Plugin 'Gundo'
     Plugin 'L9'
     Plugin 'nerdtree'
@@ -196,14 +208,18 @@ call vundle#begin()
     Plugin 'snipMate'
     Plugin 'surround'
     Plugin 'tabular'
-    " Plugin 'taglist.vim'
     Plugin 'ag'
+    Plugin 'taglist.vim'
 
     " My plugins
-    Plugin 'mystuff'
-    Plugin 'mytypes'
+    Plugin 'mycolors'
     Plugin 'makefix'
     Plugin 'marks'
+    Plugin 'mystuff'
+    Plugin 'mytypes'
+    Plugin 'mytag'
+    Plugin 'ass-inspector'
+    Plugin 'echo_tags'
 call vundle#end()
 filetype plugin indent on
 
@@ -227,6 +243,9 @@ comm! SCV vsplit | Scratch
 " NERDtree
 let NERDTreeDirArrows = 0
 nnoremap <leader>sn :NERDTreeToggle<CR>
+
+" Ass-inspector
+nnoremap <leader>as :call Ass_ShowAssembly()<CR>
 
 " === Initialize ==============================================================
 " Clear registers

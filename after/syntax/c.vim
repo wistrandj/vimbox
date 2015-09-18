@@ -10,24 +10,28 @@ syn match fnWord "\w\+" containedin=fnParen contained
 " Keywords
 " Flow
 hi flow ctermfg=yellow
-syn keyword flow break case default do if else for goto return switch while
+syn keyword flow break case default do if else for goto return switch while continue
 " Types
 hi ctypes ctermfg=green
+hi cExtraTypes ctermfg=darkgreen
 syn keyword ctypes int short unsigned signed float double char void
+syn keyword cExtraTypes FILE
 syn match ctypes "u\?int\d\+_t"
 " Modifiers
 hi cmodifiers ctermfg=darkred
 syn keyword cmodifiers static volatile const extern register 
 " Data
 hi cdata ctermfg=darkblue
+hi csizeof ctermfg=yellow
 syn keyword cdata enum struct union typedef
+syn keyword csizeof sizeof
 " Include
 hi cinclude ctermfg=darkmagenta
 hi cincludeFile ctermfg=red
 hi badContinuation ctermbg=red
 hi link cmacro cinclude
-syn match cmacro "^#.*"
-syn region cmacro start="^#define.*\\\n" skip="\\$" end="$"
+syn match cmacro "^\s*#.*" contains=comment
+syn region cmacro start="^\s*#define.*\\\n" skip="\\$" end="$"
 syn match cinclude "#include .*" contains=cincludeFile
 syn match cincludeFile "<.*>" containedin=cinclude contained
 syn match cincludeFile "\".*\"" containedin=cinclude contained
@@ -38,7 +42,9 @@ syn region cmacro start="#if 0" end="#endif"
 hi ptrchar ctermfg=red
 syn match ptrchar "\*\|&"
 hi logicchar ctermfg=darkyellow
-syn match logicchar "||\|&&\|=\|<\|>"
+syn match logicchar "||\|&&\|=\|<\|>\|==\|!="
+hi link mathchar logicchar
+syn match mathchar "+\|-\|\*\|\/\|%"
 
 " Struct & Union members
 hi structMember ctermfg=blue
@@ -48,11 +54,13 @@ syn match structMemberName "\(->\|\.\)\zs\w\+" containedin=structMember containe
 
 " Variables
 hi variable ctermfg=darkred
-syn keyword variable NULL
-syn match variable "\d\+[fL]\?"
+syn keyword variable NULL stdout stdin stderr EXIT_FAILURE EXIT_SUCCESS M_PI
+syn match variable "\<\d\+[fL]\?"
 syn match variable "\d\+\.\d*[fL]\?"
 syn match variable "\"\(\(\\\"\)\|[^"]\)*\""
 syn match variable "'.'"
+syn match variable "'\\0'"
+syn match variable "'\\n'"
 
 " Function call
 hi fn ctermfg=cyan
