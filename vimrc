@@ -1,3 +1,6 @@
+inoremap <expr> <c-j> pumvisible() ? '<c-o>' : '<c-x><c-o>'
+inoremap <expr> <c-k> pumvisible() ? '<c-p>' : '<c-x><c-p>'
+
 function! Grep(pattern)
     " TODO
     let lines = []
