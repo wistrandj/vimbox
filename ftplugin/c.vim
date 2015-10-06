@@ -20,9 +20,9 @@ autocmd BufWritePre <buffer> :%s/\s\+$//e
 
 " === Commands and mappings ===================================================
 
-    " COMMAND: Initfiles
+    " COMMAND: New
     " Creates header and source file with proper contents
-com! -nargs=* Initfiles call s:cmd_init_files(<f-args>)
+com! -nargs=* New call s:cmd_init_files(<f-args>)
     "
     " COMMAND: MoveHeader
     " Create a header file with
@@ -226,7 +226,6 @@ function! s:cmd_move_selected_lines_to_header(line1, line2)
 endfunction
 
 function! s:cmd_init_files(...)
-    echo "cmd_init_source_file input: " . string(a:000)
     let name = ''
     let split = 1
 

@@ -19,11 +19,16 @@ endfun
 " === Common private functions ================================================
 
 fun! s:decide_extension()
-    if &ft == 'cpp'
-        let g:cext = '.cpp'
-        let g:hext = '.hpp'
-    else
+    if &ft == 'c'
         let g:cext = '.c'
+        let g:hext = '.h'
+    endif
+
+    let g:cext = '.cpp'
+    let g:hext = '.hpp'
+
+    " C++ can also use .h files as headers
+    if empty(glob('**/*.hpp')) && !empty(glob('**/*.h'))
         let g:hext = '.h'
     endif
 endfun
