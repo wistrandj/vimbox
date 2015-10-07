@@ -1,23 +1,3 @@
-inoremap <expr> <c-j> pumvisible() ? '<c-o>' : '<c-x><c-o>'
-inoremap <expr> <c-k> pumvisible() ? '<c-p>' : '<c-x><c-p>'
-
-function! Grep(pattern)
-    " TODO
-    let lines = []
-    if (mode() == 'v')
-        let a = getpos("'<")[1]
-        let b = getpos("'>")[1]
-        let lines = getline(a, b)
-        normal! <ESC>'>
-    endif
-
-    " exe "read ! grep -o " . a:pattern . " %"
-    " normal! V
-    " call setpos('.', getpos("'."))
-    " " exe ":'<,'>!sort | uniq"
-endfunction
-command! -nargs=1 Grep call Grep(<f-args>)
-
 let g:makefix_highlight = 0
 
 " === Variables ===============================================================
@@ -155,6 +135,9 @@ endfunction
 nnoremap gcw :call <SID>ReplaceWord('<cword>')<CR>
 nnoremap gcW :call <SID>ReplaceWord('<cWORD>')<CR>
 
+inoremap <expr> <c-j> pumvisible() ? '<c-o>' : '<c-x><c-o>'
+inoremap <expr> <c-k> pumvisible() ? '<c-p>' : '<c-x><c-p>'
+
 " Fold
 nnoremap <Space> za
 
@@ -176,14 +159,14 @@ vnoremap <leader>ta :Tabular /
 
 " Invert hilight of column 80
 nnoremap \hc :call InvHLcol80()<CR>
-fun! InvHLcol80()
+function! InvHLcol80()
     if exists("s:hlcol80")
         call matchdelete(s:hlcol80)
         unlet s:hlcol80
     else
         let s:hlcol80 = matchadd('DiffChange', '\%81v', 100)
     endif
-endfun
+endfunction
 
 " Add quotes/parens/brackets till the end of line
 nnoremap gs' i'<ESC>A'<ESC>
@@ -213,6 +196,7 @@ call vundle#begin()
     Plugin 'tabular'
     Plugin 'ag'
     Plugin 'taglist.vim'
+    Plugin 'OmniCppComplete'
 
     " My plugins
     Plugin 'mycolors'
