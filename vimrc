@@ -17,7 +17,7 @@ let $MYSTUFF = $VIMHOME . "bundle/mystuff/"
 set nocompatible
 set history=100
 set backspace=indent,start
-" set mouse=a
+set completeopt+=menuone
 
 " Files
 set t_Co=8
@@ -32,8 +32,8 @@ autocmd BufRead help set readonly
      " this can be swapped on/off with keys "\hc"
 set display=lastline
 set lazyredraw      " don't redraw while macro execution
-" set list            " show ws as visible char
-" set listchars=tab:>\ ,trail:·
+set list            " show ws as visible char
+set listchars=tab:>\ ,trail:·
 set noshowmode
 set scrolloff=2     " Keep a few lines always visible around cursor
 set breakindent
@@ -81,7 +81,7 @@ set nojoinspaces
 
 set wildignore=*.o,*.obj,*.class
 
-set path=.,include/,/usr/include,/usr/local/include/,/opt/include/
+set path=.,./include/,/usr/include,/usr/local/include/,/opt/include/
 
 " === Mappings ================================================================
 nnoremap <CR> ``
@@ -188,15 +188,11 @@ call vundle#begin()
     Plugin 'L9'
     Plugin 'nerdtree'
     Plugin 'nerdcommenter'
-    Plugin 'rainbowparenthesis'
     Plugin 'repeat'
     Plugin 'scratch'
     Plugin 'snipMate'
     Plugin 'surround'
     Plugin 'tabular'
-    Plugin 'ag'
-    Plugin 'taglist.vim'
-    Plugin 'OmniCppComplete'
 
     " My plugins
     Plugin 'mycolors'
@@ -204,7 +200,6 @@ call vundle#begin()
     Plugin 'marks'
     Plugin 'mystuff'
     Plugin 'mytypes'
-    Plugin 'mytag'
     Plugin 'ass-inspector'
     Plugin 'echo_tags'
 call vundle#end()
