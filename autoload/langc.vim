@@ -22,6 +22,7 @@ fun! s:decide_extension()
     if &ft == 'c'
         let g:cext = '.c'
         let g:hext = '.h'
+        return
     endif
 
     let g:cext = '.cpp'
