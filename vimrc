@@ -211,7 +211,7 @@ call vundle#begin()
     Plugin 'mycolors'
     Plugin 'makefix'
     Plugin 'marks'
-    Plugin 'mystuff'
+    Plugin 'vimbox'
     Plugin 'mytypes'
     Plugin 'ass-inspector'
     Plugin 'echo_tags'
