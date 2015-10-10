@@ -1,14 +1,17 @@
-Mystuff is just .vimrc in the form of a plugin to keep the rc file as clean as
-possible. It doesn't do anything in particular and it's a collection of random
-settings, mappings, functions and syntax files.
+# VimBox-rc
 
-The plugin was not intended to be published: it doesn't have proper
-documentation or even descriptive comments. However if you dig in to the source
-code you may find something useful.
+VimBox-rc is a plugin of miscellaneous commands and mappings that are too small
+to be separate plugins. It's not intended for public use and therefore it has
+hardly any documentation. But if you find any interesting ideas in VimBox-rc
+then feel free to copy those bits and pieces into your own vimrc.
 
-Install
-=======
+# Install
 
-Use should not use Mystuff as it is but you should build your own .vimrc file or
-plugin. If you want to try it, copy Mystuff/ to your Pathogen's bundle folder
-and create a symbolic link from ~/.vimrc to ~/.vim/bundle/mystuff/vimrc.
+Copy the project into bundle/ directory provided by your plugin manager (Vundle,
+Pathogen) and make a symlink from vimrc to ~/.vimrc.
+
+```
+    cd ~/.vim/bundle
+    git clone [url]
+    ln -s VimBox-rc/vimrc ~/.vimrc
+```
