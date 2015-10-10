@@ -181,3 +181,6 @@ inoremap <expr> " matchingChars#InsertQuote("\"")
 " inoremap <expr> ' matchingChars#InsertQuote("'")
 
 imap <expr> <BS> matchingChars#RemoveSomething()
+
+" TODO See if 'changes' functions in refactor are any useful
+comm! -nargs=* Grep call refactor#grep(<f-args>)

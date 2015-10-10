@@ -2,19 +2,16 @@ fun! refactor#apply_renaming()
     let changes = s:readChanges()
     call s:applyChanges(changes)
     call s:updateBuffers(changes)
-    call SwitchToOutputWindow()
+    call output#switch_to()
 endfun
 
-fun! refactor#grep(word, filepattern)
-    let recursive = (a:filepattern == "*") ? ' -R ' : ''
-    let files = empty(recursive) ? ' . ' : ' * '
-    let cmd = "grep -n " . recursive . a:word . files
-    echo cmd
-    let lines = system("grep -n " . recursive . a:word . files)
+fun! refactor#grep(word, ...)
+    let dir = a:0 ? a:1 : ''
+    let cmd = printf('grep -Rn "%s" %s', a:word, dir)
+    let lines = system(cmd)
     let lines = substitute(lines, ':', '|', 'g')
-    call OutputText(lines)
 
-    call SwitchToOutputWindow()
+    call output#text(lines)
     set ft=qf " quickfix window's filetype
 endfun
 
