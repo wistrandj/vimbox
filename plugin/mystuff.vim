@@ -3,6 +3,31 @@ if filereadable("project.vim")
     source project.vim
 endif
 
+function! s:ChangeToWindow(nr)
+    if winbufnr(a:nr) == -1
+        echoerr "No such window as " . a:nr
+    endif
+    exe a:nr . 'wincmd w'
+endfunction
+function! s:CloseWindows(nrs)
+    let sorted=reverse(sort(a:nrs))
+    for win in sorted
+        exe win . 'wincmd c'
+    endfor
+endfunction
+function! HideInfoWindows()
+    let last = winnr('$')
+    let closelist=[]
+    for win in range(1, last)
+        call <SID>ChangeToWindow(win)
+        if !(empty(&buftype))
+            call insert(closelist, win)
+        endif
+    endfor
+    call <SID>CloseWindows(closelist)
+endfunction
+nnoremap <C-w>h :call HideInfoWindows()<CR>
+
 " Git
 nnoremap _Gs :call git#status()<CR>
 nnoremap _Gc :call git#commit()<CR>
@@ -97,7 +122,7 @@ function! s:open_temporary_file(...)
     exe 'edit ' . g:mystuff_temporary_file . suffix
 endfunction
 
-" High light words when searching
+" Hilight words when searching
 nn <silent> n n:call <SID>HLnext()<CR>
 nn <silent> N N:call <SID>HLnext()<CR>
 function! s:HLnext()
@@ -156,17 +181,3 @@ inoremap <expr> " matchingChars#InsertQuote("\"")
 " inoremap <expr> ' matchingChars#InsertQuote("'")
 
 imap <expr> <BS> matchingChars#RemoveSomething()
-
-" Refactor
-" Does these work?
-command! -nargs=? Rename :call <SID>mygrep('*', <f-args>)
-command! RenameA :call ()
-function! s:mygrep(filepattern, ...)
-    if a:0 == 0
-        let word = expand("<cword>")
-    else
-        let word = a:1
-    endif
-    call refactor#grep(word, a:filepattern)
-endfunction
-
