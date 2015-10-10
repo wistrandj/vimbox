@@ -1,3 +1,14 @@
+set mouse=a
+let g:count=1
+function! Balloon()
+    let g:count += 1
+    echo "Balloon exists (" . g:count . ")"
+    return ''
+    return "Word (" . g:count . "): " . v:beval_text
+endfunction
+set balloonexpr=Balloon()
+set ballooneval
+
 let g:makefix_highlight = 0
 
 " === Variables ===============================================================
@@ -23,13 +34,10 @@ set completeopt+=menuone
 set t_Co=8
 set confirm
 set hidden
-set noswapfile
-set nobackup
 set autowrite
 autocmd BufRead help set readonly
 
 " View
-     " this can be swapped on/off with keys "\hc"
 set display=lastline
 set lazyredraw      " don't redraw while macro execution
 set list            " show ws as visible char
@@ -49,11 +57,6 @@ endif
 
 set laststatus=2
 set statusline=%!statusline#StatusLineFunction()
-
-" Colours
-" Swap statusline color when in insert mode
-" autocmd InsertEnter * echohl StatusLineNC | echo "-- INSERT --" | echohl None
-" autocmd InsertLeave * echo ""
 
 set showmatch
 set matchtime=2
@@ -76,12 +79,22 @@ set gdefault        " s///g always
 set ignorecase      " Don't care about case in searches
 set smartcase
 set incsearch
+set matchpairs+=<:>
 
 set nojoinspaces
-
 set wildignore=*.o,*.obj,*.class
-
 set path=.,./include/,/usr/include,/usr/local/include/,/opt/include/
+
+" Backup and viminfo
+" 'directory' sets the location for swap files
+set directory=/tmp/
+set viminfo=h,f1,:100,'100,<50,s10,n~/.vimtrash/viminfo
+set nobackup
+" set backup
+" set backupdir=~/.vimtrash,/tmp
+" set backupskip=~/,~/bin,~/doc,~/dl/,~/doc,~/src
+" set writebackup
+" TODO allow backups and swap files only in ~/,~/bin,... etc. folders
 
 " === Mappings ================================================================
 nnoremap <CR> ``
