@@ -138,16 +138,22 @@ nn gj :call <SID>JumpInView(0.75)<CR>
 nn gk :call <SID>JumpInView(0.25)<CR>
 
 " Search and replace
-nnoremap <F8> :set invhls<CR>
-nnoremap g* :set hls<CR>*``
-nnoremap g# :set hls<CR>#``
+nnoremap <leader><space> :set invhls<CR>
+function! s:Gstar()
+    let s = '\<' . expand("<cword>") . '\>'
+    let s = fnameescape(s)
+    exe 'let @/ = "' . s . '"'
+    set hls
+endfunction
+nnoremap g* :call <SID>Gstar()<CR>
 function! s:ReplaceWord(type)
     let pat = escape(tolower(expand(a:type)), '*+/')
-    call feedkeys(':%s/' . pat . '/')
+    call feedkeys(':%s/\<' . pat . '\>/')
 endfunction
-nnoremap gcw :call <SID>ReplaceWord('<cword>')<CR>
-nnoremap gcW :call <SID>ReplaceWord('<cWORD>')<CR>
+nnoremap cgw :call <SID>ReplaceWord('<cword>')<CR>
+nnoremap cgW :call <SID>ReplaceWord('<cWORD>')<CR>
 
+" Complete menu
 inoremap <expr> <c-j> pumvisible() ? '<c-o>' : '<c-x><c-o>'
 inoremap <expr> <c-k> pumvisible() ? '<c-p>' : '<c-x><c-p>'
 
