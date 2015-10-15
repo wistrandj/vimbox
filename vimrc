@@ -221,6 +221,7 @@ call vundle#begin()
     Plugin 'mytypes'
     Plugin 'ass-inspector'
     Plugin 'echo_tags'
+    Plugin 'cvimming'
 call vundle#end()
 filetype plugin indent on
 
