@@ -1,15 +1,5 @@
-set mouse=a
-let g:count=1
-function! Balloon()
-    let g:count += 1
-    echo "Balloon exists (" . g:count . ")"
-    return ''
-    return "Word (" . g:count . "): " . v:beval_text
-endfunction
-set balloonexpr=Balloon()
-set ballooneval
-
 let g:makefix_highlight = 0
+set tags+=~/src/sys/tags/*
 
 " === Variables ===============================================================
 filetype off " for V_undle
