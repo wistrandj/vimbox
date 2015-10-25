@@ -57,6 +57,7 @@ hi variable ctermfg=darkred
 syn keyword variable NULL stdout stdin stderr EXIT_FAILURE EXIT_SUCCESS M_PI
 syn match variable "\<\d\+[fL]\?"
 syn match variable "\d\+\.\d*[fL]\?"
+syn match variable "0x\x\+"
 syn match variable "\"\(\(\\\"\)\|[^"]\)*\""
 syn match variable "'.'"
 syn match variable "'\\0'"
