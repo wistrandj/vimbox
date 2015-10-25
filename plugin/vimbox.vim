@@ -50,39 +50,6 @@ function! s:InsertBelow()
     startinsert!
 endfunction
 
-" Vertical insert mode
-function! s:HilightColumn(group, column, from, to)
-    let [from, to] = [a:from, a:to]
-    let to = a:to
-    let from = (a:to - a:from > 8) ? a:to - 8 : a:from
-
-    let pos_list = map(range(from, to), '[v:val, a:column, 1]')
-    return matchaddpos(a:group, pos_list)
-endfunction
-function! s:HilightColumn_VerticalR(group1, group2, startline)
-    let [_, line, col, _] = getpos('.')
-    let id1 = s:HilightColumn(a:group1, col, a:startline, line)
-    let id2 =  matchaddpos(a:group2, [[line, col, 1]])
-    redraw!
-    call matchdelete(id1)
-    call matchdelete(id2)
-endfunction
-function! s:VerticalR()
-    let [group1, group2] = ['ErrorMsg', 'StatusLine']
-    let [_, startline, _, _] = getpos('.')
-    call s:HilightColumn_VerticalR(group1, group2, startline)
-
-    while 1
-        let key = getchar()
-        if (key == "\<ESC>")
-            break
-        endif
-        exe 'normal! r' . nr2char(key) . 'j'
-        call s:HilightColumn_VerticalR(group1, group2, startline)
-    endwhile
-endfunction
-nnoremap <leader>R :call <SID>VerticalR()<CR>
-
 " Create a separator comment
 nn <leader>S :call <SID>ToggleCommentSeparator()<CR>
 function! s:ToggleCommentSeparator()
