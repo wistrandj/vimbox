@@ -1,4 +1,5 @@
-nnoremap <F1> :source "/home/jasu/.vim/bundle/mystuff/after/syntax/c.vim"<CR>
+" Don't use this syntax file
+finish
 
 syn clear
 let b:current_syntax = 'c'
