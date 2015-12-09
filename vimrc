@@ -1,5 +1,4 @@
 let g:makefix_highlight = 0
-set tags+=~/src/sys/tags/*
 
 " === Variables ===============================================================
 filetype off " for V_undle
@@ -202,6 +201,7 @@ call vundle#begin()
     Plugin 'snipMate'
     Plugin 'surround'
     Plugin 'tabular'
+    Plugin 'gitgutter'
 
     " My plugins
     Plugin 'mycolors'
@@ -210,12 +210,16 @@ call vundle#begin()
     Plugin 'vimbox'
     Plugin 'mytypes'
     Plugin 'ass-inspector'
-    Plugin 'echo_tags'
-    Plugin 'cvimming'
+    Plugin 'viewtag'
+    Plugin 'vic'
+    Plugin 'touchtags'
+    Plugin 'Z'
 call vundle#end()
 filetype plugin indent on
 
+" Ggundo
 let g:gundo_prefer_python3 = 1
+nnoremap <leader>pG :GundoToggle<CR>
 
 " Filetypes
 autocmd BufNewFile,BufRead *.story set ft=groovy
@@ -235,6 +239,12 @@ comm! SCV vsplit | Scratch
 " NERDtree
 let NERDTreeDirArrows = 0
 nnoremap <leader>sn :NERDTreeToggle<CR>
+
+" GitGutter
+let g:gitgutter_map_keys = 0
+let g:gitgutter_realtime = 0
+let g:gitgutter_highlight_lines = 0
+nnoremap <leader>pg :GitGutterSignsToggle<CR>
 
 " Ass-inspector
 nnoremap <leader>as :call Ass_ShowAssembly()<CR>
