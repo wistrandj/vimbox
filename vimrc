@@ -114,7 +114,7 @@ function! s:JumpInView(f)
     let pos[1] = line
     call setpos('.', pos)
 endfunction
-inoremap kj <Esc>l
+" inoremap kj <Esc>l
 noremap , ;
 noremap ; ,
 noremap j gj
@@ -230,6 +230,7 @@ autocmd BufRead *.tab set ft=tab
 
 " CtrlP
 comm! CR :CtrlPClearCache
+au! FileWritePost :CtrlPClearCache
 
 " Scratch buffer
 comm! SC Scratch
