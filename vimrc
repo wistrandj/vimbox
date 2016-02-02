@@ -1,5 +1,8 @@
 let g:makefix_highlight = 0
 
+exe "nnoremap gc /[A-Z]\<CR>"
+exe "nnoremap dgc d/[A-Z]\<CR>"
+
 " === Variables ===============================================================
 filetype off " for V_undle
 syntax on
@@ -125,6 +128,7 @@ map Ö {
 map Ä }
 nn gj :call <SID>JumpInView(0.75)<CR>
 nn gk :call <SID>JumpInView(0.25)<CR>
+nnoremap <C-g> g;
 
 " Search and replace
 nnoremap <leader><space> :set invhls<CR>
