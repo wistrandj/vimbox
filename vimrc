@@ -221,6 +221,9 @@ call vundle#begin()
 call vundle#end()
 filetype plugin indent on
 
+" Surround
+let g:surround_no_insert_mappings = 1
+
 " Ggundo
 let g:gundo_prefer_python3 = 1
 nnoremap <leader>pG :GundoToggle<CR>
