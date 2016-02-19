@@ -1,7 +1,23 @@
-" === Mappings ================================================================
-if filereadable("project.vim")
-    source project.vim
-endif
+
+" Maximize window
+function! s:ToggleWindowMaximize()
+    if exists('t:maximize_window')
+        unlet t:maximize_window
+        wincmd =
+    else
+        let t:maximize_window = 1
+        wincmd _
+    endif
+endfunction
+nnoremap <silent> <C-w>_ :call <SID>ToggleWindowMaximize()<CR>
+
+function! s:Autocmd_MaximizeWindow()
+    " This function is called on WinEnter
+    if exists('t:maximize_window')
+        wincmd _
+    endif
+endfunction
+au WinEnter * call <SID>Autocmd_MaximizeWindow()
 
 function! s:ChangeToWindow(nr)
     if winbufnr(a:nr) == -1
@@ -128,45 +144,6 @@ function! s:expand_visual_block()
         set startofline
     endif
 endfunction
-
-" TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-" Copied from: http://vim.wikia.com/wiki/Window_zooming_convenience
-" function! ToggleMaxWins()
-"   if exists('t:windowMax')
-"     au! maxCurrWin
-"     wincmd =
-"     unlet t:windowMax
-"   else
-"     augroup maxCurrWin
-"         " au BufEnter * wincmd _ | wincmd |
-"         "
-"         " only max it vertically
-"         au! WinEnter * if exists('t:windowMax') | wincmd _ | endif
-"     augroup END
-"     let t:windowMax=1
-"     do maxCurrWin WinEnter
-"   endif
-" endfunction
-" nnoremap <C-w>_ :call ToggleMaxWins()<CR>
-" function! MaybeMaximizeWindow()
-"     if !exists('t:maximize_window')
-"         wincmd _
-"     endif
-" endfunction
-" function! SetMaximizeWindowVariable(value)
-"     if (val)
-"         let t:maximize_window = 1
-"     elseif exists('t:maximize_window')
-"         unlet t:maximize_window
-"     endif
-" endfunction
-" 
-" augroup maxCurrWin
-"     au WinEnter * call MaybeMaximizeWindow()
-" augroup END
-" 
-" nnoremap <C-w>_ call SetMaximizeWindowVariable(1) | do maxCurrWin WinEnter
-" TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
 
 " === Autoload ================================================================
 " Runfile
