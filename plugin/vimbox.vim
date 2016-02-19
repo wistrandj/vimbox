@@ -129,6 +129,45 @@ function! s:expand_visual_block()
     endif
 endfunction
 
+" TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+" Copied from: http://vim.wikia.com/wiki/Window_zooming_convenience
+" function! ToggleMaxWins()
+"   if exists('t:windowMax')
+"     au! maxCurrWin
+"     wincmd =
+"     unlet t:windowMax
+"   else
+"     augroup maxCurrWin
+"         " au BufEnter * wincmd _ | wincmd |
+"         "
+"         " only max it vertically
+"         au! WinEnter * if exists('t:windowMax') | wincmd _ | endif
+"     augroup END
+"     let t:windowMax=1
+"     do maxCurrWin WinEnter
+"   endif
+" endfunction
+" nnoremap <C-w>_ :call ToggleMaxWins()<CR>
+" function! MaybeMaximizeWindow()
+"     if !exists('t:maximize_window')
+"         wincmd _
+"     endif
+" endfunction
+" function! SetMaximizeWindowVariable(value)
+"     if (val)
+"         let t:maximize_window = 1
+"     elseif exists('t:maximize_window')
+"         unlet t:maximize_window
+"     endif
+" endfunction
+" 
+" augroup maxCurrWin
+"     au WinEnter * call MaybeMaximizeWindow()
+" augroup END
+" 
+" nnoremap <C-w>_ call SetMaximizeWindowVariable(1) | do maxCurrWin WinEnter
+" TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+
 " === Autoload ================================================================
 " Runfile
 command! Run call runfile#Run()

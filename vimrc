@@ -1,8 +1,5 @@
 let g:makefix_highlight = 0
 
-exe "nnoremap gc /[A-Z]\<CR>"
-exe "nnoremap dgc d/[A-Z]\<CR>"
-
 " === Variables ===============================================================
 filetype off " for V_undle
 syntax on
@@ -80,7 +77,7 @@ set path=.,./include/,/usr/include,/usr/local/include/,/opt/include/
 " Backup and viminfo
 " 'directory' sets the location for swap files
 set directory=/tmp/
-set viminfo=h,f1,:100,'100,<50,s10,n~/.vimtrash/viminfo
+" set viminfo=h,f1,:100,'100,<50,s10,n~/.vimtrash/viminfo
 set nobackup
 " set backup
 " set backupdir=~/.vimtrash,/tmp
@@ -206,9 +203,10 @@ call vundle#begin()
     Plugin 'surround'
     Plugin 'tabular'
     Plugin 'gitgutter'
+    Plugin 'syntastic'
+    Plugin 'neomake'
 
     " My plugins
-    Plugin 'mycolors'
     Plugin 'makefix'
     Plugin 'marks'
     Plugin 'vimbox'
@@ -217,6 +215,7 @@ call vundle#begin()
     Plugin 'viewtag'
     Plugin 'vic'
     Plugin 'touchtags'
+    Plugin 'mycolors'
     Plugin 'Z'
 call vundle#end()
 filetype plugin indent on
@@ -263,3 +262,10 @@ let s:a = "abcdefghijklmnopqrstuvxwxyz0123456789\""
 for i in range(0, len(s:a) - 1)
     exe 'let @' . s:a[i] . '= ""'
 endfor
+
+" FIXME Where these should be put? SignColumn hilight doesn't seem to be
+" working
+colorscheme delek
+hi SignColumn ctermbg=Black
+hi Folded ctermfg=White ctermbg=Black
+
