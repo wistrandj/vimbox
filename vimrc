@@ -265,7 +265,7 @@ endfor
 
 " FIXME Where these should be put? SignColumn hilight doesn't seem to be
 " working
-colorscheme delek
+colorscheme elflord
 hi SignColumn ctermbg=Black
 hi Folded ctermfg=White ctermbg=Black
 
