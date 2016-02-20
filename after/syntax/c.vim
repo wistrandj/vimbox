@@ -22,10 +22,10 @@ syn keyword csizeof2 case
 hi ptrchar ctermfg=red
 hi logicchar ctermfg=darkyellow
 hi mathchar ctermfg=yellow
-hi comma ctermfg=yellow
+hi comma ctermfg=green
 syn match ptrchar "&"
 syn match logicchar "||\|&&\|=\|<\|>\|==\|!="
-syn match mathchar "+\|-\|\*\|\/\|%"
+syn match mathchar "+\|-\|\*\|%\|\/\ze[^\*\/]"
 syn match comma ","
 
 " Struct & Union members
@@ -44,6 +44,3 @@ hi fn ctermfg=darkblue
 hi coloncolon ctermfg=NONE
 syn match coloncolon "::" contained
 syn match fn "\(\w\+::\~\?\)\?\w\+\ze(.*)" contains=coloncolon
-
-" Comment
-" FIXME: comments should be different color than code
