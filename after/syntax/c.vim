@@ -33,10 +33,6 @@ syn match comma ","
 hi structMember ctermfg=blue
 syn match structMember "\(->\|\.\)\w*" contains=structMemberName
 
-" Templates
-hi link templateType logicchar
-syn match templateType "<.*>"
-
 " Strings
 hi variable ctermfg=darkred
 hi formatSpecifier ctermfg=yellow
