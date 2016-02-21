@@ -3,9 +3,10 @@ if exists('g:no_syntax')
 endif
 let b:current_syntax = 'c'
 
-hi sectionLineStart ctermfg=darkred cterm=underline
-hi link NormalAux Normal
-syn match sectionLineStart "^};\?$"
+hi FunctionLine cterm=italic
+hi ClassLine cterm=underline
+call matchadd("FunctionLine", '^\w\&\(public:\|private:\|protected\|class\)\@!.*')
+call matchadd("ClassLine", '^\(class\|struct\|enum\).*')
 
 " Modifiers
 hi cmodifiers ctermfg=red
@@ -31,6 +32,10 @@ syn match comma ","
 " Struct & Union members
 hi structMember ctermfg=blue
 syn match structMember "\(->\|\.\)\w*" contains=structMemberName
+
+" Templates
+hi link templateType logicchar
+syn match templateType "<.*>"
 
 " Strings
 hi variable ctermfg=darkred
