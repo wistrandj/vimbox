@@ -44,4 +44,8 @@ syn match formatSpecifier "%-\?\d*\(\.\d\+\)\?\w\+" containedin=variable
 hi fn ctermfg=darkblue
 hi coloncolon ctermfg=NONE
 syn match coloncolon "::" contained
-syn match fn "\(\w\+::\~\?\)\?\w\+\ze(.*)" contains=coloncolon
+syn match fn "\(\w\+::\~\?\)\?\w\+\ze("
+
+" hi insideParenthesis cterm=NONE
+" syn region fn start="\(\w\+::\~\?\)\?\w\+\ze(" end=")" contains=ALL
+" syn match insideParenthesis "(.*)" contains=ALL

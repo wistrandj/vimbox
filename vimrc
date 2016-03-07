@@ -203,7 +203,7 @@ call vundle#begin()
     Plugin 'surround'
     Plugin 'tabular'
     Plugin 'gitgutter'
-    Plugin 'syntastic'
+    " Plugin 'syntastic'
     Plugin 'neomake'
 
     " My plugins
@@ -252,6 +252,9 @@ let g:gitgutter_map_keys = 0
 let g:gitgutter_realtime = 0
 let g:gitgutter_highlight_lines = 0
 nnoremap <leader>pg :GitGutterSignsToggle<CR>
+
+" Syntastic
+let g:syntastic_cpp_compiler_options = ' -std=c++11'
 
 " Ass-inspector
 nnoremap <leader>as :call Ass_ShowAssembly()<CR>
