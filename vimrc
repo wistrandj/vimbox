@@ -1,5 +1,3 @@
-let g:makefix_highlight = 0
-
 " === Variables ===============================================================
 filetype off " for V_undle
 syntax on
@@ -219,6 +217,10 @@ call vundle#begin()
     Plugin 'Z'
 call vundle#end()
 filetype plugin indent on
+
+" Makefix
+let g:makefix_highlight = 0
+au BufRead *.tex call makefix#CustomFunction(function('makefix#misc#LatexNoOverfullHbox'))
 
 " Surround
 let g:surround_no_insert_mappings = 1
