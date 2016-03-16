@@ -3,6 +3,12 @@ if exists('g:no_syntax')
 endif
 let b:current_syntax = 'c'
 
+" Use better colors for completion
+hi Pmenu ctermbg=Black ctermfg=White
+hi PmenuSel cterm=underline ctermbg=Red
+hi PmenuSbar ctermfg=Blue
+hi PmenuThumb ctermfg=Blue
+
 hi FunctionLine cterm=italic
 hi ClassLine cterm=underline
 call matchadd("FunctionLine", '^\w\&\(public:\|private:\|protected\|class\)\@!.*')
