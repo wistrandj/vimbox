@@ -100,6 +100,8 @@ nnoremap <C-l> :wincmd l<CR>
 
 " Files and external programs
 nnoremap <F1> :so $MYVIMRC<CR>
+let g:vim_default_source = expand('<sfile>')
+nnoremap <F1> :echo g:vim_default_source<CR>
 nnoremap <Leader>w :update<CR>
 inoremap <C-x><C-o> <C-x><C-o><C-p>
 
@@ -204,6 +206,7 @@ call vundle#begin()
     " Plugin 'syntastic'
     Plugin 'OmniCppComplete'
     Plugin 'neomake'
+    " Plugin 'vim-autotags'
 
     " My plugins
     Plugin 'makefix'
