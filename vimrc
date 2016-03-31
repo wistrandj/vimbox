@@ -41,6 +41,12 @@ set conceallevel=2
 if has("gui_running")
     colorscheme molokai
 endif
+colorscheme elflord " This seems to clear all hilights
+hi SignColumn ctermbg=Black
+hi Folded ctermfg=White ctermbg=Black
+
+
+
 
 set laststatus=2
 set statusline=%!statusline#StatusLineFunction()
@@ -127,15 +133,47 @@ nn gj :call <SID>JumpInView(0.75)<CR>
 nn gk :call <SID>JumpInView(0.25)<CR>
 nnoremap <C-g> g;
 
-" Search and replace
-nnoremap <leader><space> :set invhls<CR>
-function! s:Gstar()
-    let s = '\<' . expand("<cword>") . '\>'
-    let s = fnameescape(s)
-    exe 'let @/ = "' . s . '"'
-    set hls
+" ------------------------------------------------------------
+let s:hls_current_index = 0
+let s:hls_colors = ['darkgreen', 'darkred', 'darkblue', 'darkcyan']
+let s:hls_names = copy(s:hls_colors)
+call map(s:hls_names, 'printf("HLS_vivi_%s", v:val)')
+let s:hls_max_number = len(s:hls_colors)
+let s:hls_matchadd_ids = repeat([-1], s:hls_max_number)
+for i in range(len(s:hls_colors))
+    let color = s:hls_colors[i]
+    let name = s:hls_names[i]
+    exe 'hi ' . name . ' cterm=reverse ctermfg=' . color
+endfor
+function! HLSPush()
+    let i = s:hls_current_index
+    if (s:hls_matchadd_ids[i] > 0)
+        echom "del " . s:hls_matchadd_ids[i]
+        call matchdelete(s:hls_matchadd_ids[i])
+    endif
+    let s:hls_matchadd_ids[i] = matchadd(s:hls_names[i], getreg('/'))
+    echom "new " . s:hls_matchadd_ids[i]
+    let s:hls_current_index = (i + 1) % s:hls_max_number
 endfunction
-nnoremap g* :call <SID>Gstar()<CR>
+function! HLSClear()
+    for i in range(s:hls_max_number)
+        if (s:hls_matchadd_ids[i] > 0)
+            echo "Cleared: " . i . ": " . s:hls_matchadd_ids[i]
+            call matchdelete(s:hls_matchadd_ids[i])
+            let s:hls_matchadd_ids[i] = -1
+        endif
+    endfor
+    let s:hls_current_index = 0
+endfunction
+nnoremap g/ :call HLSPush()<CR>
+nnoremap g\ :call HLSClear()<CR>
+comm! Push call HLSPush()
+let g:a = s:hls_matchadd_ids
+let g:names = s:hls_names
+" ------------------------------------------------------------
+
+nnoremap <leader><space> :set invhls<CR>
+
 function! s:ReplaceWord(type)
     let pat = escape(tolower(expand(a:type)), '*+/')
     call feedkeys(':%s/\<' . pat . '\>/')
@@ -271,12 +309,6 @@ let s:a = "abcdefghijklmnopqrstuvxwxyz0123456789\""
 for i in range(0, len(s:a) - 1)
     exe 'let @' . s:a[i] . '= ""'
 endfor
-
-" FIXME Where these should be put? SignColumn hilight doesn't seem to be
-" working
-colorscheme elflord
-hi SignColumn ctermbg=Black
-hi Folded ctermfg=White ctermbg=Black
 
 
 " === Debugging ===============================================================
