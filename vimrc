@@ -165,45 +165,10 @@ function! hls_obj.init()
     endfor
 endfunction
 call hls_obj.init()
+
 nnoremap g/ :call hls_obj.push()<CR>
 nnoremap g\ :call hls_obj.clear()<CR>
 nnoremap g* :let @/=expand('<cword>') <bar> call hls_obj.push()<CR>
-
-" ------------------------------------------------------------
-
-" let s:hls_current_index = 0
-" let s:hls_colors = ['darkgreen', 'darkred', 'darkblue', 'darkcyan']
-" let s:hls_names = copy(s:hls_colors)
-" call map(s:hls_names, 'printf("HLS_vivi_%s", v:val)')
-" let s:hls_max_number = len(s:hls_colors)
-" let s:hls_matchadd_ids = repeat([-1], len(s:hls_colors))
-" for i in range(len(s:hls_colors))
-"     let color = s:hls_colors[i]
-"     let name = s:hls_names[i]
-"     exe 'hi ' . name . ' cterm=reverse ctermfg=' . color
-" endfor
-" function! HLSPush()
-"     let i = s:hls_current_index
-"     if (s:hls_matchadd_ids[i] > 0)
-"         call matchdelete(s:hls_matchadd_ids[i])
-"     endif
-"     let s:hls_matchadd_ids[i] = matchadd(s:hls_names[i], getreg('/'))
-"     let s:hls_current_index = (i + 1) % len(s:hls_colors)
-" endfunction
-" function! HLSClear()
-"     for i in range(len(s:hls_colors))
-"         if (s:hls_matchadd_ids[i] > 0)
-"             call matchdelete(s:hls_matchadd_ids[i])
-"             let s:hls_matchadd_ids[i] = -1
-"         endif
-"     endfor
-"     let s:hls_current_index = 0
-" endfunction
-" nnoremap g/ :call HLSPush()<CR>
-" nnoremap g\ :call HLSClear()<CR>
-" comm! Push call HLSPush()
-" ------------------------------------------------------------
-
 nnoremap <leader><space> :set invhls<CR>
 
 function! s:ReplaceWord(type)
