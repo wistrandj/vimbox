@@ -168,7 +168,7 @@ call hls_obj.init()
 
 nnoremap g/ :call hls_obj.push()<CR>
 nnoremap g\ :call hls_obj.clear()<CR>
-nnoremap g* :let @/=expand('<cword>') <bar> call hls_obj.push()<CR>
+nnoremap g* :let @/='\<' . expand('<cword>') . '\>' <bar> call hls_obj.push()<CR>
 nnoremap <leader><space> :set invhls<CR>
 
 function! s:ReplaceWord(type)
