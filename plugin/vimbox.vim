@@ -106,16 +106,27 @@ function! s:open_temporary_file(...)
 endfunction
 
 " Hilight words when searching
-nn <silent> n n:call <SID>HLnext()<CR>
-nn <silent> N N:call <SID>HLnext()<CR>
-function! s:HLnext()
-    let pattern = '\c\%#'.@/
-    let key = matchadd('ErrorMsg', pattern)
-
-    redraw
-    sleep 100m
-    call matchdelete(key)
-    redraw
+hi HLnext cterm=underline
+nn <silent> n n:call <SID>HLnext(1)<CR>
+nn <silent> N N:call <SID>HLnext(1)<CR>
+let s:hilighted = -1
+function! s:HLnext(arg)
+    if (a:arg)
+        if (s:hilighted >= 1)
+            call matchdelete(s:hilighted)
+        endif
+        augroup HLnext
+            au!
+            au CursorMoved,InsertEnter * call <SID>HLnext(0)
+        augroup END
+        let s:hilighted = matchaddpos('HLnext', [line('.')])
+    else
+        call matchdelete(s:hilighted)
+        let s:hilighted = -1
+        augroup HLnext
+            au!
+        augroup END
+    endif
 endfunction
 
 " Expand visual block to consecutive lines with same char on same col
