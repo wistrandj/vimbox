@@ -133,6 +133,26 @@ nn gj :call <SID>JumpInView(0.75)<CR>
 nn gk :call <SID>JumpInView(0.25)<CR>
 nnoremap <C-g> g;
 
+" Select lines around based on indentation
+function! s:SelectIndention()
+    let uppernr = search('\(^\s*$\)\@!', 'bWnc')
+    let lowernr = search('\(^\s*$\)\@!', 'Wnc')
+    let upper = len(substitute(getline(uppernr), '\S.*$', '', ''))
+    let lower = len(substitute(getline(lowernr), '\S.*$', '', ''))
+    let spaces = max([upper, lower])
+    if (spaces == 0)
+        return
+    endif
+    let pattern = printf('^\( \{%d\}\)\@!' . '\&' . '^\(\s*$\)\@!', spaces)
+    let p1 = search(pattern, 'bWn')
+    let p2 = search(pattern, 'Wn')
+    let p1 = (p1 != 0) ? p1 + 1 : 1
+    let p2 = (p2 != 0) ? p2 - 1 : line('$')
+    call feedkeys(p1 < p2 ? printf('%dGV%dj', p1, p2 - p1) : 'V')
+endfunction
+nnoremap vi<TAB> :call <SID>SelectIndention()<CR>
+
+
 " ------------------------------------------------------------
 let hls_obj = {}
 let hls_obj.colors = ['darkgreen', 'darkred', 'darkblue', 'darkcyan']
