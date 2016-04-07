@@ -221,17 +221,6 @@ nnoremap <F9> :set invnumber<CR>
 " Align with Tabular plugin
 vnoremap <leader>ta :Tabular /
 
-" Invert hilight of column 80
-nnoremap \hc :call InvHLcol80()<CR>
-function! InvHLcol80()
-    if exists("s:hlcol80")
-        call matchdelete(s:hlcol80)
-        unlet s:hlcol80
-    else
-        let s:hlcol80 = matchadd('DiffChange', '\%81v', 100)
-    endif
-endfunction
-
 " Add quotes/parens/brackets till the end of line
 nnoremap gs' i'<ESC>A'<ESC>
 nnoremap gs" i"<ESC>A"<ESC>
