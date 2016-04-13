@@ -18,13 +18,13 @@ set backspace=indent,start
 set completeopt+=menuone
 
 " Files
-" set t_Co=8
 set confirm
 set hidden
 set autowrite
 autocmd BufRead help set readonly
 
 " View
+set nohlsearch
 set display=lastline
 set lazyredraw      " don't redraw while macro execution
 set list            " show ws as visible char
@@ -34,7 +34,6 @@ set scrolloff=2     " Keep a few lines always visible around cursor
 set breakindent
 set showbreak=^
 set splitright
-" set ttyfast
 set wildmenu
 set wildmode=list:longest,full
 set conceallevel=2
@@ -44,8 +43,6 @@ endif
 colorscheme elflord " This seems to clear all hilights
 hi SignColumn ctermbg=Black
 hi Folded ctermfg=White ctermbg=Black
-
-
 
 
 set laststatus=2
