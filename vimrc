@@ -232,25 +232,31 @@ nnoremap gs} i{<ESC>A}<ESC>%
 set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#begin()
     Plugin 'Vundle'
-    Plugin 'a'
     Plugin 'ctrlp.vim'
-    Plugin 'Gundo'
-    Plugin 'L9'
-    Plugin 'nerdtree'
+    Plugin 'gitgutter'
     Plugin 'nerdcommenter'
+    Plugin 'nerdtree'
     Plugin 'repeat'
     Plugin 'scratch'
     Plugin 'snipMate'
     Plugin 'surround'
     Plugin 'tabular'
-    Plugin 'gitgutter'
-    " Plugin 'syntastic'
+
     Plugin 'OmniCppComplete'
-    Plugin 'neomake'
+    Plugin 'vim-startify'
+
+    "   Do I need these?
     " Plugin 'vim-autotags'
+    " Plugin 'neomake'
+    " Plugin 'Gundo'
+
+    "   These are removed
+    " Plugin 'L9'
+    " Plugin 'syntastic'
+    " Plugin 'a'
 
     " My plugins
-    Plugin 'makefix'
+    " Plugin 'makefix'
     Plugin 'marks'
     Plugin 'vimbox'
     Plugin 'mytypes'
@@ -265,7 +271,7 @@ filetype plugin indent on
 
 " Makefix
 let g:makefix_highlight = 0
-au BufRead *.tex call makefix#CustomFunction(function('makefix#misc#LatexNoOverfullHbox'))
+" au BufRead *.tex call makefix#CustomFunction(function('makefix#misc#LatexNoOverfullHbox'))
 
 " Surround
 let g:surround_no_insert_mappings = 1

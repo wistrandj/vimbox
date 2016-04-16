@@ -1,4 +1,28 @@
 
+function! s:PrintfLine(...)
+    let fts = {'cpp':'<<', 'lua':'..', 'vim':'.'}
+    let plus = has_key(fts, &ft) ? fts[&ft] : '+'
+    let quote = "\""
+    let items = copy(a:000)
+    let line = getline('.')
+    for item in items
+        if (item =~ "^[\"'].*[\"']$")
+            let rep = item[1:len(item)-2]
+        " elseif fmt is like "name just before quote: %s"
+        else
+            let rep = quote.plus.item.plus.quote
+        endif
+        let line = substitute(line, '%s', rep, '')
+    endfor
+
+    if (line =~ plus.quote.quote)
+        let line = substitute(line, plus.quote.quote, '', '')
+    endif
+
+    call setline(line('.'), line)
+endfunction
+command! -nargs=* Printf call <SID>PrintfLine(<f-args>)
+
 " Maximize window
 function! s:ToggleWindowMaximize()
     if exists('t:maximize_window')
@@ -117,7 +141,7 @@ function! s:HLnext(arg)
         endif
         augroup HLnext
             au!
-            au CursorMoved,InsertEnter * call <SID>HLnext(0)
+            au CursorMoved,InsertEnter,WinLeave,TabLeave * call <SID>HLnext(0)
         augroup END
         let s:hilighted = matchaddpos('HLnext', [line('.')])
     else

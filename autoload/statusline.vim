@@ -11,7 +11,9 @@ function! statusline#StatusLineFunction()
     if exists("s:custom_function")
         call s:add(s:custom_function())
     endif
-    call s:add(MakefixStatusline())
+    if (exists("g:makefix_loaded"))
+        call s:add(MakefixStatusline())
+    endif
     call s:add("%=")
     call s:add(s:lines())
     call s:add(s:cursor_position())

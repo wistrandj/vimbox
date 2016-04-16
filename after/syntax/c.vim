@@ -36,7 +36,7 @@ syn match mathchar "+\|-\|\*\|%\|\/\ze[^\*\/]"
 syn match comma ","
 
 " Struct & Union members
-hi structMember ctermfg=blue
+hi structMember ctermfg=NONE
 syn match structMember "\(->\|\.\)\w*" contains=structMemberName
 
 " Strings
