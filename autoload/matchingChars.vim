@@ -1,52 +1,20 @@
-let s:matchingChars = {'(': ')', '[': ']', '{': '}'}
-let s:parens = ['(', ')', '[', ']', '{', '}']
-
-fun! s:is_paren(ch)
-    return -1 != index(s:parens, a:ch)
+fun! matchingChars#InsertParen(paren)
+    let parens = {'(':')', '[':']', '{':'}'}
+    let [left, right] = [a:paren, parens[a:paren]]
+    let line = getline('.')
+    let lline = line[:col('.')-2]
+    let rline = line[col('.')-1:]
+    let fmt1 = "[^".left."]"
+    let fmt2 = "[^".right."]"
+    let lopen = len(substitute(lline, fmt1, '', 'g'))
+    let lclosed = len(substitute(lline, fmt2, '', 'g'))
+    let ropen = len(substitute(rline, fmt1, '', 'g'))
+    let rclosed = len(substitute(rline, fmt2, '', 'g'))
+    if (rclosed - ropen > lopen - lclosed)
+        return left
+    end
+    return left . right . "\<LEFT>"
 endfun
-
-fun! s:is_quote(ch)
-    return a:ch == '"' || a:ch == "'"
-endfun
-
-fun! s:matching_char(ch)
-    let match = get(s:matchingChars, a:ch, '@')
-    if (match != '@')
-        return match
-    else if a:ch == '"' || a:ch == "'"
-        return a:ch
-    endif
-
-    throw "s:matching_char: Invalid character " . a.ch
-endfun
-
-" === Insert parens ===========================================================
-
-fun! matchingChars#InsertLeft(paren)
-    let lf_ch = a:paren
-    let rg_ch = s:matching_char(lf_ch)
-
-    let [_, ln, cl, _] = getpos('.')
-    let line = getline(ln)
-    let prev_ch = line[cl - 2]
-
-    if cl < len(line) || (s:is_quote(line[cl - 2]))
-        return lf_ch
-    endif
-
-    return lf_ch . rg_ch . "\<left>"
-endfun
-
-fun! matchingChars#InsertRight(paren)
-    " Insert right parenthesis if there is no one under cursor
-    let char = strpart(getline("."), col(".") - 1, 1)
-    if (char == a:paren)
-        return "\<right>"
-    endif
-    return a:paren
-endfun
-
-" === Insert quotes ===========================================================
 
 fun! matchingChars#InsertOrSkip(char)
     let ch = strpart(getline('.'), col('.')-1, 1)
@@ -54,52 +22,21 @@ fun! matchingChars#InsertOrSkip(char)
 endfun
 
 fun! matchingChars#InsertQuote(quote)
+    if (&ft == 'vim')
+        return a:quote
+    end
     let line = getline('.')
-    let char = strpart(line, col(".") - 1, 1)
-    if (char == a:quote)
-        return "\<right>"
-    endif
-
-    if s:is_inside_quotes(a:quote)
-        return '\' . a:quote
-    elseif s:is_imbalanced_quotes(a:quote)
+    let ch = strpart(line, col('.') - 2, 2)
+    let nr = len(substitute(line, '[^'.a:quote.']', '', 'g'))
+    if (ch[1] == a:quote)
+        return "\<RIGHT>"
+    elseif (nr % 2 == 1)
         return a:quote
     endif
-
-    return a:quote . a:quote . "\<left>"
+    return a:quote . a:quote . "\<LEFT>"
 endfun
 
-fun! s:line_left_part()
-    return strpart(getline('.'), 0, col('.') - 1)
-endfun
-
-fun! s:line_right_part()
-    return strpart(getline('.'), col('.') - 1)
-endfun
-
-fun! s:nr_non_escaped_quotes(line, quote)
-    let line = substitute(a:line, '\\' . a:quote, '', 'g')
-    let line = substitute(line, '[^\' . a:quote . ']', '', 'g')
-    return strlen(line)
-endfun
-
-fun! s:is_inside_quotes(quote)
-    let lf_nr = s:nr_non_escaped_quotes(s:line_left_part(), a:quote)
-    let rg_nr = s:nr_non_escaped_quotes(s:line_right_part(), a:quote)
-
-    return (lf_nr % 2 == 1) && rg_nr > 0
-endfun
-
-fun! s:is_imbalanced_quotes(quote)
-    let lf_nr = s:nr_non_escaped_quotes(s:line_left_part(), a:quote)
-    let rg_nr = s:nr_non_escaped_quotes(s:line_right_part(), a:quote)
-
-    return (lf_nr % 2) + (rg_nr % 2) == 1
-endfun
-"
-" === Remove parens and quotes ================================================
-
-fun! matchingChars#RemoveSomething()
+fun! matchingChars#Backspace()
     let ch = strpart(getline('.'), col('.')-2, 2)
     if (-1 != index(["()", "[]", "{}", '""', "''"], ch))
         return "\<right>\<BS>\<BS>"

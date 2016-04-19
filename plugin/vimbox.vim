@@ -187,12 +187,16 @@ command! Runout call runfile#RunFileToOutput()
 
 " Matching Chars
 
+inoremap <expr> ( matchingChars#InsertParen('(')
+inoremap <expr> [ matchingChars#InsertParen('[')
+inoremap <expr> { matchingChars#InsertParen('{')
+inoremap {<CR>  {<CR>}<ESC>O
+inoremap <expr> " matchingChars#InsertQuote("\"")
+inoremap <expr> ' matchingChars#InsertQuote("'")
 inoremap <expr> ) matchingChars#InsertOrSkip(')')
 inoremap <expr> ] matchingChars#InsertOrSkip(']')
 inoremap <expr> } matchingChars#InsertOrSkip('}')
-inoremap <expr> " matchingChars#InsertOrSkip("\"")
-inoremap <expr> ' matchingChars#InsertOrSkip("'")
-imap <expr> <BS> matchingChars#RemoveSomething()
+inoremap <expr> <BS> matchingChars#Backspace()
 
 
 " inoremap ( ()<left>
