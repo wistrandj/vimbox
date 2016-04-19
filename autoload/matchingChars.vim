@@ -48,6 +48,11 @@ endfun
 
 " === Insert quotes ===========================================================
 
+fun! matchingChars#InsertOrSkip(char)
+    let ch = strpart(getline('.'), col('.')-1, 1)
+    return (ch == a:char) ? "\<RIGHT>" : a:char
+endfun
+
 fun! matchingChars#InsertQuote(quote)
     let line = getline('.')
     let char = strpart(line, col(".") - 1, 1)
@@ -91,44 +96,13 @@ fun! s:is_imbalanced_quotes(quote)
 
     return (lf_nr % 2) + (rg_nr % 2) == 1
 endfun
-
-" === Remove parens ===========================================================
-
-fun! s:RemoveParenthesis(left)
-    let ch = strpart(getline('.'), col('.') - 2, 2)
-    if len(ch) == 2
-        if s:is_paren(ch[0]) && ch[1] == s:matching_char(ch[0])
-            return "\<right>\<BS>\<BS>"
-        endif
-    endif
-
-    return "\<BS>"
-endfun
-
-" === Remove quotes ===========================================================
-
-fun! s:RemoveQuotes(left)
-    let line = strpart(getline('.'), col('.') - 2)
-    let leftleft = strpart(getline('.'), col('.')-3, 1)
-
-    if line =~ "^" . a:left . " *" . a:left
-        if leftleft == ' '
-            " this will not delete a space before the first quote
-            return "\<esc>da" . a:left . "a "
-        endif
-        return "\<esc>da" . a:left . "a"
-    endif
-    return "\<BS>"
-endfun
-
+"
 " === Remove parens and quotes ================================================
 
 fun! matchingChars#RemoveSomething()
-    let ch = strpart(getline('.'), col('.')-2, 1)
-    if ch == '(' || ch == '[' || ch == '{'
-        return s:RemoveParenthesis(ch)
-    elseif ch == "\"" || ch == "\'"
-        return s:RemoveQuotes(ch)
+    let ch = strpart(getline('.'), col('.')-2, 2)
+    if (-1 != index(["()", "[]", "{}", '""', "''"], ch))
+        return "\<right>\<BS>\<BS>"
     endif
     return "\<BS>"
 endfun

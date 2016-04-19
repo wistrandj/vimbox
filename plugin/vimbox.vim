@@ -186,19 +186,26 @@ command! Run call runfile#Run()
 command! Runout call runfile#RunFileToOutput()
 
 " Matching Chars
-" inoremap ( ()<left>
-    inoremap <expr> ( matchingChars#InsertLeft('(')
-    inoremap <expr> [ matchingChars#InsertLeft('[')
-    inoremap <expr> { matchingChars#InsertLeft('{')
-    inoremap {<CR> {<CR><CR>}<UP>
 
-inoremap <expr> ) matchingChars#InsertRight(")")
-inoremap <expr> ] matchingChars#InsertRight("]")
-inoremap <expr> } matchingChars#InsertRight("}")
-inoremap <expr> " matchingChars#InsertQuote("\"")
-" inoremap <expr> ' matchingChars#InsertQuote("'")
-
+inoremap <expr> ) matchingChars#InsertOrSkip(')')
+inoremap <expr> ] matchingChars#InsertOrSkip(']')
+inoremap <expr> } matchingChars#InsertOrSkip('}')
+inoremap <expr> " matchingChars#InsertOrSkip("\"")
+inoremap <expr> ' matchingChars#InsertOrSkip("'")
 imap <expr> <BS> matchingChars#RemoveSomething()
+
+
+" inoremap ( ()<left>
+" inoremap <expr> ( matchingChars#InsertLeft('(')
+" inoremap <expr> [ matchingChars#InsertLeft('[')
+" inoremap <expr> { matchingChars#InsertLeft('{')
+" inoremap {<CR> {<CR><CR>}<UP>
+
+" inoremap <expr> ) matchingChars#InsertRight(")")
+" inoremap <expr> ] matchingChars#InsertRight("]")
+" inoremap <expr> } matchingChars#InsertRight("}")
+" inoremap <expr> " matchingChars#InsertQuote("\"")
+" inoremap <expr> ' matchingChars#InsertQuote("'")
 
 " TODO See if 'changes' functions in refactor are any useful
 comm! -nargs=* Grep call refactor#grep(<f-args>)
