@@ -1,10 +1,8 @@
 function! matchingChars#InsertBrackets(count)
-    let pos = getpos('.')
     let toline = line('.') + a:count
     normal! A {
     call append(toline, '}')
-    normal! =a}
-    call setpos('.', pos)
+    normal! =a}$
 endfunction
 
 fun! matchingChars#InsertParen(paren)

@@ -197,7 +197,7 @@ inoremap <expr> ] matchingChars#InsertOrSkip(']')
 inoremap <expr> } matchingChars#InsertOrSkip('}')
 inoremap <expr> <BS> matchingChars#Backspace()
 
-nnoremap g} :<C-U>call matchingChars#InsertBrackets(v:count)<CR> 
+nnoremap g} :<C-U>call matchingChars#InsertBrackets(v:count1)<CR> 
 if exists("g:loaded_surround")
             " Insert brackets around v:count lines
     exe "vmap g} S}i <left>"
