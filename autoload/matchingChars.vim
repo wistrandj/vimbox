@@ -1,3 +1,12 @@
+function! matchingChars#InsertBrackets(count)
+    let pos = getpos('.')
+    let toline = line('.') + a:count
+    normal! A {
+    call append(toline, '}')
+    normal! =a}
+    call setpos('.', pos)
+endfunction
+
 fun! matchingChars#InsertParen(paren)
     let parens = {'(':')', '[':']', '{':'}'}
     let [left, right] = [a:paren, parens[a:paren]]
@@ -43,4 +52,3 @@ fun! matchingChars#Backspace()
     endif
     return "\<BS>"
 endfun
-

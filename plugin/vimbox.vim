@@ -189,7 +189,6 @@ command! Runout call runfile#RunFileToOutput()
 
 inoremap <expr> ( matchingChars#InsertParen('(')
 inoremap <expr> [ matchingChars#InsertParen('[')
-inoremap <expr> { matchingChars#InsertParen('{')
 inoremap {<CR>  {<CR>}<ESC>O
 inoremap <expr> " matchingChars#InsertQuote("\"")
 inoremap <expr> ' matchingChars#InsertQuote("'")
@@ -198,6 +197,15 @@ inoremap <expr> ] matchingChars#InsertOrSkip(']')
 inoremap <expr> } matchingChars#InsertOrSkip('}')
 inoremap <expr> <BS> matchingChars#Backspace()
 
+nnoremap g} :<C-U>call matchingChars#InsertBrackets(v:count)<CR> 
+if exists("g:loaded_surround")
+            " Insert brackets around v:count lines
+    exe "vmap g} S}i <left>"
+            " Delete brackets around AND the if/while/for-stuff prepending
+    nmap gda} ?{<CR>d^ds}
+            " Move everything away from current block
+    nmap gd} ?{<CR>i<CR><CR><ESC>ds}<<kk:s/ *$//<CR>jA<TAB>
+endif
 
 " TODO See if 'changes' functions in refactor are any useful
 comm! -nargs=* Grep call refactor#grep(<f-args>)

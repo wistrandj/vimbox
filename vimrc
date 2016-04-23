@@ -149,6 +149,7 @@ function! s:SelectIndention()
 endfunction
 nnoremap vi<TAB> :call <SID>SelectIndention()<CR>
 
+nnoremap d= ^d/=\s*\zs<CR>
 
 " ------------------------------------------------------------
 let hls_obj = {}
@@ -244,6 +245,7 @@ call vundle#begin()
 
     Plugin 'OmniCppComplete'
     Plugin 'vim-startify'
+    Plugin 'Emmet.vim'
 
     "   Do I need these?
     " Plugin 'vim-autotags'
@@ -311,6 +313,10 @@ let g:syntastic_cpp_compiler_options = ' -std=c++11'
 
 " Ass-inspector
 nnoremap <leader>as :call Ass_ShowAssembly()<CR>
+
+" Emmet for HTML
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall
 
 " === Initialize ==============================================================
 " Clear registers
