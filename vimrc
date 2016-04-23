@@ -209,6 +209,10 @@ vnoremap < <gv
 
 " Insert & delete
 nnoremap S i_<Esc>r
+function! s:ReplaceToInsertMode()
+    return (mode() == 'R') ? "\<ESC>a" : "\<ESC>lR"
+endfunction
+inoremap <expr> <c-l> <SID>ReplaceToInsertMode()
 
 " Make the previous word UPPER CASE
 inoremap <C-u> <esc>hviwUel
@@ -246,16 +250,6 @@ call vundle#begin()
     Plugin 'OmniCppComplete'
     Plugin 'vim-startify'
     Plugin 'Emmet.vim'
-
-    "   Do I need these?
-    " Plugin 'vim-autotags'
-    " Plugin 'neomake'
-    " Plugin 'Gundo'
-
-    "   These are removed
-    " Plugin 'L9'
-    " Plugin 'syntastic'
-    " Plugin 'a'
 
     " My plugins
     " Plugin 'makefix'
