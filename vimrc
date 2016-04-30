@@ -41,7 +41,7 @@ if has("gui_running")
     colorscheme molokai
 endif
 colorscheme elflord " This seems to clear all hilights
-hi SignColumn ctermbg=Black
+hi SignColumn ctermbg=darkgreen
 hi Folded ctermfg=White ctermbg=Black
 
 
@@ -129,6 +129,10 @@ map Ä }
 nn gj :call <SID>JumpInView(0.75)<CR>
 nn gk :call <SID>JumpInView(0.25)<CR>
 nnoremap <C-g> g;
+cnoremap <c-a> <home>
+cnoremap <c-e> <end>
+cnoremap <c-b> <S-left>
+cnoremap <c-f> <S-right>
 
 " Select lines around based on indentation
 function! s:SelectIndention()
@@ -252,7 +256,7 @@ call vundle#begin()
     Plugin 'Emmet.vim'
 
     " My plugins
-    " Plugin 'makefix'
+    Plugin 'makefix'
     Plugin 'marks'
     Plugin 'vimbox'
     Plugin 'mytypes'
