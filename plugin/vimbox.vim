@@ -206,6 +206,3 @@ if exists("g:loaded_surround")
             " Move everything away from current block
     nmap gd} ?{<CR>i<CR><CR><ESC>ds}<<kk:s/ *$//<CR>jA<TAB>
 endif
-
-" TODO See if 'changes' functions in refactor are any useful
-comm! -nargs=* Grep call refactor#grep(<f-args>)

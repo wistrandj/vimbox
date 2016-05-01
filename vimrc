@@ -71,6 +71,8 @@ set smartcase
 set incsearch
 set matchpairs+=<:>
 
+set wildignore+=cscope.out
+
 set nojoinspaces
 set wildignore=*.o,*.obj,*.class
 set path=.,./include/,/usr/include,/usr/local/include/,/opt/include/
