@@ -50,6 +50,8 @@ set statusline=%!statusline#StatusLineFunction()
 
 set showmatch
 set matchtime=2
+set ttimeoutlen=10 "ms
+" `ttimeoutlen` is to quickly escape
 
 " Indent
 set autoindent
@@ -71,7 +73,7 @@ set smartcase
 set incsearch
 set matchpairs+=<:>
 
-set wildignore+=cscope.out
+set wildignore+=cscope.out,a.out
 
 set nojoinspaces
 set wildignore=*.o,*.obj,*.class

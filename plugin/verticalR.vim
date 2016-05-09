@@ -23,46 +23,11 @@ endfunction
 let s:charMap = {}
 let s:direction = "down"
 
-" Basic features
-function! SetChar(key)
-    exe 'normal! r' . nr2char(a:key)
-endfunction
-function! PutChar(key)
-    let line = getline('.')
-    let prevChar = char2nr(line[col('.')])
-    let s:charMap[getline('.')] = [prevChar, a:key]
-    call SetChar(a:key)
-    call s:Forward(s:direction)
-endfunction
-function! Backspace()
-    call s:Backward(s:direction)
-    let [prev, new] = s:charMap[line('.')]
-    call SetChar(a:key)
-endfunction
-function! UndoBackspace()
-    if (!has_key(s:charMap, line('.') + 1))
-        return
-    endif
-    call s:Forward(s:direction)
-    let [prev, new] = s:charMap[line('.')]
-    call SetChar(a:key)
-endfunction
-
 " User-Interface
-function! s:HilightColumn(group, column, from, to)
-    let [from, to] = [a:from, a:to]
-    let to = a:to
-    let from = (a:to - a:from > 8) ? a:to - 8 : a:from
-
-    let pos_list = map(sort(range(from, to)), '[v:val, a:column, 1]')
-    return matchaddpos(a:group, pos_list)
-endfunction
 function! s:HilightColumn_VerticalR(group1, group2, startline)
     let [_, line, col, _] = getpos('.')
-    """""""""""" let id1 = s:HilightColumn(a:group1, col, a:startline, line)
     let id2 =  matchaddpos(a:group2, [[line, col, 1]])
     redraw
-    """""""""""" call matchdelete(id1)
     call matchdelete(id2)
 endfunction
 function! s:VerticalR(direction)
@@ -91,9 +56,5 @@ function! s:VerticalR(direction)
     endtry
 endfunction
 
-nnoremap <leader>R :call <SID>VerticalR("down")<CR>
-nnoremap gR :call <SID>VerticalR("up")<CR>
-
-"    v->a = x01;
-"    v->y = x01;
-"    v->x = x01;
+nmap <Plug>VerticalRDown :call <SID>VerticalR("down")<CR>
+nmap <Plug>VerticalRUp :call <SID>VerticalR("up")<CR>

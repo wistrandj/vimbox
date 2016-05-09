@@ -1,4 +1,24 @@
+" VerticalR
+nmap <leader>R <Plug>VerticalRDown
 
+" Tags
+function! ShowTag(filter, ...)
+    let tags = taglist(a:filter)
+    for exp in a:000
+        call filter(tags, 'v:val["name"] =~ exp')
+    endfor
+    for tag in tags
+        echo tag["name"]
+        if has_key(tag, "signature")
+            echohl String
+            echon tag["signature"]
+            echohl NONE
+        endif
+    endfor
+endfunction
+command! -nargs=* Tag call ShowTag(<f-args>)
+
+" PrintfLine
 function! s:PrintfLine(...)
     let fts = {'cpp':'<<', 'lua':'..', 'vim':'.'}
     let plus = has_key(fts, &ft) ? fts[&ft] : '+'
