@@ -91,8 +91,6 @@ set nobackup
 " TODO allow backups and swap files only in ~/,~/bin,... etc. folders
 
 " === Mappings ================================================================
-nnoremap <CR> ``
-
 " Windows, buffers and tabs
 nnoremap <leader>T :tabnew<CR>
 nnoremap <leader>ta :tabprev<CR>
@@ -196,6 +194,7 @@ nnoremap g/ :call hls_obj.push()<CR>
 nnoremap g\ :call hls_obj.clear()<CR>
 nnoremap g* :let @/='\<' . expand('<cword>') . '\>' <bar> call hls_obj.push()<CR>
 nnoremap <leader><space> :set invhls<CR>
+nnoremap <CR> :set invrnu<CR>
 
 function! s:ReplaceWord(type)
     let pat = escape(tolower(expand(a:type)), '*+/')
@@ -243,6 +242,7 @@ nnoremap gs} i{<ESC>A}<ESC>%
 
 " === Plugins and filetypes ===================================================
 set rtp+=~/.vim/bundle/Vundle.vim/
+" let g:EasyMotion_do_mapping = 0
 call vundle#begin()
     Plugin 'Vundle'
     Plugin 'ctrlp.vim'
@@ -254,10 +254,13 @@ call vundle#begin()
     Plugin 'snipMate'
     Plugin 'surround'
     Plugin 'tabular'
+    Plugin 'vim-easymotion'
 
     Plugin 'OmniCppComplete'
-    Plugin 'vim-startify'
     Plugin 'Emmet.vim'
+
+    " Python completer
+    Plugin 'jedi-vim'
 
     " My plugins
     Plugin 'makefix'
@@ -273,9 +276,8 @@ call vundle#begin()
 call vundle#end()
 filetype plugin indent on
 
-" Makefix
-let g:makefix_highlight = 0
-" au BufRead *.tex call makefix#CustomFunction(function('makefix#misc#LatexNoOverfullHbox'))
+" EasyMotion
+" TODO do mapping
 
 " Surround
 let g:surround_no_insert_mappings = 1
