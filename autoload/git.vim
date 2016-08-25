@@ -5,7 +5,7 @@
 
 " === Variables ===============================================================
 
-let s:git_available = 0
+let s:git_available = 1
 let s:branch = ''
 let s:colors = {
     \'modified'  : 'MoreMsg',
