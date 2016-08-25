@@ -260,7 +260,7 @@ call vundle#begin()
     " My plugins
     Plugin 'makefix'
     Plugin 'marks'
-    Plugin 'vimbox'
+    Plugin 'VimBox-rc'
     Plugin 'mytypes'
     Plugin 'ass-inspector'
     Plugin 'viewtag'
