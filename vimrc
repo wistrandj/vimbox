@@ -243,15 +243,19 @@ nnoremap gs} i{<ESC>A}<ESC>%
 set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#begin()
     Plugin 'VundleVim/Vundle.vim'
-    Plugin 'airblade/gitgutter'
-    Plugin 'garbalas/vim-snipmate'
-    Plugin 'godlygee/tabular'
+    Plugin 'airblade/vim-gitgutter'
+        " Dependencies for snipmate
+        Plugin 'MarcWeber/vim-addon-mw-utils'
+        Plugin 'tomtom/tlib_vim'
+        Plugin 'honza/vim-snippets'
+    Plugin 'garbas/vim-snipmate'
+    Plugin 'godlygeek/tabular'
     Plugin 'kien/ctrlp.vim'
     Plugin 'mtth/scratch.vim'
     Plugin 'scrooloose/nerdcommenter'
-    Plugin 'scrooloosenerdtree'
-    Plugin 'tpope/repeat'
-    Plugin 'tpope/surround'
+    Plugin 'scrooloose/nerdtree'
+    Plugin 'tpope/vim-repeat'
+    Plugin 'tpope/vim-surround'
 
     Plugin 'vim-scripts/OmniCppComplete'
 
@@ -259,13 +263,13 @@ call vundle#begin()
     Plugin 'jasu0/makefix'
     Plugin 'jasu0/viewtag'
     Plugin 'jasu0/touchtags'
-    Plugin 'VimBox-rc'
-    Plugin 'Z'
+    Plugin 'jasu0/VimBox-rc'
     Plugin 'ass-inspector'
     Plugin 'marks'
     Plugin 'mycolors'
     Plugin 'mytypes'
     Plugin 'vic'
+    Plugin 'Z'
 call vundle#end()
 filetype plugin indent on
 
