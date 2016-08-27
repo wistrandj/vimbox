@@ -242,32 +242,30 @@ nnoremap gs} i{<ESC>A}<ESC>%
 " === Plugins and filetypes ===================================================
 set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#begin()
-    Plugin 'Vundle'
-    Plugin 'ctrlp.vim'
-    Plugin 'gitgutter'
-    Plugin 'nerdcommenter'
-    Plugin 'nerdtree'
-    Plugin 'repeat'
-    Plugin 'scratch'
-    Plugin 'snipMate'
-    Plugin 'surround'
-    Plugin 'tabular'
+    Plugin 'VundleVim/Vundle.vim'
+    Plugin 'airblade/gitgutter'
+    Plugin 'garbalas/vim-snipmate'
+    Plugin 'godlygee/tabular'
+    Plugin 'kien/ctrlp.vim'
+    Plugin 'mtth/scratch.vim'
+    Plugin 'scrooloose/nerdcommenter'
+    Plugin 'scrooloosenerdtree'
+    Plugin 'tpope/repeat'
+    Plugin 'tpope/surround'
 
-    Plugin 'OmniCppComplete'
-    Plugin 'vim-startify'
-    Plugin 'Emmet.vim'
+    Plugin 'vim-scripts/OmniCppComplete'
 
     " My plugins
-    Plugin 'makefix'
-    Plugin 'marks'
+    Plugin 'jasu0/makefix'
+    Plugin 'jasu0/viewtag'
+    Plugin 'jasu0/touchtags'
     Plugin 'VimBox-rc'
-    Plugin 'mytypes'
-    Plugin 'ass-inspector'
-    Plugin 'viewtag'
-    Plugin 'vic'
-    Plugin 'touchtags'
-    Plugin 'mycolors'
     Plugin 'Z'
+    Plugin 'ass-inspector'
+    Plugin 'marks'
+    Plugin 'mycolors'
+    Plugin 'mytypes'
+    Plugin 'vic'
 call vundle#end()
 filetype plugin indent on
 
