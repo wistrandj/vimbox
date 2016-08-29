@@ -18,7 +18,7 @@ function! s:reset_status()
     let s:status = {'modified': [], 'untracked': [], 'new': [], 'deleted': []}
 endfunction
 call s:reset_status()
-au BufWritePost * silent! call s:update_status()
+au BufWritePost,ShellCmdPost * silent! call s:update_status()
 
 " === Public Functions ========================================================
 
@@ -29,6 +29,7 @@ function! git#commit()
     call s:echo_status()
     let msg = input("Commit message: ")
     echo system('git commit -am "'. msg . '"')
+    call git#status()
 endfunction
 
 function! s:build_statusline_info()
