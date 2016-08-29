@@ -239,6 +239,11 @@ nnoremap gs] i[<ESC>A]<ESC>%
 nnoremap gs{ i{<ESC>A}<ESC>%
 nnoremap gs} i{<ESC>A}<ESC>%
 
+" My git
+nnoremap <F8> :call git#commit()<CR>
+nnoremap <F9> :call git#status()<CR>
+
+
 " === Plugins and filetypes ===================================================
 set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#begin()
@@ -258,7 +263,6 @@ call vundle#begin()
     Plugin 'tpope/vim-surround'
 
     Plugin 'vim-scripts/OmniCppComplete'
-
     " My plugins
     Plugin 'jasu0/makefix'
     Plugin 'jasu0/viewtag'
