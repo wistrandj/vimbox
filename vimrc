@@ -268,12 +268,12 @@ call vundle#begin()
     Plugin 'jasu0/viewtag'
     Plugin 'jasu0/touchtags'
     Plugin 'jasu0/VimBox-rc'
-    Plugin 'ass-inspector'
-    Plugin 'marks'
-    Plugin 'mycolors'
-    Plugin 'mytypes'
-    Plugin 'vic'
-    Plugin 'Z'
+    " Plugin 'ass-inspector'
+    " Plugin 'marks'
+    " Plugin 'mycolors'
+    " Plugin 'mytypes'
+    " Plugin 'vic'
+    " Plugin 'Z'
 call vundle#end()
 filetype plugin indent on
 
