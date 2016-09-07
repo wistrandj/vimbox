@@ -240,39 +240,42 @@ nnoremap gs] i[<ESC>A]<ESC>%
 nnoremap gs{ i{<ESC>A}<ESC>%
 nnoremap gs} i{<ESC>A}<ESC>%
 
+" My git
+nnoremap <F8> :call git#commit()<CR>
+nnoremap <F9> :call git#status()<CR>
+
+
 " === Plugins and filetypes ===================================================
 set rtp+=~/.vim/bundle/Vundle.vim/
 " let g:EasyMotion_do_mapping = 0
 call vundle#begin()
-    Plugin 'Vundle'
-    Plugin 'ctrlp.vim'
-    Plugin 'gitgutter'
-    Plugin 'nerdcommenter'
-    Plugin 'nerdtree'
-    Plugin 'repeat'
-    Plugin 'scratch'
-    Plugin 'snipMate'
-    Plugin 'surround'
-    Plugin 'tabular'
-    Plugin 'vim-easymotion'
+    Plugin 'VundleVim/Vundle.vim'
+    Plugin 'airblade/vim-gitgutter'
+        " Dependencies for snipmate
+        Plugin 'MarcWeber/vim-addon-mw-utils'
+        Plugin 'tomtom/tlib_vim'
+        Plugin 'honza/vim-snippets'
+    Plugin 'garbas/vim-snipmate'
+    Plugin 'godlygeek/tabular'
+    Plugin 'kien/ctrlp.vim'
+    Plugin 'mtth/scratch.vim'
+    Plugin 'scrooloose/nerdcommenter'
+    Plugin 'scrooloose/nerdtree'
+    Plugin 'tpope/vim-repeat'
+    Plugin 'tpope/vim-surround'
 
-    Plugin 'OmniCppComplete'
-    Plugin 'Emmet.vim'
-
-    " Python completer
-    Plugin 'jedi-vim'
-
+    Plugin 'vim-scripts/OmniCppComplete'
     " My plugins
-    Plugin 'makefix'
-    Plugin 'marks'
-    Plugin 'vimbox'
-    Plugin 'mytypes'
-    Plugin 'ass-inspector'
-    Plugin 'viewtag'
-    Plugin 'vic'
-    Plugin 'touchtags'
-    Plugin 'mycolors'
-    Plugin 'Z'
+    Plugin 'jasu0/makefix'
+    Plugin 'jasu0/viewtag'
+    Plugin 'jasu0/touchtags'
+    Plugin 'jasu0/VimBox-rc'
+    " Plugin 'ass-inspector'
+    " Plugin 'marks'
+    " Plugin 'mycolors'
+    " Plugin 'mytypes'
+    " Plugin 'vic'
+    " Plugin 'Z'
 call vundle#end()
 filetype plugin indent on
 
