@@ -52,6 +52,8 @@ set statusline=%!statusline#StatusLineFunction()
 
 set showmatch
 set matchtime=2
+set ttimeoutlen=10 "ms
+" `ttimeoutlen` is to quickly escape
 
 " Indent
 set autoindent
@@ -73,7 +75,7 @@ set smartcase
 set incsearch
 set matchpairs+=<:>
 
-set wildignore+=cscope.out
+set wildignore+=cscope.out,a.out
 
 set nojoinspaces
 set wildignore=*.o,*.obj,*.class
@@ -91,8 +93,6 @@ set nobackup
 " TODO allow backups and swap files only in ~/,~/bin,... etc. folders
 
 " === Mappings ================================================================
-nnoremap <CR> ``
-
 " Windows, buffers and tabs
 nnoremap <leader>T :tabnew<CR>
 nnoremap <leader>ta :tabprev<CR>
@@ -196,6 +196,7 @@ nnoremap g/ :call hls_obj.push()<CR>
 nnoremap g\ :call hls_obj.clear()<CR>
 nnoremap g* :let @/='\<' . expand('<cword>') . '\>' <bar> call hls_obj.push()<CR>
 nnoremap <leader><space> :set invhls<CR>
+nnoremap <CR> :set invrnu<CR>
 
 function! s:ReplaceWord(type)
     let pat = escape(tolower(expand(a:type)), '*+/')
@@ -248,6 +249,7 @@ nnoremap <F9> :call git#status()<CR>
 
 " === Plugins and filetypes ===================================================
 set rtp+=~/.vim/bundle/Vundle.vim/
+" let g:EasyMotion_do_mapping = 0
 call vundle#begin()
     Plugin 'VundleVim/Vundle.vim'
     Plugin 'airblade/vim-gitgutter'
