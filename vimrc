@@ -269,9 +269,9 @@ call vundle#begin()
     Plugin 'artur-shaik/vim-javacomplete2'
     Plugin 'vim-scripts/OmniCppComplete'
     " My plugins
-    Plugin 'jasu0/makefix'
-    Plugin 'jasu0/viewtag'
-    Plugin 'jasu0/touchtags'
+    " Plugin 'jasu0/makefix'
+    " Plugin 'jasu0/viewtag'
+    " Plugin 'jasu0/touchtags'
     Plugin 'jasu0/VimBox-rc'
     " Plugin 'ass-inspector'
     " Plugin 'marks'
