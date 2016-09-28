@@ -1,3 +1,5 @@
+set tags+=$HOME/java/tags
+
 " === Variables ===============================================================
 filetype off " for V_undle
 syntax on
@@ -266,23 +268,31 @@ call vundle#begin()
     Plugin 'tpope/vim-repeat'
     Plugin 'tpope/vim-surround'
 
+    Plugin 'artur-shaik/vim-javacomplete2'
     Plugin 'vim-scripts/OmniCppComplete'
     " My plugins
-    Plugin 'jasu0/makefix'
-    Plugin 'jasu0/viewtag'
-    Plugin 'jasu0/touchtags'
+    " Plugin 'jasu0/makefix'
+    " Plugin 'jasu0/viewtag'
+    " Plugin 'jasu0/touchtags'
     Plugin 'jasu0/VimBox-rc'
     " Plugin 'ass-inspector'
     " Plugin 'marks'
     " Plugin 'mycolors'
     " Plugin 'mytypes'
     " Plugin 'vic'
-    " Plugin 'Z'
+    Plugin 'Z'
 call vundle#end()
 filetype plugin indent on
 
-" EasyMotion
-" TODO do mapping
+" vim-javacomplete2
+autocmd FileType java setlocal omnifunc=javacomplete#Complete
+nmap <F4> <Plug>(JavaComplete-Imports-AddSmart)
+nmap <F3> <Plug>(JavaComplete-Imports-AddMissing)
+nmap <F2> <Plug>(JavaComplete-Imports-RemoveUnused)
+
+" Makefix
+let g:makefix_highlight = 0
+" au BufRead *.tex call makefix#CustomFunction(function('makefix#misc#LatexNoOverfullHbox'))
 
 " Surround
 let g:surround_no_insert_mappings = 1
@@ -301,6 +311,7 @@ autocmd BufRead *.tab set ft=tab
 " CtrlP
 comm! CR :CtrlPClearCache
 au! FileWritePost :CtrlPClearCache
+let g:ctrlp_clear_cache_on_exit = 1
 
 " Scratch buffer
 comm! SC Scratch

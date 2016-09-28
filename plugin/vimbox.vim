@@ -1,3 +1,16 @@
+" Scan tags files in parent folders
+function! ScanTags()
+    let path = getcwd()
+    while !empty(path)
+        let tags = split(glob(path . '/*tags'))
+        let path = substitute(path, '\/[^\/]*$', '', '')
+        for t in tags
+            exe "set tags+=" . t
+        endfor
+    endwhile
+endfunction
+call ScanTags()
+
 " VerticalR
 nmap <leader>R <Plug>VerticalRDown
 

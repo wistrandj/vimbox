@@ -31,6 +31,15 @@ set errorformat=
      \%-G%.%$,
      \%+G%.%#at\ %m(%f:%l)
 
+fun! GetDefaultPackage()
+    let files=split(system("find src/main/ -name '*.java'"))
+    if empty(files)
+        return ""
+    endif
+    let first = files[0]
+    return substitute(first, "\/[^\/]*", "", "")
+endfun
+
 " Private functions
 fun! s:InitClassOrTest()
     " Initialize the current empty file from templates.
