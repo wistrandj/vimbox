@@ -250,7 +250,9 @@ set rtp+=~/.vim/bundle/Vundle.vim/
 " let g:EasyMotion_do_mapping = 0
 call vundle#begin()
     Plugin 'VundleVim/Vundle.vim'
-    Plugin 'airblade/vim-gitgutter'
+    if !empty(system("which git"))
+        Plugin 'airblade/vim-gitgutter'
+    endif
         " Dependencies for snipmate
         Plugin 'MarcWeber/vim-addon-mw-utils'
         Plugin 'tomtom/tlib_vim'
