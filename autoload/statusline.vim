@@ -7,7 +7,7 @@ function! statusline#StatusLineFunction()
     call s:add("(buf %n) %y")
     call s:add("%f")
     call s:add(s:flags())
-    call s:add('%{git#statusline()}')
+    " call s:add('%{git#statusline()}')
     if exists("s:custom_function")
         call s:add(s:custom_function())
     endif

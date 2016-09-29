@@ -1,4 +1,4 @@
-
+finish
 " FIXME
 "  * a file can be modified after 'git add' etc.
 "    -> the statusline doesn't know how to show all combinations
