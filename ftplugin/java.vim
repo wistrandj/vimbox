@@ -11,6 +11,16 @@ set makeprg=mvn\ -q\ -e
 command! Init call s:InitClassOrTest()
 command! Mktest call s:MakeTestFile()
 
+ia E Exception
+ia eamo EasyMock
+ia cemo createMock
+ia epe expect
+ia epel expectLastcall
+ia sse assertEquals();<LEFT><LEFT>
+ia sss assertSame();<LEFT><LEFT>
+ia sst assertTrue();<LEFT><LEFT>
+ia ssf assertFalse();<LEFT><LEFT>
+
 nnoremap <buffer> <leader>mr :!mvn exec:java -Dexec.mainClass=ohtu.laskin.Main<CR>
 nnoremap <buffer> <leader>mm :call JavaClean()<CR>
 nnoremap <buffer> <leader>mi :call JavaIntegrationTest()<CR>
@@ -76,6 +86,10 @@ fun! s:MakeTestFile()
     let testpath = substitute(path, "src/main/", "src/test/", "")
     let testpath = substitute(testpath, "\.java$", "Test.java", "")
     exe "n " . testpath
+    if empty(glob(expand("%:p:h")))
+        " Folder doesn't exists
+        call mkdir(expand("%:p:h"), "p")
+    endif
     call InitClassOrTest()
 endfun
 
