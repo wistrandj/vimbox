@@ -4,7 +4,11 @@ if exists("g:java_loaded")
 endif
 let g:java_loaded = 1
 
+call matchadd("_warn", ")$")
+
 nnoremap <leader><leader>r :set ft=java<CR>
+nnoremap <F5> :edit<CR>
+
 
 " Public interface: mappings and commands
 set makeprg=mvn\ -q\ -e
@@ -14,8 +18,9 @@ command! Mktest call s:MakeTestFile()
 ia E Exception
 ia eamo EasyMock
 ia cemo createMock
+ia ecemo EasyMock.createMock
 ia epe expect
-ia epel expectLastcall
+ia eepel expectLastCall
 ia sse assertEquals();<LEFT><LEFT>
 ia sss assertSame();<LEFT><LEFT>
 ia sst assertTrue();<LEFT><LEFT>

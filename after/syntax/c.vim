@@ -1,3 +1,4 @@
+finish
 if exists('g:no_syntax')
     finish
 endif

@@ -132,7 +132,7 @@ map Ö {
 map Ä }
 nn gj :call <SID>JumpInView(0.75)<CR>
 nn gk :call <SID>JumpInView(0.25)<CR>
-nnoremap <C-g> g;
+nnoremap ` ``
 cnoremap <c-a> <home>
 cnoremap <c-e> <end>
 cnoremap <c-b> <S-left>
@@ -268,7 +268,7 @@ call vundle#begin()
     Plugin 'tpope/vim-repeat'
     Plugin 'tpope/vim-surround'
 
-    Plugin 'artur-shaik/vim-javacomplete2'
+    " Plugin 'artur-shaik/vim-javacomplete2'
     Plugin 'vim-scripts/OmniCppComplete'
     " My plugins
     " Plugin 'jasu0/makefix'

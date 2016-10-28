@@ -11,3 +11,8 @@ syn match _easymock "EasyMock"
 syn match _easymock "EasyMock\.expect\w*"
 syn match _easymock "andReturn"
 syn match _easymock "andThrow"
+syn match _easymock "PowerMock"
+syn match _easymock "PowerMock\.expect\w*"
+
+" Used for matchadd defined in ftplugin/java.vim
+hi _warn ctermbg=yellow
