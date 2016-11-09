@@ -319,6 +319,12 @@ comm! SCS split | Scratch
 comm! SCV vsplit | Scratch
 
 " NERDtree
+if !exists("NERDTreeIgnore")
+    let NERDTreeIgnore = ['\.pyc', '__init__\.py']
+else
+    call insert(NERDTreeIgnore, '\.pyc')
+    call insert(NERDTreeIgnore, '__init__\.py')
+endif
 let NERDTreeDirArrows = 0
 nnoremap <leader>sn :NERDTreeToggle<CR>
 
