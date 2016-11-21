@@ -15,6 +15,7 @@ set makeprg=mvn\ -q\ -e
 command! Init call s:InitClassOrTest()
 command! Mktest call s:MakeTestFile()
 
+
 ia E Exception
 ia eamo EasyMock
 ia cemo createMock
@@ -25,6 +26,8 @@ ia sse assertEquals();<LEFT><LEFT>
 ia sss assertSame();<LEFT><LEFT>
 ia sst assertTrue();<LEFT><LEFT>
 ia ssf assertFalse();<LEFT><LEFT>
+ia pwane PowerMock.expectLastCall().andReturn(
+ia epel expectLastCall()
 
 nnoremap <buffer> <leader>mr :!mvn exec:java -Dexec.mainClass=ohtu.laskin.Main<CR>
 nnoremap <buffer> <leader>mm :call JavaClean()<CR>

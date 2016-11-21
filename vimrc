@@ -157,11 +157,12 @@ function! s:SelectIndention()
 endfunction
 nnoremap vi<TAB> :call <SID>SelectIndention()<CR>
 
+nnoremap gd= :s/ *=.*//<CR>
 nnoremap d= ^d/=\s*\zs<CR>
 
 " ------------------------------------------------------------
 let hls_obj = {}
-let hls_obj.colors = ['darkgreen', 'darkred', 'darkblue', 'darkcyan']
+let hls_obj.colors = ['darkgreen', 'darkred', 'darkcyan', 'darkblue']
 function! hls_obj.push()
     let i = self.index
     if (self.matchadd[i] > 0)

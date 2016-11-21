@@ -51,9 +51,6 @@ endfunction
 function! s:ReadSkeletonFile(...)
     let [name, ft] = s:Userdata(a:1, &ft)
     let args = a:000[1:]
-    echom "name = " . name
-    echom "ft = " . ft
-    echom "args = " . string(args)
 
     let file = s:FindExistingSkeletonFile(name, ft)
     if !empty(file)
