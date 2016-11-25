@@ -95,14 +95,13 @@ function! s:ReplaceUserArguments(lines, args)
     let nargs = len(a:args)
 
     for i in range(len(a:lines))
-        let line = a:lines[i]
-        if (match(line, '\$') != -1)
-            let n = substitute(line, '.*\$\(\d*\).*', '\1', '')
+        while (match(a:lines[i], '\$') != -1)
+            let n = substitute(a:lines[i], '.*\$\(\d*\).*', '\1', '')
             if (empty(n) || (n-1) > nargs)
                 continue
             endif
-            let a:lines[i] = substitute(line, '\$'.n, a:args[n-1], '')
-        endif
+            let a:lines[i] = substitute(a:lines[i], '\$'.n, a:args[n-1], '')
+        endwhile
     endfor
     return a:lines
 endfunction

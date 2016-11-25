@@ -39,6 +39,7 @@ set splitright
 set wildmenu
 set wildmode=list:longest,full
 set conceallevel=2
+set nowrap
 if has("gui_running")
     colorscheme molokai
 endif
