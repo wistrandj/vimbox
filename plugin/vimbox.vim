@@ -11,6 +11,17 @@ function! ScanTags()
 endfunction
 call ScanTags()
 
+" QuickPaste: use gp/ or gp? to paste a line that matches argument
+function s:QuickPaste(mode, search)
+    let mode = (a:mode == '/') ? 'n' : 'bn'
+    let nr = search(a:search, mode)
+    call append('.', getline(nr))
+    normal! j==$k
+endfunction
+comm! -nargs=* QuickPaste :call <SID>QuickPaste(<f-args>)
+nnoremap gp/ :QuickPaste / 
+nnoremap gp? :QuickPaste ? 
+
 " VerticalR
 nmap <leader>R <Plug>VerticalRDown
 
@@ -139,9 +150,6 @@ function! s:ToggleCommentSeparator()
     call setline('.', line)
 endfunction
 
-" Change current directory to the file location
-command! CDH exe "cd " . expand("%:p:h")
-
 " Open temporary files
 command! -nargs=? Tfile call <SID>open_temporary_file(<f-args>)
 "   ARG: the optional string argument is used as suffix of the temp file
@@ -214,13 +222,7 @@ function! s:expand_visual_block()
 endfunction
 
 " === Autoload ================================================================
-" Runfile
-command! Run call runfile#Run()
-command! Runout call runfile#RunFileToOutput()
-
 " Matching Chars
-
-
 inoremap <expr> ( matchingChars#InsertParen('(')
 inoremap <expr> [ matchingChars#InsertParen('[')
 inoremap {<CR>  {<CR>}<ESC>O
