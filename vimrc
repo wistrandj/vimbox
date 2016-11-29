@@ -280,7 +280,7 @@ call vundle#begin()
     " Plugin 'mycolors'
     " Plugin 'mytypes'
     " Plugin 'vic'
-    Plugin 'Z'
+    Plugin 'jasu0/Z'
 call vundle#end()
 filetype plugin indent on
 
