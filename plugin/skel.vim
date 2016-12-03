@@ -51,9 +51,6 @@ endfunction
 function! s:ReadSkeletonFile(...)
     let [name, ft] = s:Userdata(a:1, &ft)
     let args = a:000[1:]
-    echom "name = " . name
-    echom "ft = " . ft
-    echom "args = " . string(args)
 
     let file = s:FindExistingSkeletonFile(name, ft)
     if !empty(file)
@@ -93,19 +90,45 @@ comm! -nargs=1 Skeln call <SID>NewSkeletonFile(<f-args>)
 " === Postprocessing and user arguments =======================================
 " =============================================================================
 
+function Heippa()
+    return 'moimoimoimoimio'
+endfunction
+
+function s:SkelEval(command)
+    if (match(a:command, '(.*)') != -1)
+        if (exists('*'.a:command))
+            sandbox let val = eval(a:command)
+            return val
+        else
+            return 0
+        endif
+    endif
+    if exists(a:command)
+        return eval(a:command)
+    endif
+    return 0
+endfunction
+
 function! s:ReplaceUserArguments(lines, args)
     " XXX Func is not careful if replaced argument returns something with '$'
     let nargs = len(a:args)
 
     for i in range(len(a:lines))
-        let line = a:lines[i]
-        if (match(line, '\$') != -1)
-            let n = substitute(line, '.*\$\(\d*\).*', '\1', '')
-            if (empty(n) || (n-1) > nargs)
-                continue
+        " for j in range(len(a:args))
+        "     let a:lines[i] = substitute(a:lines[i], '\$'.j, a:args[j], 'g')
+        " endfor
+
+        let escape = 10
+        while (match(a:lines[i], '\${.\+}') != -1) && escape > 0
+            let escape = escape - 1
+            let command = substitute(a:lines[i], '.*\${\(.*\)}.*', '\1', '')
+            let val = s:SkelEval(command)
+            if (type(val) == type("") && !empty(val))
+                let a:lines[i] = substitute(a:lines[i], '\${'.command.'}', val, '')
+            else
+                break
             endif
-            let a:lines[i] = substitute(line, '\$'.n, a:args[n-1], '')
-        endif
+        endwhile
     endfor
     return a:lines
 endfunction

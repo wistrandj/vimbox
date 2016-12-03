@@ -1,4 +1,5 @@
 set tags+=$HOME/java/tags
+nnoremap <c-g> :echo synIDattr(synID(line("."),col("."),1),"name")<CR>
 
 " === Variables ===============================================================
 filetype off " for V_undle
