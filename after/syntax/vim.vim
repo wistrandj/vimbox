@@ -8,15 +8,34 @@
 " set foldmethod=syntax
 
 syn clear
-hi vimLineComment ctermfg=green
-syn match vimLineComment "\"[^\"]*$"
-syn match vimString "\"[^\"]*\""
 
 hi vimFuncKey ctermfg=yellow
-syn keyword vimFuncKey fu fun func funct functi functio function endfu endfun endfunc endfunct endfuncti endfunctio endfunction wh whi whil while endwh endwhi endwhil if el els else elsei elseif en end endi endif for endfor
+syn keyword vimFuncKey fu fun func funct functi functio function endfu endfun endfunc endfunct endfuncti endfunctio endfunction wh whi whil while endwh endwhi endwhil endwhile if el els else elsei elseif en endi endif for endfor return break continue in
 syn keyword vimFuncKey com comm comma comman command
 syn match vimFuncKey "\w*map"
 syn keyword vimFuncKey nn nnr nnre nnrem nnrema nnremap
+syn keyword vimFuncKey syn synt syntax hi
+
+hi vimOperator ctermfg=red
+hi vimParen ctermfg=blue
+syn match vimOperator "=\|+\|-"
+syn match vimParen "\[\|\]\|{\|}\|(\|)"
+syn match vimOperator ","
+" syn match vimOperator "\V==\|==#\|==?\|!=\|!=#\|!=?\|>#\|>?\|>=\|>=#\|>=?\|<#\|<?\|<=\|<=#\|<=?\|<\|>\|=~\|=~#\|=~?\|!~\|!~#\|!~?\|isnot#\|isnot?\|isnot\|is#\|is?\|is"
+
+hi vimEscapedChar ctermfg=darkred
+" syn match vimEscapedChar "\\(.*\\)" containedin=vimString
+syn match vimString "'\([^']*\\'\)*[^']*'" contains=vimEscapedChar
+syn match vimString '"\([^"]*\"\)*[^"]*"' contains=vimEscapedChar
+syn match vimString "\<\d\(\.\d*\)*\>"
+
+hi vimLineComment ctermfg=green
+syn match vimLineComment "^\s*\".*"
+
+hi vimCall ctermfg=blue
+hi vimCallAutoload ctermfg=red
+syn match vimCall "\<\(\(\w:\)\?\w\+\.\)\?\w\+\ze("
+syn match vimCallAutoload "\(\w:\)\?\w\+#\w\+\>"
 
 " syn keyword vimFuncKey map
 " syn match vimFuncKey "map\!"
@@ -30,11 +49,6 @@ syn keyword vimFuncKey nn nnr nnre nnrem nnrema nnremap
 " im[ap]
 " lm[ap]
 " cm[ap]
-
-
-
-
-
 
 hi Folded ctermfg=blue ctermbg=none
 hi vimFuncKey ctermfg=yellow
