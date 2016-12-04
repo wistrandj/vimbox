@@ -1,5 +1,24 @@
 let s:TmpFolder = '/tmp/tmpvimfilejar/'
 
+function! javabox#ReadJavaFile(path)
+    let package = ''
+    let class = substitute(a:path, '.*\/\(\w*\).java', '\1' ,'')
+    let attrs = []
+    let fmtAttr = '^\s*\(public\|private\|protected\)[^=(;]*\(\<\w*\>\)\s*\(;\|=\|(\).*'
+    let fmtPackage = '^\s*package\s*\([0-9a-zA-Z\._]*\);$'
+    for line in readfile(a:path)
+        if (line =~# fmtAttr)
+            let att = substitute(line, fmtAttr, '\2', '')
+            call insert(attrs, att)
+        elseif empty(package) && (line =~# fmtPackage)
+            let package = substitute(line, fmtPackage, '\1', '')
+        endif
+    endfor
+
+    call sort(attrs)
+    return [a:path, package, class, attrs]
+endfunction
+
 function! s:ReadJarFile(jarpath)
     " Read a .jar file and return a list of it's contents:
     "     [(file-name, java-package, class-name, attributes-and-methods)]
@@ -154,6 +173,7 @@ endfunction
 " === Commands ================================================================
 
 let s:Index = s:IndexMeta.new()
+let g:Index = s:Index
 
 function! javabox#Cmd_AddJarFileToIndex(jarPath)
     for info in s:ReadJarFile(a:jarPath)
@@ -165,6 +185,13 @@ endfunction
 function! javabox#Cmd_AddJarFileToIndexRecursive(path)
     for file in split(system(printf("find %s -iname" '*.jar", a:path)))
         call javabox#Cmd_AddJarFileToIndex(file)
+    endfor
+endfunction
+
+function! javabox#Cmd_ReadJavaFilesRecursively(path)
+    for file in split(system(printf("find %s -iname '*.java'", a:path)))
+        let [file, pkg, class, attrs] = javabox#ReadJavaFile(file)
+        call s:Index.AddClass(pkg, class, attrs)
     endfor
 endfunction
 
@@ -208,6 +235,10 @@ function! javabox#FindVariableDeclaration(name)
     " The a:name is supposed to be also under cursor so search works properly
     let m = ['\(\<\w\+\>\)\s*\<%s\>', '\(\<\w\+\><.*>\)\s*\<%s\>', '(.*\(\<\w\+\>\)\s*\<%s\>)', '(.*\(\<\w\+\><.*>\)\s*\<%s\>)']
 
+    if (a:name == 'this')
+        return substitute(expand('%'), '.*\/\(\w*\).java', '\1' ,'')
+    endif
+
     let lineNr = -1
     let realPat = ''
     for pat1 in m
@@ -245,5 +276,3 @@ function! JavaInsertCompletion()
     call complete(col('.') - len(attribute), completeList)
     return ''
 endfunction
-
-inoremap <C-n> <C-R>=JavaInsertCompletion()<CR>

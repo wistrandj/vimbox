@@ -12,6 +12,8 @@ comm -narg=1 PKG :echo javabox#Cmd_GetPackage(<f-args>)
 comm -narg=1 ATT :echo javabox#Cmd_GetAttributes(<f-args>)
 comm SaveIndex :echo javabox#Cmd_SaveIndex(s:indexFile)
 comm LoadIndex :echo javabox#Cmd_LoadIndex(s:indexFile)
+set omnifunc=javabox#JavaInsertCompletion
+inoremap <C-x>j <C-R>=JavaInsertCompletion()<CR>
 
 nnoremap <leader><leader>r :set ft=java<CR>
 nnoremap <F5> :edit<CR>
