@@ -6,6 +6,13 @@ let g:java_loaded = 1
 
 call matchadd("_warn", ")$")
 
+let s:indexFile = expand('$HOME/.vimskel/java_index/index.dat')
+comm -narg=1 -complete=file Add :call javabox#Cmd_AddJarFileToIndex(<f-args>)
+comm -narg=1 PKG :echo javabox#Cmd_GetPackage(<f-args>)
+comm -narg=1 ATT :echo javabox#Cmd_GetAttributes(<f-args>)
+comm SaveIndex :echo javabox#Cmd_SaveIndex(s:indexFile)
+comm LoadIndex :echo javabox#Cmd_LoadIndex(s:indexFile)
+
 nnoremap <leader><leader>r :set ft=java<CR>
 nnoremap <F5> :edit<CR>
 
