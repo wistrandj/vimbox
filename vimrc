@@ -1,4 +1,5 @@
 set tags+=$HOME/java/tags
+nnoremap <c-g> :echo synIDattr(synID(line("."),col("."),1),"name")<CR>
 
 " === Variables ===============================================================
 filetype off " for V_undle
@@ -276,7 +277,6 @@ call vundle#begin()
     Plugin 'tpope/vim-repeat'
     Plugin 'tpope/vim-surround'
 
-    " Plugin 'artur-shaik/vim-javacomplete2'
     Plugin 'vim-scripts/OmniCppComplete'
     " My plugins
     " Plugin 'jasu0/makefix'
@@ -288,15 +288,9 @@ call vundle#begin()
     " Plugin 'mycolors'
     " Plugin 'mytypes'
     " Plugin 'vic'
-    Plugin 'Z'
+    Plugin 'jasu0/Z'
 call vundle#end()
 filetype plugin indent on
-
-" vim-javacomplete2
-autocmd FileType java setlocal omnifunc=javacomplete#Complete
-nmap <F4> <Plug>(JavaComplete-Imports-AddSmart)
-nmap <F3> <Plug>(JavaComplete-Imports-AddMissing)
-nmap <F2> <Plug>(JavaComplete-Imports-RemoveUnused)
 
 " Makefix
 let g:makefix_highlight = 0

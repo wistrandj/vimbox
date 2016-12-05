@@ -90,6 +90,25 @@ comm! -nargs=1 Skeln call <SID>NewSkeletonFile(<f-args>)
 " === Postprocessing and user arguments =======================================
 " =============================================================================
 
+function Heippa()
+    return 'moimoimoimoimio'
+endfunction
+
+function s:SkelEval(command)
+    if (match(a:command, '(.*)') != -1)
+        if (exists('*'.a:command))
+            sandbox let val = eval(a:command)
+            return val
+        else
+            return 0
+        endif
+    endif
+    if exists(a:command)
+        return eval(a:command)
+    endif
+    return 0
+endfunction
+
 function! s:ReplaceUserArguments(lines, args)
     " XXX Func is not careful if replaced argument returns something with '$'
     let nargs = len(a:args)
