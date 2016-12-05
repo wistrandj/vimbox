@@ -93,6 +93,12 @@ set nobackup
 " set writebackup
 " TODO allow backups and swap files only in ~/,~/bin,... etc. folders
 
+" === Commands ================================================================
+function! s:GetSyntaxItemUnderCursor()
+    return synIDattr(synID(line('.'), col('.'), 1), 'name')
+endfunction
+comm! SyntaxItem :echo <SID>GetSyntaxItemUnderCursor()
+
 " === Mappings ================================================================
 " Windows, buffers and tabs
 nnoremap <leader>T :tabnew<CR>
