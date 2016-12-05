@@ -4,13 +4,18 @@ function! javabox#ReadJavaFile(path)
     let package = ''
     let class = substitute(a:path, '.*\/\(\w*\).java', '\1' ,'')
     let attrs = []
-    let fmtAttr = '^\s*\(public\|private\|protected\)[^=(;]*\(\<\w*\>\)\s*\(;\|=\|(\).*'
+    let fmtAttr = ['^\s*\(public\|private\|protected\)[^=(;]*\(\<\w*\>\)\s*\(;\|=\|(\).*', '^\s*\(\S*\)\s*\(\S*\)\(throws.*\)\?$']
     let fmtPackage = '^\s*package\s*\([0-9a-zA-Z\._]*\);$'
     for line in readfile(a:path)
-        if (line =~# fmtAttr)
-            let att = substitute(line, fmtAttr, '\2', '')
-            call insert(attrs, att)
-        elseif empty(package) && (line =~# fmtPackage)
+        let found = 0
+        for fmt in fmtAttr
+            if (line =~# fmt)
+                let found = 1
+                let att = substitute(line, fmt, '\2', '')
+                call insert(attrs, att)
+            endif
+        endfor
+        if empty(package) && !found && (line =~# fmtPackage)
             let package = substitute(line, fmtPackage, '\1', '')
         endif
     endfor
@@ -260,7 +265,7 @@ endfunction
 
 
 
-function! JavaInsertCompletion()
+function! javabox#JavaInsertCompletion()
     let cword = substitute(getline('.')[:col('.')-2], '.* ', '', 'g')
     let variable = substitute(cword, '\..*', '', 'g')
     let attribute = substitute(cword, '.*\.', '', 'g')
