@@ -1,6 +1,51 @@
 let s:TmpFolder = '/tmp/tmpvimfilejar/'
 
+function! javabox#ReadTags()
+    let attrsByClass = {}
+    let pkgByClass = {}
+    echom "Start reading tags..."
+    let tags = taglist('.*')
+    let _len = len(tags)
+    let _count = 1
+    for tag in tags
+        let name = tag.name
+        if !has_key(tag, 'class')
+            continue
+        endif
+        let class = tag['class']
+        let _count = _count + 1
+        let file = tag.filename
+        let package = substitute(file[:-6], '\/', '.', '')
+        let signature = ''
+        let kind = ''
+        if has_key(tag, 'signature')
+            let signature = tag.signature
+        endif
+        if has_key(tag, 'kind')
+            let kind = tag.kind
+        endif
+
+        if has_key(pkgByClass, class)
+            call insert(attrsByClass[class], name)
+        else
+            let attrsByClass[class] = [name]
+            let pkgByClass[class] = package
+        endif
+    endfor
+    echom "Done. Add them into index.."
+
+    let ret=[]
+    for class in keys(pkgByClass)
+        let pkg = pkgByClass[(class)]
+        let attrs = attrsByClass[class]
+        call sort(attrs)
+        call insert(ret, ['_path', pkg, class, attrs])
+    endfor
+    return ret
+endfunction
+
 function! javabox#ReadJavaFile(path)
+    " @Deprecated, replace by tags file
     let package = ''
     let class = substitute(a:path, '.*\/\(\w*\).java', '\1' ,'')
     let attrs = []
@@ -179,6 +224,13 @@ endfunction
 
 let s:Index = s:IndexMeta.new()
 let g:Index = s:Index
+
+function! javabox#Cmd_AddTagsToIndex()
+    for info in javabox#ReadTags()
+        let [file, pkg, class, attrs] = info
+        call s:Index.AddClass(pkg, class, attrs)
+    endfor
+endfunction
 
 function! javabox#Cmd_AddJarFileToIndex(jarPath)
     for info in s:ReadJarFile(a:jarPath)
