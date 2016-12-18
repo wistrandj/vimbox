@@ -90,10 +90,6 @@ comm! -nargs=1 Skeln call <SID>NewSkeletonFile(<f-args>)
 " === Postprocessing and user arguments =======================================
 " =============================================================================
 
-function Heippa()
-    return 'moimoimoimoimio'
-endfunction
-
 function s:SkelEval(command)
     if (match(a:command, '(.*)') != -1)
         if (exists('*'.a:command))
