@@ -342,10 +342,6 @@ let g:syntastic_cpp_compiler_options = ' -std=c++11'
 " Ass-inspector
 nnoremap <leader>as :call Ass_ShowAssembly()<CR>
 
-" Emmet for HTML
-let g:user_emmet_install_global = 0
-autocmd FileType html,css EmmetInstall
-
 " === Initialize ==============================================================
 " Clear registers
 let s:a = "abcdefghijklmnopqrstuvxwxyz0123456789\""
