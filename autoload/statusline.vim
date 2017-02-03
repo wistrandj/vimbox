@@ -2,7 +2,6 @@
 let s:statusline = []
 " let s:custom_function
 
-syn clear StatuslineHilight
 hi StatuslineHilight cterm=reverse ctermfg=white ctermbg=darkred
 
 function! statusline#StatusLineFunction()
