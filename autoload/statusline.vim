@@ -2,7 +2,13 @@
 let s:statusline = []
 " let s:custom_function
 
+syn clear StatuslineHilight
+hi StatuslineHilight cterm=reverse ctermfg=white ctermbg=darkred
+
 function! statusline#StatusLineFunction()
+    return "(buf %n) %y %#StatuslineHilight#%-5.50f%* %c/%l/%L"
+    " TODO: Remove code below :D register thingy and lines() are good
+
     let s:statusline = []
     call s:add("(buf %n) %y")
     call s:add("%f")
