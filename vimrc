@@ -172,27 +172,39 @@ nnoremap d= ^d/=\s*\zs<CR>
 let hls_obj = {}
 let hls_obj.colors = ['darkgreen', 'darkred', 'darkcyan', 'darkblue']
 function! hls_obj.push()
-    let i = self.index
-    if (self.matchadd[i] > 0)
-        call matchdelete(self.matchadd[i])
+    let bufid = bufnr('%')
+    if !has_key(self.buffer_synids, bufid)
+        let self.buffer_synids[bufid] = repeat([-1], len(self.colors))
+        let self.buffer_id[bufid] = 0
     endif
-    let self.matchadd[i] = matchadd(self.names[i], getreg('/'))
-    let self.index = (i + 1) % len(self.colors)
+    let buffer = self.buffer_synids[bufid]
+    let id = self.buffer_id[bufid]
+    if (buffer[id] > 0)
+        call matchdelete(buffer[id])
+    endif
+    let buffer[id] = matchadd(self.names[id], getreg('/'))
+    let self.buffer_id[bufid] = (id + 1) % len(self.colors)
 endfunction
 function! hls_obj.clear()
-    for i in range(len(self.colors))
-        if (self.matchadd[i] > 0)
-            call matchdelete(self.matchadd[i])
-            let self.matchadd[i] = -1
+    let bufid = bufnr('%')
+    if !has_key(self.buffer_synids, bufid)
+        return
+    endif
+    let b = self.buffer_synids[bufid]
+    for i in range(len(b))
+        if (b[i] > 0)
+            call matchdelete(b[i])
         endif
     endfor
-    let self.index = 0
+    unlet self.buffer_synids[bufid]
+    unlet self.buffer_id[bufid]
 endfunction
 function! hls_obj.init()
     let self.index = 0
     let self.names = copy(self.colors)
+    let self.buffer_id = {}
+    let self.buffer_synids = {}
     call map(self.names, 'printf("HLS_vivi_%s", v:val)')
-    let self.matchadd = repeat([-1], len(self.colors))
     for i in range(len(self.colors))
         let color = self.colors[i]
         let name = self.names[i]
@@ -277,6 +289,7 @@ call vundle#begin()
     Plugin 'tpope/vim-repeat'
     Plugin 'tpope/vim-surround'
 
+    Plugin 'A'
     Plugin 'vim-scripts/OmniCppComplete'
     " My plugins
     " Plugin 'jasu0/makefix'
