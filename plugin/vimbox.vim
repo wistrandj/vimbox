@@ -171,6 +171,8 @@ function! s:open_temporary_file(...)
 endfunction
 
 " Hilight words when searching
+if exists('*matchaddpos')
+
 hi HLnext cterm=underline
 nn <silent> n n:call <SID>HLnext(1)<CR>
 nn <silent> N N:call <SID>HLnext(1)<CR>
@@ -193,6 +195,8 @@ function! s:HLnext(arg)
         augroup END
     endif
 endfunction
+
+endif
 
 " Expand visual block to consecutive lines with same char on same col
 nn <leader>v :call <SID>expand_visual_block()<CR>

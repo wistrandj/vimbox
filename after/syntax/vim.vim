@@ -10,7 +10,7 @@
 syn clear
 
 hi vimFuncKey ctermfg=yellow
-syn keyword vimFuncKey fu fun func funct functi functio function endfu endfun endfunc endfunct endfuncti endfunctio endfunction wh whi whil while endwh endwhi endwhil endwhile if el els else elsei elseif en endi endif for endfor return break continue in
+syn keyword vimFuncKey fu fun func funct functi functio function endfu endfun endfunc endfunct endfuncti endfunctio endfunction wh whi whil while endwh endwhi endwhil endwhile if el els else elsei elseif en endi endif for endfor return break continue in try endtry finally
 syn keyword vimFuncKey com comm comma comman command
 syn match vimFuncKey "\w*map"
 syn keyword vimFuncKey nn nnr nnre nnrem nnrema nnremap

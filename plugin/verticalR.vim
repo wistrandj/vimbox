@@ -25,10 +25,14 @@ let s:direction = "down"
 
 " User-Interface
 function! s:HilightColumn_VerticalR(group1, group2, startline)
+    if exists('*matchaddpos')
+
     let [_, line, col, _] = getpos('.')
-    let id2 =  matchaddpos(a:group2, [[line, col, 1]])
+    let id2 = matchaddpos(a:group2, [[line, col, 1]])
     redraw
     call matchdelete(id2)
+
+    endif
 endfunction
 function! s:VerticalR(direction)
     let [group1, group2] = ['ErrorMsg', 'StatusLine']
