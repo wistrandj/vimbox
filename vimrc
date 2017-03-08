@@ -1,6 +1,20 @@
 set tags+=$HOME/java/tags
 nnoremap <c-g> :echo synIDattr(synID(line("."),col("."),1),"name")<CR>
 
+let g:sign_counter = 101
+hi _signhl ctermfg=blue ctermfg=red
+sign define tmpsign text=>> texthl=_signhl
+function s:SetSign()
+    echom "Sign set"
+    let file = expand('%:p')
+    let line = line('.')
+    let cmd = printf('sign place %d line=%d name=tmpsign file=%s', g:sign_counter, line, file)
+    exe cmd
+    let g:sign_counter = g:sign_counter + 1
+endfunction
+
+nnoremap <F7> :call <SID>SetSign()<CR>
+
 " === Variables ===============================================================
 filetype off " for V_undle
 syntax on
@@ -327,6 +341,7 @@ autocmd BufRead *.tab set ft=tab
 comm! CR :CtrlPClearCache
 au! FileWritePost :CtrlPClearCache
 let g:ctrlp_clear_cache_on_exit = 1
+let g:ctrlp_custom_ignore = {'dir': '\C\<target\>'}
 
 " Scratch buffer
 comm! SC Scratch
