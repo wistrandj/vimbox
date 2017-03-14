@@ -5,7 +5,7 @@ let s:statusline = []
 hi StatuslineHilight cterm=reverse ctermfg=white ctermbg=darkred
 
 function! statusline#StatusLineFunction()
-    return "(buf %n) %y %#StatuslineHilight#%-5.50f%* %c/%l/%L"
+    return "(buf %n) %y %#StatuslineHilight#%-5.50f%*%=col %c|line %l/%L"
     " TODO: Remove code below :D register thingy and lines() are good
 
     let s:statusline = []
