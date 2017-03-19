@@ -1,8 +1,3 @@
-finish
-" FIXME
-"  * a file can be modified after 'git add' etc.
-"    -> the statusline doesn't know how to show all combinations
-
 " === Variables ===============================================================
 
 let s:git_available = 1
@@ -25,41 +20,18 @@ au BufWritePost,ShellCmdPost * silent! call s:update_status()
 function! git#status()
     call s:echo_status()
 endfunction
-function! git#commit()
-    call s:echo_status()
-    let msg = input("Commit message: ")
-    echo system('git commit -am "'. msg . '"')
-    call git#status()
-endfunction
 
-function! s:build_statusline_info()
-    let d = len(s:status['deleted'])
-    let m = len(s:status['modified'])
-    let n = len(s:status['new'])
-    let u = len(s:status['untracked'])
-
-    if (d + m + n + u == 0)
-        return ''
-    endif
-
-    let s = printf('-%d/+%d/%dm (%d)', d, n, m, u)
-    let s = substitute(s, '\(-0\(\/\)\?\)\|\(+0\(\/\)\)', '', 'g')
-    let s = substitute(s, '\(0m\)\|\( (0)\)', '', 'g')
-    let s = substitute(s, '\/$', '', '')
-
-    return s
-endfunction
 function! git#statusline()
     if !s:git_available
         return ''
     endif
 
-    let info = s:build_statusline_info()
-    if empty(info)
-        return printf('[G: %s]', s:branch)
-    else
-        return printf('[G: %s %s]', s:branch, info)
-    endif
+    let s = ''
+    let s .= (len(s:status['modified']) > 0)  ? '*' : ''
+    let s .= (len(s:status['untracked']) > 0) ? '+' : ''
+    let s .= (len(s:status['new']) > 0)       ? '+' : ''
+    let s .= (len(s:status['deleted']) > 0)   ? '-' : ''
+    return printf('[%s%s]', s:branch, s)
 endfunction
 
 " === private =================================================================
@@ -100,19 +72,17 @@ function! s:echo_file_list_long(key, list, color)
     endfor
 endfunction
 function! s:echo_status()
-    let ok = 0
+    let changes = 0
 
     for key in keys(s:status)
         let list = s:status[key]
         if !empty(list)
-            let ok = 1
+            let changes = 1
             call s:echo_file_list_long(key, list, s:colors[key])
         endif
     endfor
 
-    if ok
-        echo "Type 'git commit -m' to continue"
-    else
+    if !changes
         echo 'You have not done anything 8-)'
     endif
 endfunction
