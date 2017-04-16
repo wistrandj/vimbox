@@ -115,6 +115,7 @@ let g:vim_default_source = expand('<sfile>')
 nnoremap <F1> :echo g:vim_default_source<CR>
 nnoremap <Leader>w :update<CR>
 inoremap <C-x><C-o> <C-x><C-o><C-p>
+command! -nargs=* Tag call ShowTag(<f-args>)
 
 " Escaping and moving cursor
 " inoremap kj <Esc>l
@@ -159,6 +160,7 @@ nnoremap <Space> za
 " Visual
 vnoremap > >gv
 vnoremap < <gv
+nnoremap <leader>v :call <SID>expand_visual_block()<CR>
 
 " Insert & delete
 nnoremap S i_<Esc>r
@@ -544,6 +546,22 @@ function! s:expand_visual_block()
     endif
 endfunction
 
+" Tags
+"
+function! ShowTag(filter, ...)
+    let tags = taglist(a:filter)
+    for exp in a:000
+        call filter(tags, 'v:val["name"] =~ exp')
+    endfor
+    for tag in tags
+        echo tag["name"]
+        if has_key(tag, "signature")
+            echohl String
+            echon tag["signature"]
+            echohl NONE
+        endif
+    endfor
+endfunction
 
 " === Initialize ==============================================================
 " Clear registers
