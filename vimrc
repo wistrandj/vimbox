@@ -1,11 +1,4 @@
 " === Custom mappings =========================================================
-
-set tags+=$HOME/java/tags
-
-let g:vimrc_sign_counter = 1001
-hi _signhl ctermfg=blue ctermfg=red
-sign define tmpsign text=>> texthl=_signhl
-
 nnoremap <F7> :call      <SID>SetSign(line('.',   line('.')))<CR>
 vnoremap <F7> <ESC>:call <SID>SetSign(line("'<"), line("'>"))<CR>
 
@@ -146,6 +139,11 @@ nnoremap vi<TAB> :call <SID>SelectIndention()<CR>
 nnoremap gd= :s/ *=.*//<CR>
 nnoremap d= ^d/=\s*\zs<CR>
 
+if exists('*matchaddpos')
+nn <silent> n n:call <SID>HLnext(1)<CR>
+nn <silent> N N:call <SID>HLnext(1)<CR>
+endif
+
 nnoremap g/ :call hls_obj.push()<CR>
 nnoremap g\ :call hls_obj.clear()<CR>
 nnoremap g* :let @/='\<' . expand('<cword>') . '\>' <bar> call hls_obj.push()<CR>
@@ -168,6 +166,32 @@ function! s:ReplaceToInsertMode()
     return (mode() == 'R') ? "\<ESC>a" : "\<ESC>lR"
 endfunction
 inoremap <expr> <c-l> <SID>ReplaceToInsertMode()
+nnoremap <leader>S :call <SID>ToggleCommentSeparator()<CR>
+
+comm! -nargs=* QuickPaste :call <SID>QuickPaste(<f-args>)
+nnoremap gp/ :QuickPaste / 
+nnoremap gp? :QuickPaste ? 
+nmap <leader>R <Plug>VerticalRDown
+
+inoremap <expr> ( matchingChars#InsertParen('(')
+inoremap <expr> [ matchingChars#InsertParen('[')
+inoremap {<CR>  {<CR>}<ESC>O
+inoremap <expr> " matchingChars#InsertQuote("\"")
+inoremap <expr> ) matchingChars#InsertOrSkip(')')
+inoremap <expr> ] matchingChars#InsertOrSkip(']')
+inoremap <expr> } matchingChars#InsertOrSkip('}')
+inoremap <expr> <BS> matchingChars#Backspace()
+
+nnoremap g{ :<C-U>call matchingChars#InsertBrackets(v:count1)<CR> 
+if exists("g:loaded_surround")
+            " Insert brackets around v:count lines
+    exe "vmap g} S}i <left>"
+            " Delete brackets around AND the if/while/for-stuff prepending
+    nmap gda} ?{<CR>d^ds}
+            " Move everything away from current block
+    nmap gd} ?{<CR>i<CR><CR><ESC>ds}<<kk:s/ *$//<CR>jA<TAB>
+endif
+
 
 " Make the previous word UPPER CASE
 inoremap <C-u> <esc>hviwUel
@@ -369,6 +393,9 @@ endfunction
 
 " Leave signs on lines between `lft` and ´rgh´
 "
+let g:vimrc_sign_counter = 1001
+hi _signhl ctermfg=blue ctermfg=red
+sign define tmpsign text=>> texthl=_signhl
 function! s:SetSign(lft, rgh)
     for i in range(a:lft, a:rgh)
         let id = g:vimrc_sign_counter
@@ -424,6 +451,99 @@ function! hls_obj.init()
     endfor
 endfunction
 
+" ONCE: Find ´tags´ tags in parent folders
+" 
+function! s:ScanTags()
+    let path = getcwd()
+    while !empty(path)
+        let tags = split(glob(path . '/*tags'))
+        let path = substitute(path, '\/[^\/]*$', '', '')
+        for t in tags
+            exe "set tags+=" . t
+        endfor
+    endwhile
+endfunction
+
+" QuickPaste: use gp/ or gp? to paste a line that matches argument
+"
+function s:QuickPaste(mode, search)
+    let mode = (a:mode == '/') ? 'n' : 'bn'
+    let nr = search(a:search, mode)
+    call append('.', getline(nr))
+    normal! j==$k
+endfunction
+
+" Change current line's comment to long format (========)
+"
+function! s:ToggleCommentSeparator()
+    let line = getline('.')
+    if line =~ "^.*=== .* =*$"
+        let line = substitute(line, '^\(\s*\S*\)\s*=== \(.*\) =*$', '\1 \2', '')
+    else
+        let comment = substitute(line, '^\([^ ]*\).*', '\1', '')
+        let txt = substitute(line, '^[^ ]* *\(.*\) *$', '\1', '')
+        let len = len(comment) + len(txt) + 1
+        let line = comment . ' === ' . txt . ' ' . repeat('=', 79 - len - 5)
+    endif
+
+    call setline('.', line)
+endfunction
+
+" Hilight found search term with underline
+"
+if exists('*matchaddpos')
+
+hi HLnext cterm=underline
+let s:hilighted = -1
+function! s:HLnext(arg)
+    if (a:arg)
+        if (s:hilighted >= 1)
+            call matchdelete(s:hilighted)
+        endif
+        augroup HLnext
+            au!
+            au CursorMoved,InsertEnter,WinLeave,TabLeave * call <SID>HLnext(0)
+        augroup END
+        let s:hilighted = matchaddpos('HLnext', [line('.')])
+    else
+        call matchdelete(s:hilighted)
+        let s:hilighted = -1
+        augroup HLnext
+            au!
+        augroup END
+    endif
+endfunction
+
+endif
+
+
+" Select with visual block everything that has same char as current one
+"
+function! s:evb_block_range()
+    let cl = col('.')
+    let pat = '^\(.\{' . (cl - 1) . '\}' . getline('.')[cl - 1] . '\)\@!'
+
+    let a = search(pat, 'Wbn') + 1
+    let b = search(pat, 'Wn') - 1
+
+    if b == -1
+        let b = line('$')
+    endif
+
+    return [a, b]
+endfunction
+function! s:expand_visual_block()
+    let [start, end] = s:evb_block_range()
+    let sol=&startofline
+    set nostartofline
+
+    exe "normal! " . start . "G\<C-V>" . end . "G"
+
+    if sol
+        set startofline
+    endif
+endfunction
+
 
 " === Initialize ==============================================================
 " Clear registers
@@ -433,5 +553,5 @@ for i in range(0, len(s:a) - 1)
 endfor
 unlet s:a
 
-" hls_obj
 call hls_obj.init()
+call <SID>ScanTags()
