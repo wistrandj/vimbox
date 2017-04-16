@@ -1,27 +1,22 @@
-set tags+=$HOME/java/tags
-nnoremap <c-g> :echo synIDattr(synID(line("."),col("."),1),"name")<CR>
+" === Custom mappings =========================================================
 
-let g:sign_counter = 101
+set tags+=$HOME/java/tags
+
+let g:vimrc_sign_counter = 1001
 hi _signhl ctermfg=blue ctermfg=red
 sign define tmpsign text=>> texthl=_signhl
-function s:SetSign()
-    echom "Sign set"
-    let file = expand('%:p')
-    let line = line('.')
-    let cmd = printf('sign place %d line=%d name=tmpsign file=%s', g:sign_counter, line, file)
-    exe cmd
-    let g:sign_counter = g:sign_counter + 1
-endfunction
 
-nnoremap <F7> :call <SID>SetSign()<CR>
+nnoremap <F7> :call      <SID>SetSign(line('.',   line('.')))<CR>
+vnoremap <F7> <ESC>:call <SID>SetSign(line("'<"), line("'>"))<CR>
+
+comm!          SyntaxItem :echo <SID>GetSyntaxItemUnderCursor()
+comm! -nargs=1 Pretty call <SID>PrettyPrint_list(eval(<f-args>))
 
 " === Variables ===============================================================
 filetype off " for V_undle
 syntax on
 
 " Use these keys for mappings
-map - <nop>
-map + <nop>
 let mapleader = "-"
 
 " Environment
@@ -108,12 +103,6 @@ set nobackup
 " set writebackup
 " TODO allow backups and swap files only in ~/,~/bin,... etc. folders
 
-" === Commands ================================================================
-function! s:GetSyntaxItemUnderCursor()
-    return synIDattr(synID(line('.'), col('.'), 1), 'name')
-endfunction
-comm! SyntaxItem :echo <SID>GetSyntaxItemUnderCursor()
-
 " === Mappings ================================================================
 " Windows, buffers and tabs
 nnoremap <leader>T :tabnew<CR>
@@ -135,14 +124,6 @@ nnoremap <Leader>w :update<CR>
 inoremap <C-x><C-o> <C-x><C-o><C-p>
 
 " Escaping and moving cursor
-function! s:JumpInView(f)
-    let top = line('w0') + &scrolloff
-    let bottom = line('w$') - &scrolloff
-    let line = top + float2nr(a:f * (bottom - top))
-    let pos = getcurpos()
-    let pos[1] = line
-    call setpos('.', pos)
-endfunction
 " inoremap kj <Esc>l
 noremap , ;
 noremap ; ,
@@ -160,8 +141,138 @@ cnoremap <c-e> <end>
 cnoremap <c-b> <S-left>
 cnoremap <c-f> <S-right>
 
-" Select lines around based on indentation
+nnoremap vi<TAB> :call <SID>SelectIndention()<CR>
+
+nnoremap gd= :s/ *=.*//<CR>
+nnoremap d= ^d/=\s*\zs<CR>
+
+nnoremap g/ :call hls_obj.push()<CR>
+nnoremap g\ :call hls_obj.clear()<CR>
+nnoremap g* :let @/='\<' . expand('<cword>') . '\>' <bar> call hls_obj.push()<CR>
+nnoremap <leader><space> :set invhls<CR>
+
+" Complete menu
+inoremap <expr> <c-j> pumvisible() ? '<c-o>' : '<c-x><c-o>'
+inoremap <expr> <c-k> pumvisible() ? '<c-p>' : '<c-x><c-p>'
+
+" Fold
+nnoremap <Space> za
+
+" Visual
+vnoremap > >gv
+vnoremap < <gv
+
+" Insert & delete
+nnoremap S i_<Esc>r
+function! s:ReplaceToInsertMode()
+    return (mode() == 'R') ? "\<ESC>a" : "\<ESC>lR"
+endfunction
+inoremap <expr> <c-l> <SID>ReplaceToInsertMode()
+
+" Make the previous word UPPER CASE
+inoremap <C-u> <esc>hviwUel
+
+" Align with Tabular plugin
+vnoremap <leader>ta :Tabular /
+
+" Add quotes/parens/brackets till the end of line
+nnoremap gs' i'<ESC>A'<ESC>
+nnoremap gs" i"<ESC>A"<ESC>
+nnoremap gs( i(<ESC>A)<ESC>%
+nnoremap gs) i(<ESC>A)<ESC>%
+nnoremap gs[ i[<ESC>A]<ESC>%
+nnoremap gs] i[<ESC>A]<ESC>%
+nnoremap gs{ i{<ESC>A}<ESC>%
+nnoremap gs} i{<ESC>A}<ESC>%
+
+" My git
+nnoremap <F8> :call git#commit()<CR>
+nnoremap <F9> :call git#status()<CR>
+
+
+" === Plugins and filetypes ===================================================
+set rtp+=~/.vim/bundle/Vundle.vim/
+" let g:EasyMotion_do_mapping = 0
+call vundle#begin()
+    Plugin 'VundleVim/Vundle.vim'
+    if !empty(system("which git"))
+        Plugin 'airblade/vim-gitgutter'
+    endif
+    Plugin 'MarcWeber/vim-addon-mw-utils' " Dependency for snipmate
+    Plugin 'tomtom/tlib_vim'              " Dependency for snipmate
+    Plugin 'honza/vim-snippets'           " Dependency for snipmate
+    Plugin 'garbas/vim-snipmate'
+
+    Plugin 'godlygeek/tabular'
+    Plugin 'kien/ctrlp.vim'
+    Plugin 'mtth/scratch.vim'
+    Plugin 'scrooloose/nerdcommenter'
+    Plugin 'scrooloose/nerdtree'
+    Plugin 'tpope/vim-repeat'
+    Plugin 'tpope/vim-surround'
+
+    " Optional
+    Plugin 'davidhalter/jedi-vim'
+    Plugin 'vim-scripts/OmniCppComplete'
+
+    " My plugins
+    Plugin 'jasu0/VimBox-rc'
+    Plugin 'jasu0/Z'
+    " Plugin 'jasu0/makefix'
+    " Plugin 'jasu0/viewtag'
+    " Plugin 'jasu0/touchtags'
+call vundle#end()
+filetype plugin indent on
+
+" Surround
+let g:surround_no_insert_mappings = 1
+
+" Filetypes
+autocmd BufNewFile,BufRead *.story set ft=groovy
+autocmd BufNewFile,BufRead *memo set ft=memo
+autocmd BufNewFile,BufRead kirjat set ft=kirjat
+autocmd BufNewFile,BufRead *.scl set ft=scala
+autocmd BufRead *.tab set ft=tab
+
+" CtrlP
+comm! CR :CtrlPClearCache
+au! FileWritePost :CtrlPClearCache
+let g:ctrlp_clear_cache_on_exit = 1
+let g:ctrlp_custom_ignore = {'dir': '\C\<target\>'}
+
+" Scratch buffer
+comm! SC Scratch
+comm! SCS split | Scratch
+comm! SCV vsplit | Scratch
+
+" NERDtree
+if !exists("NERDTreeIgnore")
+    let NERDTreeIgnore = ['\.pyc', '__init__\.py']
+else
+    call insert(NERDTreeIgnore, '\.pyc')
+    call insert(NERDTreeIgnore, '__init__\.py')
+endif
+let NERDTreeDirArrows = 0
+nnoremap <leader>sn :NERDTreeToggle<CR>
+
+" GitGutter
+let g:gitgutter_map_keys = 0
+let g:gitgutter_realtime = 0
+let g:gitgutter_highlight_lines = 0
+nnoremap <leader>pg :GitGutterSignsToggle<CR>
+
+" Syntastic
+let g:syntastic_cpp_compiler_options = ' -std=c++11'
+
+
+" === Functions ===============================================================
+
+" Select lines around based on indentation level
+" TODO: when vi<TAB> is pressed multiple times/mode() == 'v'
+"       => Choose more lines
+"
 function! s:SelectIndention()
+    " Select lines around based on indentation
     let uppernr = search('\(^\s*$\)\@!', 'bWnc')
     let lowernr = search('\(^\s*$\)\@!', 'Wnc')
     let upper = len(substitute(getline(uppernr), '\S.*$', '', ''))
@@ -177,12 +288,99 @@ function! s:SelectIndention()
     let p2 = (p2 != 0) ? p2 - 1 : line('$')
     call feedkeys(p1 < p2 ? printf('%dGV%dj', p1, p2 - p1) : 'V')
 endfunction
-nnoremap vi<TAB> :call <SID>SelectIndention()<CR>
 
-nnoremap gd= :s/ *=.*//<CR>
-nnoremap d= ^d/=\s*\zs<CR>
+" Move and jump the cursor on screen to (f%) of the current screen
+" Mapped for gj and gk
+"
+function! s:JumpInView(f)
+    let top = line('w0') + &scrolloff
+    let bottom = line('w$') - &scrolloff
+    let line = top + float2nr(a:f * (bottom - top))
+    let pos = getcurpos()
+    let pos[1] = line
+    call setpos('.', pos)
+endfunction
 
-" ------------------------------------------------------------
+" *** Debugging ***
+
+function! s:GetSyntaxItemUnderCursor()
+    return synIDattr(synID(line('.'), col('.'), 1), 'name')
+endfunction
+
+function! s:PrettyString(str, depth, newline)
+    let space = printf('%' . a:depth . 's', '')
+    " let text = (type(a:str) == type("")) ? a:str : string(a:str)
+    let text = a:str
+    if a:newline
+        echo space . text
+    else
+        echon space . text
+    endif
+endfunction
+
+function! s:PrettyPrint_aux(ds, depth)
+    if (a:depth > 16) | return | endif
+    let true = 1
+    let false = 0
+    let T = type(a:ds)
+    if (T == type({}))
+        let maxkey = max(map(copy(keys(a:ds)), 'len(string(v:val))'))
+        for key in keys(a:ds)
+            call s:PrettyString(printf('%-' . maxkey. 's', key . ':'), a:depth, true)
+            call s:PrettyPrint_aux(a:ds[key], a:depth + 4)
+        endfor
+    elseif (T == type([]))
+        if (len(a:ds) > 6)
+            echo '['
+            echon string(a:ds[0])
+            echon string(a:ds[1])
+            echon string(a:ds[2])
+            echon '..., '
+            echon string(a:ds[-3])
+            echon string(a:ds[-2])
+            echon string(a:ds[-1])
+            echo ']'
+        else
+            echo string(a:ds)
+        endif
+    elseif (T == type(""))
+        let s = substitute(a:ds, '\n', '\\n', 'g')
+        if len(s) > 50
+            echon string(s[:47]) . '...'
+        else
+            echon string(s)
+        endif
+    else
+        echon string(a:ds)
+    endif
+endfunction
+
+function! s:PrettyPrint_list(args)
+    if (type(a:args) == type([]) && !empty(a:args) && type(a:args[0]) == type({}))
+        for arg in a:args
+            call s:PrettyPrint_aux(arg, 0)
+            echo "----------------------------------------"
+        endfor
+    else
+        call s:PrettyPrint_aux(a:args, 0)
+    endif
+endfunction
+
+
+" Leave signs on lines between `lft` and ´rgh´
+"
+function! s:SetSign(lft, rgh)
+    for i in range(a:lft, a:rgh)
+        let id = g:vimrc_sign_counter
+        let g:vimrc_sign_counter = g:vimrc_sign_counter + 1
+        let cmd = printf('sign place %d line=%d name=tmpsign file=%s', id, i, expand('%:p'))
+        exe cmd
+    endfor
+endfunction
+
+
+" Hilight words with colors
+"
 let hls_obj = {}
 let hls_obj.colors = ['darkgreen', 'darkred', 'darkcyan', 'darkblue']
 function! hls_obj.push()
@@ -225,150 +423,7 @@ function! hls_obj.init()
         exe 'hi ' . name . ' cterm=reverse ctermfg=' . color
     endfor
 endfunction
-call hls_obj.init()
 
-nnoremap g/ :call hls_obj.push()<CR>
-nnoremap g\ :call hls_obj.clear()<CR>
-nnoremap g* :let @/='\<' . expand('<cword>') . '\>' <bar> call hls_obj.push()<CR>
-nnoremap <leader><space> :set invhls<CR>
-nnoremap <CR> :set invrnu<CR>
-
-function! s:ReplaceWord(type)
-    let pat = escape(tolower(expand(a:type)), '*+/')
-    call feedkeys(':%s/\<' . pat . '\>/')
-endfunction
-nnoremap cgw :call <SID>ReplaceWord('<cword>')<CR>
-nnoremap cgW :call <SID>ReplaceWord('<cWORD>')<CR>
-
-" Complete menu
-inoremap <expr> <c-j> pumvisible() ? '<c-o>' : '<c-x><c-o>'
-inoremap <expr> <c-k> pumvisible() ? '<c-p>' : '<c-x><c-p>'
-
-" Fold
-nnoremap <Space> za
-
-" Visual
-vnoremap > >gv
-vnoremap < <gv
-
-" Insert & delete
-nnoremap S i_<Esc>r
-function! s:ReplaceToInsertMode()
-    return (mode() == 'R') ? "\<ESC>a" : "\<ESC>lR"
-endfunction
-inoremap <expr> <c-l> <SID>ReplaceToInsertMode()
-
-" Make the previous word UPPER CASE
-inoremap <C-u> <esc>hviwUel
-
-" Toggle line numbers
-nnoremap <F9> :set invnumber<CR>
-
-" Align with Tabular plugin
-vnoremap <leader>ta :Tabular /
-
-" Add quotes/parens/brackets till the end of line
-nnoremap gs' i'<ESC>A'<ESC>
-nnoremap gs" i"<ESC>A"<ESC>
-nnoremap gs( i(<ESC>A)<ESC>%
-nnoremap gs) i(<ESC>A)<ESC>%
-nnoremap gs[ i[<ESC>A]<ESC>%
-nnoremap gs] i[<ESC>A]<ESC>%
-nnoremap gs{ i{<ESC>A}<ESC>%
-nnoremap gs} i{<ESC>A}<ESC>%
-
-" My git
-nnoremap <F8> :call git#commit()<CR>
-nnoremap <F9> :call git#status()<CR>
-
-
-" === Plugins and filetypes ===================================================
-set rtp+=~/.vim/bundle/Vundle.vim/
-" let g:EasyMotion_do_mapping = 0
-call vundle#begin()
-    Plugin 'VundleVim/Vundle.vim'
-    if !empty(system("which git"))
-        Plugin 'airblade/vim-gitgutter'
-    endif
-        " Dependencies for snipmate
-        Plugin 'MarcWeber/vim-addon-mw-utils'
-        Plugin 'tomtom/tlib_vim'
-        Plugin 'honza/vim-snippets'
-    Plugin 'garbas/vim-snipmate'
-    Plugin 'godlygeek/tabular'
-    Plugin 'kien/ctrlp.vim'
-    Plugin 'mtth/scratch.vim'
-    Plugin 'scrooloose/nerdcommenter'
-    Plugin 'scrooloose/nerdtree'
-    Plugin 'tpope/vim-repeat'
-    Plugin 'tpope/vim-surround'
-
-    Plugin 'A'
-    Plugin 'vim-scripts/OmniCppComplete'
-    " My plugins
-    " Plugin 'jasu0/makefix'
-    " Plugin 'jasu0/viewtag'
-    " Plugin 'jasu0/touchtags'
-    Plugin 'jasu0/VimBox-rc'
-    " Plugin 'ass-inspector'
-    " Plugin 'marks'
-    " Plugin 'mycolors'
-    " Plugin 'mytypes'
-    " Plugin 'vic'
-    Plugin 'jasu0/Z'
-call vundle#end()
-filetype plugin indent on
-
-" Makefix
-let g:makefix_highlight = 0
-" au BufRead *.tex call makefix#CustomFunction(function('makefix#misc#LatexNoOverfullHbox'))
-
-" Surround
-let g:surround_no_insert_mappings = 1
-
-" Ggundo
-let g:gundo_prefer_python3 = 1
-nnoremap <leader>pG :GundoToggle<CR>
-
-" Filetypes
-autocmd BufNewFile,BufRead *.story set ft=groovy
-autocmd BufNewFile,BufRead *memo set ft=memo
-autocmd BufNewFile,BufRead kirjat set ft=kirjat
-autocmd BufNewFile,BufRead *.scl set ft=scala
-autocmd BufRead *.tab set ft=tab
-
-" CtrlP
-comm! CR :CtrlPClearCache
-au! FileWritePost :CtrlPClearCache
-let g:ctrlp_clear_cache_on_exit = 1
-let g:ctrlp_custom_ignore = {'dir': '\C\<target\>'}
-
-" Scratch buffer
-comm! SC Scratch
-comm! SCS split | Scratch
-comm! SCV vsplit | Scratch
-
-" NERDtree
-if !exists("NERDTreeIgnore")
-    let NERDTreeIgnore = ['\.pyc', '__init__\.py']
-else
-    call insert(NERDTreeIgnore, '\.pyc')
-    call insert(NERDTreeIgnore, '__init__\.py')
-endif
-let NERDTreeDirArrows = 0
-nnoremap <leader>sn :NERDTreeToggle<CR>
-
-" GitGutter
-let g:gitgutter_map_keys = 0
-let g:gitgutter_realtime = 0
-let g:gitgutter_highlight_lines = 0
-nnoremap <leader>pg :GitGutterSignsToggle<CR>
-
-" Syntastic
-let g:syntastic_cpp_compiler_options = ' -std=c++11'
-
-" Ass-inspector
-nnoremap <leader>as :call Ass_ShowAssembly()<CR>
 
 " === Initialize ==============================================================
 " Clear registers
@@ -376,65 +431,7 @@ let s:a = "abcdefghijklmnopqrstuvxwxyz0123456789\""
 for i in range(0, len(s:a) - 1)
     exe 'let @' . s:a[i] . '= ""'
 endfor
+unlet s:a
 
-
-" === Debugging ===============================================================
-
-function! s:PrettyString(str, depth, newline)
-    let space = printf('%' . a:depth . 's', '')
-    " let text = (type(a:str) == type("")) ? a:str : string(a:str)
-    let text = a:str
-    if a:newline
-        echo space . text
-    else
-        echon space . text
-    endif
-endfunction
-function! s:PrettyPrint_aux(ds, depth)
-    if (a:depth > 16) | return | endif
-    let true = 1
-    let false = 0
-    let T = type(a:ds)
-    if (T == type({}))
-        let maxkey = max(map(copy(keys(a:ds)), 'len(string(v:val))'))
-        for key in keys(a:ds)
-            call s:PrettyString(printf('%-' . maxkey. 's', key . ':'), a:depth, true)
-            call s:PrettyPrint_aux(a:ds[key], a:depth + 4)
-        endfor
-    elseif (T == type([]))
-        if (len(a:ds) > 6)
-            echo '['
-            echon string(a:ds[0])
-            echon string(a:ds[1])
-            echon string(a:ds[2])
-            echon '..., '
-            echon string(a:ds[-3])
-            echon string(a:ds[-2])
-            echon string(a:ds[-1])
-            echo ']'
-        else
-            echo string(a:ds)
-        endif
-    elseif (T == type(""))
-        let s = substitute(a:ds, '\n', '\\n', 'g')
-        if len(s) > 50
-            echon string(s[:47]) . '...'
-        else
-            echon string(s)
-        endif
-    else
-        echon string(a:ds)
-    endif
-endfunction
-function! s:PrettyPrint_list(args)
-    if (type(a:args) == type([]) && !empty(a:args) && type(a:args[0]) == type({}))
-        for arg in a:args
-            call s:PrettyPrint_aux(arg, 0)
-            echo "----------------------------------------"
-        endfor
-    else
-        call s:PrettyPrint_aux(a:args, 0)
-    endif
-endfunction
-comm! -nargs=1 Pretty call s:PrettyPrint_list(eval(<f-args>))
-
+" hls_obj
+call hls_obj.init()
