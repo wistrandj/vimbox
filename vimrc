@@ -87,7 +87,7 @@ set path=.,./include/,/usr/include,/usr/local/include/,/opt/include/
 
 " Backup and viminfo
 " --- Location for backup and swap files
-set directory=
+set directory=/tmp
 set nobackup
 
 " Filetypes
