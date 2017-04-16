@@ -97,7 +97,10 @@ set nobackup
 " TODO allow backups and swap files only in ~/,~/bin,... etc. folders
 
 " === Mappings ================================================================
-" Windows, buffers and tabs
+
+" Files, Windows, buffers and tabs
+"
+let g:vim_default_source = expand('<sfile>')
 nnoremap <leader>T :tabnew<CR>
 nnoremap <leader>ta :tabprev<CR>
 nnoremap <leader>tw :tabnext<CR>
@@ -109,68 +112,64 @@ nnoremap <C-j> :wincmd j<CR>
 nnoremap <C-k> :wincmd k<CR>
 nnoremap <C-l> :wincmd l<CR>
 
-" Files and external programs
 nnoremap <F1> :so $MYVIMRC<CR>
-let g:vim_default_source = expand('<sfile>')
 nnoremap <F1> :echo g:vim_default_source<CR>
 nnoremap <Leader>w :update<CR>
 inoremap <C-x><C-o> <C-x><C-o><C-p>
 command! -nargs=* Tag call ShowTag(<f-args>)
 
 " Escaping and moving cursor
-" inoremap kj <Esc>l
+"
+noremap ö [
+noremap ä ]
+noremap Ö {
+noremap Ä }
 noremap , ;
 noremap ; ,
 noremap j gj
 noremap k gk
-map ö [
-map ä ]
-map Ö {
-map Ä }
-nn gj :call <SID>JumpInView(0.75)<CR>
-nn gk :call <SID>JumpInView(0.25)<CR>
 nnoremap ` ``
 cnoremap <c-a> <home>
 cnoremap <c-e> <end>
 cnoremap <c-b> <S-left>
 cnoremap <c-f> <S-right>
+nnoremap gj :call <SID>JumpInView(0.75)<CR>
+nnoremap gk :call <SID>JumpInView(0.25)<CR>
 
+
+" Visual
+"
+vnoremap > >gv
+vnoremap < <gv
+nnoremap <leader>v :call <SID>expand_visual_block()<CR>
 nnoremap vi<TAB> :call <SID>SelectIndention()<CR>
 
-nnoremap gd= :s/ *=.*//<CR>
-nnoremap d= ^d/=\s*\zs<CR>
 
+" Colors
+"
 if exists('*matchaddpos')
-nn <silent> n n:call <SID>HLnext(1)<CR>
-nn <silent> N N:call <SID>HLnext(1)<CR>
+nnoremap <silent> n n:call <SID>HLnext(1)<CR>
+nnoremap <silent> N N:call <SID>HLnext(1)<CR>
 endif
-
 nnoremap g/ :call hls_obj.push()<CR>
 nnoremap g\ :call hls_obj.clear()<CR>
 nnoremap g* :let @/='\<' . expand('<cword>') . '\>' <bar> call hls_obj.push()<CR>
 nnoremap <leader><space> :set invhls<CR>
 
-" Complete menu
-inoremap <expr> <c-j> pumvisible() ? '<c-o>' : '<c-x><c-o>'
-inoremap <expr> <c-k> pumvisible() ? '<c-p>' : '<c-x><c-p>'
 
-" Fold
-nnoremap <Space> za
-
-" Visual
-vnoremap > >gv
-vnoremap < <gv
-nnoremap <leader>v :call <SID>expand_visual_block()<CR>
 
 " Insert & delete
+"
 nnoremap S i_<Esc>r
 function! s:ReplaceToInsertMode()
     return (mode() == 'R') ? "\<ESC>a" : "\<ESC>lR"
 endfunction
 inoremap <expr> <c-l> <SID>ReplaceToInsertMode()
 nnoremap <leader>S :call <SID>ToggleCommentSeparator()<CR>
+nnoremap gd= :s/ *=.*//<CR>
+nnoremap d= ^d/=\s*\zs<CR>
 
-comm! -nargs=* QuickPaste :call <SID>QuickPaste(<f-args>)
+command! -nargs=* QuickPaste :call <SID>QuickPaste(<f-args>)
 nnoremap gp/ :QuickPaste / 
 nnoremap gp? :QuickPaste ? 
 nmap <leader>R <Plug>VerticalRDown
@@ -183,25 +182,25 @@ inoremap <expr> ) matchingChars#InsertOrSkip(')')
 inoremap <expr> ] matchingChars#InsertOrSkip(']')
 inoremap <expr> } matchingChars#InsertOrSkip('}')
 inoremap <expr> <BS> matchingChars#Backspace()
-
 nnoremap g{ :<C-U>call matchingChars#InsertBrackets(v:count1)<CR> 
-if exists("g:loaded_surround")
-            " Insert brackets around v:count lines
-    exe "vmap g} S}i <left>"
-            " Delete brackets around AND the if/while/for-stuff prepending
-    nmap gda} ?{<CR>d^ds}
-            " Move everything away from current block
-    nmap gd} ?{<CR>i<CR><CR><ESC>ds}<<kk:s/ *$//<CR>jA<TAB>
-endif
+" --- Insert brackets around v:count lines
+exe "vmap g} S}i <left>"
+" --- Delete brackets around AND the if/while/for-stuff prepending
+nmap gda} ?{<CR>d^ds}
+" --- Move everything away from current block
+nmap gd} ?{<CR>i<CR><CR><ESC>ds}<<kk:s/ *$//<CR>jA<TAB>
 
 
-" Make the previous word UPPER CASE
+" Misc
+"
+inoremap <expr> <c-j> pumvisible() ? '<c-o>' : '<c-x><c-o>'
+inoremap <expr> <c-k> pumvisible() ? '<c-p>' : '<c-x><c-p>'
+nnoremap <Space> za
+" --- Make the previous word UPPER CASE
 inoremap <C-u> <esc>hviwUel
-
-" Align with Tabular plugin
+" --- Align with Tabular plugin
 vnoremap <leader>ta :Tabular /
-
-" Add quotes/parens/brackets till the end of line
+" --- Add quotes/parens/brackets till the end of line
 nnoremap gs' i'<ESC>A'<ESC>
 nnoremap gs" i"<ESC>A"<ESC>
 nnoremap gs( i(<ESC>A)<ESC>%
@@ -211,7 +210,6 @@ nnoremap gs] i[<ESC>A]<ESC>%
 nnoremap gs{ i{<ESC>A}<ESC>%
 nnoremap gs} i{<ESC>A}<ESC>%
 
-" My git
 nnoremap <F8> :call git#commit()<CR>
 nnoremap <F9> :call git#status()<CR>
 
