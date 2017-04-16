@@ -86,15 +86,17 @@ set wildignore=*.o,*.obj,*.class
 set path=.,./include/,/usr/include,/usr/local/include/,/opt/include/
 
 " Backup and viminfo
-" 'directory' sets the location for swap files
-set directory=/tmp/
-" set viminfo=h,f1,:100,'100,<50,s10,n~/.vimtrash/viminfo
+" --- Location for backup and swap files
+set directory=
 set nobackup
-" set backup
-" set backupdir=~/.vimtrash,/tmp
-" set backupskip=~/,~/bin,~/doc,~/dl/,~/doc,~/src
-" set writebackup
-" TODO allow backups and swap files only in ~/,~/bin,... etc. folders
+
+" Filetypes
+autocmd BufNewFile,BufRead *.story set ft=groovy
+autocmd BufNewFile,BufRead *memo set ft=memo
+autocmd BufNewFile,BufRead kirjat set ft=kirjat
+autocmd BufNewFile,BufRead *.scl set ft=scala
+autocmd BufRead *.tab set ft=tab
+
 
 " === Mappings ================================================================
 
@@ -250,13 +252,6 @@ filetype plugin indent on
 
 " Surround
 let g:surround_no_insert_mappings = 1
-
-" Filetypes
-autocmd BufNewFile,BufRead *.story set ft=groovy
-autocmd BufNewFile,BufRead *memo set ft=memo
-autocmd BufNewFile,BufRead kirjat set ft=kirjat
-autocmd BufNewFile,BufRead *.scl set ft=scala
-autocmd BufRead *.tab set ft=tab
 
 " CtrlP
 comm! CR :CtrlPClearCache
@@ -561,8 +556,11 @@ function! ShowTag(filter, ...)
     endfor
 endfunction
 
+
 " === Initialize ==============================================================
+
 " Clear registers
+"
 let s:a = "abcdefghijklmnopqrstuvxwxyz0123456789\""
 for i in range(0, len(s:a) - 1)
     exe 'let @' . s:a[i] . '= ""'
