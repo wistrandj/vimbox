@@ -12,9 +12,18 @@ syn clear
 hi vimFuncKey ctermfg=yellow
 syn keyword vimFuncKey fu fun func funct functi functio function endfu endfun endfunc endfunct endfuncti endfunctio endfunction wh whi whil while endwh endwhi endwhil endwhile if el els else elsei elseif en endi endif for endfor return break continue in try endtry finally
 syn keyword vimFuncKey com comm comma comman command
-syn match vimFuncKey "\w*map"
+" syn match vimFuncKey "\w*map"
 syn keyword vimFuncKey nn nnr nnre nnrem nnrema nnremap
 syn keyword vimFuncKey syn synt syntax hi
+
+hi vimMappingLine ctermfg=0
+hi link vimMappingLineKeyword vimFuncKey
+hi vimMappingLineMapping ctermfg=white
+hi vimMappingLineRest ctermfg=gray
+syn match vimMappingLine "^\(\w*map\w*\|cm\|lm\|im\|om\|sm\|xm\|vm\|nm\|cm\|lm\|im\|om\|sm\|xm\|vm\|nm\|cm\|lm\|im\|om\|xm\|vm\|nm\|no\|nn\|vn\|xn\|no\|ln\|vu\|xu\|ou\|iu\|lu\|cu\|nun\|cno\|ino\|ono\|snor\).*$" transparent contains=vimMappingLineKeyword
+syn match vimMappingLineRest ".*" contained containedin=vimMappingLineRest
+syn match vimMappingLineMapping "\S\+" contained containedin=vimMappingLine nextgroup=vimMappingLineRest
+syn match vimMappingLineKeyword "^\w\+" contained containedin=vimMappingLine nextgroup=vimMappingLineMapping
 
 hi vimOperator ctermfg=red
 hi vimParen ctermfg=blue
