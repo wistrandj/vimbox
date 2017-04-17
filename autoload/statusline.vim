@@ -8,9 +8,12 @@ function! statusline#StatusLineFunction()
     " TODO: Remove code below :D register thingy and lines() are good
 
     let s:statusline = []
-    call s:add("%f", "StatuslineHilight")
-    call s:add('%{git#statusline()}')
+    call s:add(":b%n |")
+    call s:add("%t", "StatuslineHilight")
+    call s:add("%<%{File()}")
     call s:add("%=")
+    call s:add('%y')
+    call s:add('%{git#statusline()}')
     call s:add("col")
     call s:add("%c", "StatuslineHilight")
     call s:add("|")
@@ -34,6 +37,30 @@ function! s:add(text, ...)
 endfunction
 
 " === Building block ==========================================================
+
+function! s:join_by_color(text1, text2, color)
+    return printf('%s%%#%s#%s%%*', a:text1, a:color, a:text2)
+endfunction
+
+let s:file_names_by_buffer = {}
+function! File()
+    let buf = bufnr('%')
+    if has_key(s:file_names_by_buffer, buf)
+        return s:file_names_by_buffer[buf]
+    endif
+
+    if &ft == 'java'
+        let ln = search('^package ')
+        if (ln != -1)
+            let pack = substitute(getline(ln), '.*package *\(.*\);$', '\1', '')
+            let pack = substitute(pack, '\.', ' ', 'g')
+            let s:file_names_by_buffer[buf] = '('.pack.')'
+            return pack
+        endif
+    endif
+
+    return expand('%:h')
+endfunction
 
 function! s:flags()
     return "[%M%R%H%W]"
