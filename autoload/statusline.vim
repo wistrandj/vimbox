@@ -1,5 +1,6 @@
 
 let s:statusline = []
+let s:package_cache_by_buffer = {}
 
 hi StatuslineHilight cterm=reverse ctermfg=white ctermbg=darkred
 
@@ -10,7 +11,7 @@ function! statusline#StatusLineFunction()
     let s:statusline = []
     call s:add(":b%n |")
     call s:add("%t", "StatuslineHilight")
-    call s:add("%<%{File()}")
+    call s:add("%<%{Vimrc_statusline_get_package()}")
     call s:add("%=")
     call s:add('%y')
     call s:add('%{git#statusline()}')
@@ -42,11 +43,10 @@ function! s:join_by_color(text1, text2, color)
     return printf('%s%%#%s#%s%%*', a:text1, a:color, a:text2)
 endfunction
 
-let s:file_names_by_buffer = {}
-function! File()
+function! Vimrc_statusline_get_package()
     let buf = bufnr('%')
-    if has_key(s:file_names_by_buffer, buf)
-        return s:file_names_by_buffer[buf]
+    if has_key(s:package_cache_by_buffer, buf)
+        return s:package_cache_by_buffer[buf]
     endif
 
     if &ft == 'java'
@@ -54,9 +54,26 @@ function! File()
         if (ln != -1)
             let pack = substitute(getline(ln), '.*package *\(.*\);$', '\1', '')
             let pack = substitute(pack, '\.', ' ', 'g')
-            let s:file_names_by_buffer[buf] = '('.pack.')'
+            let s:package_cache_by_buffer[buf] = '('.pack.')'
             return pack
         endif
+
+    elseif &ft == 'python'
+        let pkg = []
+        let dirs = split(expand('%:p:h'), '/')
+        while !empty(dirs)
+            let init = join(['/'] + dirs + ['__init__.py'], '/')
+            echom init
+            if filereadable(init)
+                call insert(pkg, dirs[-1])
+                call remove(dirs, -1)
+            else
+                break
+            endif
+        endwhile
+        let str = empty(pkg) ? '' : '('.join(pkg, '.').')'
+        let s:package_cache_by_buffer[buf] = str
+        return str
     endif
 
     return expand('%:h')
