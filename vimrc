@@ -44,7 +44,7 @@ set wildmode=list:longest,full
 set conceallevel=2
 set nowrap
 if has("gui_running")
-    colorscheme molokai
+    colorscheme desert
 endif
 colorscheme elflord " This seems to clear all hilights
 hi SignColumn ctermbg=darkgreen
