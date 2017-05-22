@@ -1,5 +1,5 @@
 " === Custom mappings =========================================================
-nnoremap <F7> :call      <SID>SetSign(line('.',   line('.')))<CR>
+nnoremap <F7> :call      <SID>SetSign(line('.'),   line('.'))<CR>
 vnoremap <F7> <ESC>:call <SID>SetSign(line("'<"), line("'>"))<CR>
 
 comm!          SyntaxItem :echo <SID>GetSyntaxItemUnderCursor()
