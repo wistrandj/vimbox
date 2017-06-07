@@ -1,6 +1,11 @@
 " === Custom mappings =========================================================
 nnoremap <F7> :call      <SID>SetSign(line('.'),   line('.'))<CR>
 vnoremap <F7> <ESC>:call <SID>SetSign(line("'<"), line("'>"))<CR>
+command -nargs=1 SetSign :call SetSign_Helper(<f-args>)
+
+function SetSign_Helper(line)
+    call <SID>SetSign(a:line, a:line)
+endfunction
 
 comm!          SyntaxItem :echo <SID>GetSyntaxItemUnderCursor()
 comm! -nargs=1 Pretty call <SID>PrettyPrint_list(eval(<f-args>))
@@ -557,13 +562,13 @@ endfunction
 
 " === Initialize ==============================================================
 
-" Clear registers
-"
-let s:a = "abcdefghijklmnopqrstuvxwxyz0123456789\""
-for i in range(0, len(s:a) - 1)
-    exe 'let @' . s:a[i] . '= ""'
-endfor
-unlet s:a
+" " Clear registers
+" "
+" let s:a = "abcdefghijklmnopqrstuvxwxyz0123456789\""
+" for i in range(0, len(s:a) - 1)
+"     exe 'let @' . s:a[i] . '= ""'
+" endfor
+" unlet s:a
 
 call hls_obj.init()
 call <SID>ScanTags()
