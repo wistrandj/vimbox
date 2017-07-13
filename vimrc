@@ -41,7 +41,9 @@ set list            " show ws as visible char
 set listchars=tab:>\ ,trail:·
 set noshowmode
 set scrolloff=2     " Keep a few lines always visible around cursor
+if exists('&breakindent')
 set breakindent
+endif
 set showbreak=^
 set splitright
 set wildmenu
