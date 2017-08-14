@@ -31,6 +31,7 @@ set completeopt+=menuone
 set confirm
 set hidden
 set autowrite
+set wildmenu=longest,list
 autocmd BufRead help set readonly
 
 " View
@@ -245,7 +246,7 @@ call vundle#begin()
     Plugin 'tpope/vim-surround'
 
     " Optional
-    Plugin 'davidhalter/jedi-vim'
+    " Plugin 'davidhalter/jedi-vim'
     Plugin 'vim-scripts/OmniCppComplete'
 
     " My plugins
