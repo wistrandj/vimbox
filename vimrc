@@ -31,7 +31,7 @@ set completeopt+=menuone
 set confirm
 set hidden
 set autowrite
-set wildmenu=longest,list
+set wildmode=longest,list
 autocmd BufRead help set readonly
 
 " View
