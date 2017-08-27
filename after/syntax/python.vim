@@ -9,7 +9,8 @@ hi PythonConstant ctermfg=white cterm=bold
 hi PythonProperty ctermfg=white cterm=bold
 hi PythonConstructioncall ctermfg=green
 hi PythonImport ctermfg=cyan
-hi PythonKeyword ctermfg=yellow
+hi PythonKeyword1 ctermfg=yellow
+hi PythonKeyword2 ctermfg=yellow cterm=none
 hi PythonList ctermfg=white cterm=bold
 hi PythonLogicOperators ctermfg=red cterm=bold
 hi PythonSelf ctermfg=none
@@ -17,7 +18,9 @@ hi PythonStandardFunction ctermfg=magenta
 hi PythonValue ctermfg=red
 
 " Keywords and build-in functions
-syn keyword PythonKeyword break continue def elif else except exec finally for if pass raise return try while yield
+" syn keyword PythonKeyword2 break continue def elif else except exec finally for if pass raise return try while yield
+syn keyword PythonKeyword1 def try except finally for raise return try while yield
+syn keyword PythonKeyword2 if else elif break continue exec pass
 syn keyword PythonImport from import
 syn match PythonSelf "^\s*self"
 syn keyword PythonConstant and as del in is not or
@@ -29,7 +32,7 @@ syn region PythonLambda matchgroup=PythonLambda1 start="\<lambda" end=':\|$' dis
 
 " Class
 hi PythonClass cterm=none
-syn region PythonClass matchgroup=PythonKeyword start=/^class/ matchgroup=PythonConstructioncall  end=/\<\w*:\|$/
+syn region PythonClass matchgroup=PythonKeyword1 start=/^class/ matchgroup=PythonConstructioncall  end=/\<\w*:\|$/
 
 " Property tag
 syn match PythonProperty "^\s*@\w*"
