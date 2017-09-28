@@ -4,40 +4,48 @@ endif
 syntax clear
 let b:current_syntax = 'python'
 
-hi PythonKeyword ctermfg=yellow
-hi PythonImport ctermfg=cyan
-hi PythonLogicOperators ctermfg=white cterm=bold
-hi PythonValue ctermfg=red
-hi PythonConstant ctermfg=white cterm=bold
-hi PythonStandardFunction ctermfg=magenta
 hi PythonComment ctermfg=darkmagenta cterm=none
-hi PythonFunctioncall ctermfg=blue
+hi PythonConstant ctermfg=white cterm=bold
+hi PythonProperty ctermfg=white cterm=bold
 hi PythonConstructioncall ctermfg=green
+hi PythonImport ctermfg=cyan
+hi PythonKeyword1 ctermfg=yellow
+hi PythonKeyword2 ctermfg=white cterm=bold
 hi PythonList ctermfg=white cterm=bold
+hi PythonLogicOperators ctermfg=white cterm=bold
 hi PythonSelf ctermfg=none
+hi PythonStandardFunction ctermfg=magenta
+hi PythonValue ctermfg=red
 
-syn keyword PythonKeyword def class pass return local global
+" Keywords and build-in functions
+" syn keyword PythonKeyword2 break continue def elif else except exec finally for if pass raise return try while yield
+syn keyword PythonKeyword1 def try except finally for raise return try while yield
+syn keyword PythonKeyword2 if else elif break continue exec pass with
 syn keyword PythonImport from import
 syn match PythonSelf "^\s*self"
-syn keyword PythonLogicOperators for try except if elif else while in not or and is with
-syn region PythonValue start='u\?"' skip='[^\\]\\"' end='"'
-syn region PythonValue start="u\?'" skip="\\'" end = "'"
-syn match PythonValue "-\?\<\d\+\(\.\d\+\)\?"
+syn keyword PythonConstant and as del in is not or
+
+" Special case: lambda
+hi PythonLambda cterm=none
+hi PythonLambda1 ctermfg=yellow cterm=bold
+syn region PythonLambda matchgroup=PythonLambda1 start="\<lambda" end=':\|$' display
+
+" Class
+hi PythonClass cterm=none
+syn region PythonClass matchgroup=PythonKeyword1 start=/^class/ matchgroup=PythonConstructioncall  end=/\<\w*:\|$/
+
+" Property tag
+syn match PythonProperty "^\s*@\w*"
+
+" Values
+syn region PythonValue start='u\?"' skip='\\"' end='"' display
+syn region PythonValue start='u\?"""' skip='\\"' end='"""' display
+syn region PythonValue start="u\?'" skip="\\'" end = "'" display
+syn match PythonValue "\<\d\+\(\.\d\+\)\?"
 syn keyword PythonConstant None True False
-syn keyword PythonStandardFunction list str len enumerate id type
-syn match PythonStandardFunction '^\s*@\w*'
-
-" Lambda function
-hi link PythonLambda PythonStandardFunction
-hi PythonLambdaDot ctermfg=white cterm=bold
-syn region PythonStandardFunction start='lambda' end=':\|\n' contains=PythonLambdaDot transparent
-syn match PythonLambda 'lambda' contained containedin=PythonStandardFunction
-syn match PythonLambdaDot ':' contained containedin=PythonStandardFunction
-
-
-syn match PythonComment "#.*$"
-"syn match PythonFunctioncall ")*"
-"syn match PythonFunctioncall "\<\w\+("
-syn match PythonConstructioncall "\<[A-Z]\w*\ze("
-
+syn match PythonStandardFunction "\<\(__import__\|abs\|all\|any\|ascii\|bin\|bool\|bytearray\|bytes\|callable\|chr\|classmethod\|compile\|complex\|delattr\|dict\|dir\|divmod\|enumerate\|eval\|exec\|filter\|float\|format\|frozenset\|getattr\|globals\|hasattr\|hash\|help\|hex\|id\|input\|int\|isinstance\|issubclass\|iter\|len\|list\|locals\|map\|max\|memoryview\|min\|next\|object\|oct\|open\|ord\|pow\|print\|property\|range\|repr\|reversed\|round\|set\|setattr\|slice\|sorted\|staticmethod\|str\|sum\|super\|tuple\|type\|vars\|zip\)\ze("
 syn match PythonList "\[\|\]\|{\|}"
+
+" Comments
+syn match PythonComment "^\s*#.*$"
+syn match PythonConstructioncall "\<[A-Z]\w*\ze("
