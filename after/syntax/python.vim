@@ -18,9 +18,8 @@ hi PythonStandardFunction ctermfg=magenta
 hi PythonValue ctermfg=red
 
 " Keywords and build-in functions
-" syn keyword PythonKeyword2 break continue def elif else except exec finally for if pass raise return try while yield
-syn keyword PythonKeyword1 def try except finally for raise return try while yield
-syn keyword PythonKeyword2 if else elif break continue exec pass with
+syn keyword PythonKeyword1 def for raise return try while yield
+syn keyword PythonKeyword2 if else elif break continue exec pass with try except finally local global
 syn keyword PythonImport from import
 syn match PythonSelf "^\s*self"
 syn keyword PythonConstant and as del in is not or
@@ -38,9 +37,9 @@ syn region PythonClass matchgroup=PythonKeyword1 start=/^class/ matchgroup=Pytho
 syn match PythonProperty "^\s*@\w*"
 
 " Values
-syn region PythonValue start='u\?"' skip='\\"' end='"' display
-syn region PythonValue start='u\?"""' skip='\\"' end='"""' display
-syn region PythonValue start="u\?'" skip="\\'" end = "'" display
+syn region PythonValue start='u\?"' skip='[^\\]\\"' end='"' display
+syn region PythonValue start='u\?"""' skip='[^\\]\\"' end='"""' display
+syn region PythonValue start="u\?'" skip="[^\\]\\'" end = "'" display
 syn match PythonValue "\<\d\+\(\.\d\+\)\?"
 syn keyword PythonConstant None True False
 syn match PythonStandardFunction "\<\(__import__\|abs\|all\|any\|ascii\|bin\|bool\|bytearray\|bytes\|callable\|chr\|classmethod\|compile\|complex\|delattr\|dict\|dir\|divmod\|enumerate\|eval\|exec\|filter\|float\|format\|frozenset\|getattr\|globals\|hasattr\|hash\|help\|hex\|id\|input\|int\|isinstance\|issubclass\|iter\|len\|list\|locals\|map\|max\|memoryview\|min\|next\|object\|oct\|open\|ord\|pow\|print\|property\|range\|repr\|reversed\|round\|set\|setattr\|slice\|sorted\|staticmethod\|str\|sum\|super\|tuple\|type\|vars\|zip\)\ze("
