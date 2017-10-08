@@ -90,7 +90,7 @@ comm! -nargs=1 Skeln call <SID>NewSkeletonFile(<f-args>)
 " === Postprocessing and user arguments =======================================
 " =============================================================================
 
-function s:SkelEval(command)
+function! s:SkelEval(command)
     if (match(a:command, '(.*)') != -1)
         if (exists('*'.a:command))
             sandbox let val = eval(a:command)
