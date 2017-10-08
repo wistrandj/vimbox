@@ -265,7 +265,7 @@ let g:surround_no_insert_mappings = 1
 comm! CR :CtrlPClearCache
 au! FileWritePost :CtrlPClearCache
 let g:ctrlp_clear_cache_on_exit = 1
-let g:ctrlp_custom_ignore = {'dir': '\C\<target\>'}
+let g:ctrlp_custom_ignore = {'dir': '\C\<target\>\|node_modules'}
 
 " Scratch buffer
 comm! SC Scratch
