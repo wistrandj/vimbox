@@ -250,7 +250,7 @@ call vundle#begin()
     Plugin 'vim-scripts/OmniCppComplete'
 
     " My plugins
-    Plugin 'jasu0/VimBox-rc'
+    Plugin 'jasu0/vimbox'
     Plugin 'jasu0/Z'
     " Plugin 'jasu0/makefix'
     " Plugin 'jasu0/viewtag'
