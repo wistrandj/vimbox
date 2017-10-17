@@ -4,9 +4,9 @@ set noautoindent
 set nosmartindent
 set softtabstop=2
 set shiftwidth=2
-set indentexpr=YamlIndent(v:lnum)
+set indentexpr=<SID>YamlIndent(v:lnum)
 
-function! YamlIndent(lnum)
+function! s:YamlIndent(lnum)
     let prevnonblank = prevnonblank(a:lnum)
     if (a:lnum - prevnonblank > 3)
         return 0
