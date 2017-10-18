@@ -1,7 +1,7 @@
-if exists('g:vimbox_ft_sh_loaded')
+if exists('g:vimbox_ft_loaded_sh')
     finish
 endif
-let g:vimbox_ft_sh_loaded = 1
+let g:vimbox_ft_loaded_sh = 1
 
 ia elog echo "$(date +%Y%m%d:%H%M)"<LEFT>
 
