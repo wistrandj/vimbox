@@ -1,11 +1,11 @@
-function! matchingChars#InsertBrackets(count)
+function! parenthesis#InsertBrackets(count)
     let toline = line('.') + a:count
     normal! A {
     call append(toline, '}')
     normal! =a}$
 endfunction
 
-fun! matchingChars#InsertParen(paren)
+fun! parenthesis#InsertParen(paren)
     let parens = {'(':')', '[':']', '{':'}'}
     let [left, right] = [a:paren, parens[a:paren]]
     let line = getline('.')
@@ -23,12 +23,12 @@ fun! matchingChars#InsertParen(paren)
     return left . right . "\<LEFT>"
 endfun
 
-fun! matchingChars#InsertOrSkip(char)
+fun! parenthesis#InsertOrSkip(char)
     let ch = strpart(getline('.'), col('.')-1, 1)
     return (ch == a:char) ? "\<RIGHT>" : a:char
 endfun
 
-fun! matchingChars#InsertQuote(quote)
+fun! parenthesis#InsertQuote(quote)
     if (&ft == 'vim')
         return a:quote
     end
@@ -43,7 +43,7 @@ fun! matchingChars#InsertQuote(quote)
     return a:quote . a:quote . "\<LEFT>"
 endfun
 
-fun! matchingChars#Backspace()
+fun! parenthesis#Backspace()
     let ch = strpart(getline('.'), col('.')-2, 2)
     if (-1 != index(["()", "[]", "{}", '""', "''"], ch))
         return "\<right>\<BS>\<BS>"
