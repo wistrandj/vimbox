@@ -195,6 +195,7 @@ nnoremap gs[ i[<ESC>A]<ESC>%
 nnoremap gs] i[<ESC>A]<ESC>%
 nnoremap gs{ i{<ESC>A}<ESC>%
 nnoremap gs} i{<ESC>A}<ESC>%
+onoremap F   :<C-U>normal! 0f(hvB<CR>
 
 
 " === Plugins and filetypes ===================================================
@@ -212,10 +213,6 @@ endfunction
 
 call vundle#begin()
     XPlugin 'VundleVim/Vundle.vim'
-    XPlugin 'MarcWeber/vim-addon-mw-utils'
-    XPlugin 'tomtom/tlib_vim'
-    XPlugin 'honza/vim-snippets'
-    XPlugin 'garbas/vim-snipmate'
 
     XPlugin 'godlygeek/tabular'
     XPlugin 'kien/ctrlp.vim'
@@ -228,16 +225,31 @@ call vundle#begin()
     XPlugin 'jasu0/vimbox'
     XPlugin 'jasu0/Z'
 
+    if 1
+        XPlugin 'MarcWeber/vim-addon-mw-utils'
+        XPlugin 'tomtom/tlib_vim'
+        XPlugin 'honza/vim-snippets'
+        XPlugin 'garbas/vim-snipmate'
+    endif
+
     if !empty(system("which git"))
         XPlugin 'airblade/vim-gitgutter'
     endif
 
     if has('conceal') && has('python3') || has('python')
         " requires: pip install jedi
-        let g:jedi#completions_command = "<C-N>"
+        let g:jedi#completions_command = "<C-Space>"
         let g:jedi#popup_on_dot = 0
         XPlugin 'davidhalter/jedi-vim'
     endif
+
+    " if has('python3') && has('timers')
+    "     " requires: pip3 install neovim
+    "     let g:deoplete#enable_at_startup = 1
+    "     XPlugin 'roxma/nvim-yarp'
+    "     XPlugin 'roxma/vim-hug-neovim-rpc'
+    "     XPlugin 'Shougo/deoplete.nvim'
+    " endif
 call vundle#end()
 filetype plugin indent on
 
@@ -292,7 +304,6 @@ delfunction HasPlugin
 "       => Choose more lines
 "
 function! s:SelectIndention()
-    " Select lines around based on indentation
     let uppernr = search('\(^\s*$\)\@!', 'bWnc')
     let lowernr = search('\(^\s*$\)\@!', 'Wnc')
     let upper = len(substitute(getline(uppernr), '\S.*$', '', ''))
@@ -435,29 +446,13 @@ endif
 
 " Select with visual block everything that has same char as current one
 "
-function! s:evb_block_range()
-    let cl = col('.')
-    let pat = '^\(.\{' . (cl - 1) . '\}' . getline('.')[cl - 1] . '\)\@!'
-
-    let a = search(pat, 'Wbn') + 1
-    let b = search(pat, 'Wn') - 1
-
-    if b == -1
-        let b = line('$')
-    endif
-
-    return [a, b]
-endfunction
 function! s:expand_visual_block()
-    let [start, end] = s:evb_block_range()
-    let sol=&startofline
-    set nostartofline
-
-    exe "normal! " . start . "G\<C-V>" . end . "G"
-
-    if sol
-        set startofline
-    endif
+    let col = col('.')
+    let char = escape(getline('.')[col - 1], '.*')
+    let pat = printf('^\(^$\|.\{%d\}%s\)\@!', col - 1, char)
+    let s = search(pat, 'Wcnb') + 1
+    let e = search(pat, 'Wcn') - 1
+    call feedkeys(printf("%dG%d|\<C-V>%dG%d|", s, col, e, col))
 endfunction
 
 " Tags
@@ -499,5 +494,5 @@ if vimbox#really_loaded()
 
     nnoremap <F7> :call      sign#SetRange(line('.'),   line('.'))<CR>
     vnoremap <F7> <ESC>:call sign#SetRange(line("'<"), line("'>"))<CR>
-    command -nargs=1 SetSign :call sign#SetLine(<f-args>)
+    command! -nargs=1 SetSign :call sign#SetLine(<f-args>)
 endif
