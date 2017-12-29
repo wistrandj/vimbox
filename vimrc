@@ -130,13 +130,13 @@ cnoremap <c-f> <S-right>
 nnoremap gj :call <SID>JumpInView(0.75)<CR>
 nnoremap gk :call <SID>JumpInView(0.25)<CR>
 
-
 " Visual
 "
 vnoremap > >gv
 vnoremap < <gv
 nnoremap <leader>v :call <SID>expand_visual_block()<CR>
-nnoremap vi<TAB> :call <SID>SelectIndention()<CR>
+nnoremap <expr> vi<TAB> <SID>SelectIndention()
+onoremap i<TAB> :<C-U>exe ":normal! " . <SID>SelectIndention()<CR>
 
 
 " Colors
@@ -160,8 +160,8 @@ function! s:ReplaceToInsertMode()
 endfunction
 inoremap <expr> <c-l> <SID>ReplaceToInsertMode()
 nnoremap <leader>S :call <SID>ToggleCommentSeparator()<CR>
-nnoremap gd= :s/ *=.*//<CR>
-nnoremap d= ^d/=\s*\zs<CR>
+onoremap = :<C-U>normal! ^vf=gE<CR>
+onoremap g= :<C-U>normal! ^f=wv$h<CR>
 
 command! -nargs=* QuickPaste :call <SID>QuickPaste(<f-args>)
 nnoremap gp/ :QuickPaste / 
@@ -300,24 +300,22 @@ delfunction HasPlugin
 " === Functions ===============================================================
 
 " Select lines around based on indentation level
-" TODO: when vi<TAB> is pressed multiple times/mode() == 'v'
-"       => Choose more lines
 "
 function! s:SelectIndention()
-    let uppernr = search('\(^\s*$\)\@!', 'bWnc')
+    let uppernr = search('\(^\s*$\)\@!', 'Wncb')
     let lowernr = search('\(^\s*$\)\@!', 'Wnc')
     let upper = len(substitute(getline(uppernr), '\S.*$', '', ''))
     let lower = len(substitute(getline(lowernr), '\S.*$', '', ''))
     let spaces = max([upper, lower])
     if (spaces == 0)
-        return
+        return 'Vip'
     endif
-    let pattern = printf('^\( \{%d\}\)\@!' . '\&' . '^\(\s*$\)\@!', spaces)
-    let p1 = search(pattern, 'bWn')
+    let pattern = printf('^\(\s\{,%d\}\)\S', spaces - 1)
+    let p1 = search(pattern, 'Wnb')
     let p2 = search(pattern, 'Wn')
     let p1 = (p1 != 0) ? p1 + 1 : 1
     let p2 = (p2 != 0) ? p2 - 1 : line('$')
-    call feedkeys(p1 < p2 ? printf('%dGV%dj', p1, p2 - p1) : 'V')
+    return (p1 < p2 ? printf('%dGV%dj', p1, p2 - p1) : 'V')
 endfunction
 
 " Move and jump the cursor on screen to (f%) of the current screen
