@@ -7,6 +7,7 @@
 
 " set foldmethod=syntax
 
+finish
 syn clear
 
 hi vimFuncKey ctermfg=yellow
