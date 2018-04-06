@@ -41,10 +41,13 @@ set conceallevel=2
 set nowrap
 if has("gui_running")
     colorscheme desert
+else
+    colorscheme elflord " This seems to clear all hilights
 endif
-colorscheme elflord " This seems to clear all hilights
 hi SignColumn ctermbg=darkgreen
 hi Folded ctermfg=White ctermbg=Black
+hi Search cterm=reverse ctermfg=Black ctermbg=DarkYellow
+set hlsearch
 
 
 set laststatus=2
@@ -69,7 +72,7 @@ set softtabstop=4   " backspace removes spaces
 " Patterns
 set synmaxcol=800   " Do not match patterns for long lines
 set gdefault        " s///g always
-set ignorecase      " Don't care about case in searches
+set ignorecase
 set smartcase
 set incsearch
 set matchpairs+=<:>
@@ -197,10 +200,9 @@ nnoremap gs{ i{<ESC>A}<ESC>%
 nnoremap gs} i{<ESC>A}<ESC>%
 onoremap F   :<C-U>normal! 0f(hvB<CR>
 
-
 " === Plugins and filetypes ===================================================
 set rtp+=$HOME/.vim/bundle/Vundle.vim/
-comm -nargs=1 XPlugin call XPlugin(<args>)
+command! -nargs=1 XPlugin call XPlugin(<args>)
 let b:pluginlist = []
 function! XPlugin(pluginname)
     call insert(b:pluginlist, a:pluginname)
@@ -350,6 +352,7 @@ function! hls_obj.push()
     let self.buffer_id[bufid] = (id + 1) % len(self.colors)
 endfunction
 function! hls_obj.clear()
+    let @/=''
     let bufid = bufnr('%')
     if !has_key(self.buffer_synids, bufid)
         return
@@ -493,4 +496,8 @@ if vimbox#really_loaded()
     nnoremap <F7> :call      sign#SetRange(line('.'),   line('.'))<CR>
     vnoremap <F7> <ESC>:call sign#SetRange(line("'<"), line("'>"))<CR>
     command! -nargs=1 SetSign :call sign#SetLine(<f-args>)
+endif
+
+if filereadable(glob('$HOME/.vimrc.local'))
+    exe 'source ' . glob('$HOME/.vimrc.local')
 endif
