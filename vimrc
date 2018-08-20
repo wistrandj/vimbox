@@ -120,6 +120,7 @@ set nobackup
 " Filetypes
 autocmd BufNewFile,BufRead *.story set ft=groovy
 autocmd BufNewFile,BufRead *.scl set ft=scala
+autocmd BufNewFile,BufRead Jenkinsfile* set ft=groovy
 
 
 " === Mappings ================================================================
