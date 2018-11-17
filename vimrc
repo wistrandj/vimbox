@@ -1,30 +1,3 @@
-let s:snapshots_location='/tmp'
-function! s:snapshot_location()
-    let path = expand('%:p')
-    if !empty(path)
-        let hashed_path = systemlist('echo "%s" | md5sum | tr -s " " | cut -f1 -d" "')[0]
-        let absolute_path = s:snapshots_location . '/' . hashed_path
-        return absolute_path
-    else
-        return ''
-    endif
-endfunction
-
-function! s:create_snapshot()
-    let snapshot = s:snapshot_location()
-    if !empty(snapshot)
-        call writefile(getline(1,'$'), snapshot)
-    endif
-endfunction
-
-function! s:compare_to_snapshot()
-    let snapshot = s:snapshot_location()
-    let diff = systemlist(printf('diff -aur %s %s', snapshot, expand('%:p')))
-    echo join(diff, "\n")
-endfunction
-
-comm! Snapw call s:create_snapshot()
-comm! Snap call s:compare_to_snapshot()
 
 " === Variables ===============================================================
 filetype off " for V_undle
@@ -229,6 +202,9 @@ nnoremap gs] i[<ESC>A]<ESC>%
 nnoremap gs{ i{<ESC>A}<ESC>%
 nnoremap gs} i{<ESC>A}<ESC>%
 onoremap F   :<C-U>normal! 0f(hvB<CR>
+
+comm! Snapw call s:create_snapshot()
+comm! Snap call s:compare_to_snapshot()
 
 " === Plugins and filetypes ===================================================
 set rtp+=$HOME/.vim/bundle/Vundle.vim/
@@ -501,6 +477,34 @@ function! ShowTag(filter, ...)
             echohl NONE
         endif
     endfor
+endfunction
+
+" Snapshots - save current version of this file as temporary file against
+" which you can compare future changes.
+"
+let s:snapshots_location='/tmp'
+function! s:snapshot_location()
+    let path = expand('%:p')
+    if !empty(path)
+        let hashed_path = systemlist('echo "%s" | md5sum | tr -s " " | cut -f1 -d" "')[0]
+        let absolute_path = s:snapshots_location . '/' . hashed_path
+        return absolute_path
+    else
+        return ''
+    endif
+endfunction
+
+function! s:create_snapshot()
+    let snapshot = s:snapshot_location()
+    if !empty(snapshot)
+        call writefile(getline(1,'$'), snapshot)
+    endif
+endfunction
+
+function! s:compare_to_snapshot()
+    let snapshot = s:snapshot_location()
+    let diff = systemlist(printf('diff -aur %s %s', snapshot, expand('%:p')))
+    echo join(diff, "\n")
 endfunction
 
 
