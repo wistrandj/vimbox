@@ -210,6 +210,7 @@ comm! Snap call s:compare_to_snapshot()
 set rtp+=$HOME/.vim/bundle/Vundle.vim/
 command! -nargs=1 XPlugin call XPlugin(<args>)
 let b:pluginlist = []
+let b:DisabledPlugins = 0
 function! XPlugin(pluginname)
     call insert(b:pluginlist, a:pluginname)
     exe printf("Plugin '%s'", a:pluginname)
@@ -244,20 +245,27 @@ call vundle#begin()
         XPlugin 'airblade/vim-gitgutter'
     endif
 
-    if has('conceal') && has('python3') || has('python')
-        " requires: pip install jedi
-        let g:jedi#completions_command = "<C-Space>"
-        let g:jedi#popup_on_dot = 0
-        XPlugin 'davidhalter/jedi-vim'
+    if b:DisabledPlugins
+        if has('conceal') && has('python3') || has('python')
+            " requires: pip install jedi
+            let g:jedi#completions_command = "<C-Space>"
+            let g:jedi#popup_on_dot = 0
+            XPlugin 'davidhalter/jedi-vim'
+        endif
+
+        if has('python3') && has('timers')
+            " requires: pip3 install neovim
+            let g:deoplete#enable_at_startup = 1
+            XPlugin 'roxma/nvim-yarp'
+            XPlugin 'roxma/vim-hug-neovim-rpc'
+            XPlugin 'Shougo/deoplete.nvim'
+        endif
+
+        if has('python3') || has('python')
+            XPlugin 'Valloric/YouCompleteMe'
+        endif
     endif
 
-    " if has('python3') && has('timers')
-    "     " requires: pip3 install neovim
-    "     let g:deoplete#enable_at_startup = 1
-    "     XPlugin 'roxma/nvim-yarp'
-    "     XPlugin 'roxma/vim-hug-neovim-rpc'
-    "     XPlugin 'Shougo/deoplete.nvim'
-    " endif
 call vundle#end()
 filetype plugin indent on
 
