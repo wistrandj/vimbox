@@ -5,7 +5,6 @@ let g:vimbox_ft_loaded_sh = 1
 
 ia elog echo "$(date +%Y%m%d:%H%M)"<LEFT>
 
-
 au BufEnter *.sh call <SID>FillEmptyScript()
 au BufWritePre *.sh call <SID>SaveAsExecutable_Pre()
 au BufWritePost *.sh call <SID>SaveAsExecutable_Post()
@@ -20,7 +19,6 @@ function s:FillEmptyScript()
 endfunction
 
 function s:SaveAsExecutable_Pre()
-    echom "PRE"
     if !filereadable(expand('%'))
         let b:set_executable_bit = 1
     endif
