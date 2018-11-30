@@ -504,6 +504,7 @@ function s:minimizeVisibleWindow(direction)
     endif
     exe "wincmd " . a:direction
     exe cmd
+endfunction
 
 
 " Snapshots - save current version of this file as temporary file against
