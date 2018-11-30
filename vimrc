@@ -1,30 +1,3 @@
-let s:snapshots_location='/tmp'
-function! s:snapshot_location()
-    let path = expand('%:p')
-    if !empty(path)
-        let hashed_path = systemlist('echo "%s" | md5sum | tr -s " " | cut -f1 -d" "')[0]
-        let absolute_path = s:snapshots_location . '/' . hashed_path
-        return absolute_path
-    else
-        return ''
-    endif
-endfunction
-
-function! s:create_snapshot()
-    let snapshot = s:snapshot_location()
-    if !empty(snapshot)
-        call writefile(getline(1,'$'), snapshot)
-    endif
-endfunction
-
-function! s:compare_to_snapshot()
-    let snapshot = s:snapshot_location()
-    let diff = systemlist(printf('diff -aur %s %s', snapshot, expand('%:p')))
-    echo join(diff, "\n")
-endfunction
-
-comm! Snapw call s:create_snapshot()
-comm! Snap call s:compare_to_snapshot()
 
 " === Variables ===============================================================
 filetype off " for V_undle
@@ -236,10 +209,14 @@ nnoremap gs{ i{<ESC>A}<ESC>%
 nnoremap gs} i{<ESC>A}<ESC>%
 onoremap F   :<C-U>normal! 0f(hvB<CR>
 
+comm! Snapw call s:create_snapshot()
+comm! Snap call s:compare_to_snapshot()
+
 " === Plugins and filetypes ===================================================
 set rtp+=$HOME/.vim/bundle/Vundle.vim/
 command! -nargs=1 XPlugin call XPlugin(<args>)
 let b:pluginlist = []
+let b:DisabledPlugins = 0
 function! XPlugin(pluginname)
     call insert(b:pluginlist, a:pluginname)
     exe printf("Plugin '%s'", a:pluginname)
@@ -274,20 +251,27 @@ call vundle#begin()
         XPlugin 'airblade/vim-gitgutter'
     endif
 
-    if has('conceal') && has('python3') || has('python')
-        " requires: pip install jedi
-        let g:jedi#completions_command = "<C-Space>"
-        let g:jedi#popup_on_dot = 0
-        XPlugin 'davidhalter/jedi-vim'
+    if b:DisabledPlugins
+        if has('conceal') && has('python3') || has('python')
+            " requires: pip install jedi
+            let g:jedi#completions_command = "<C-Space>"
+            let g:jedi#popup_on_dot = 0
+            XPlugin 'davidhalter/jedi-vim'
+        endif
+
+        if has('python3') && has('timers')
+            " requires: pip3 install neovim
+            let g:deoplete#enable_at_startup = 1
+            XPlugin 'roxma/nvim-yarp'
+            XPlugin 'roxma/vim-hug-neovim-rpc'
+            XPlugin 'Shougo/deoplete.nvim'
+        endif
+
+        if has('python3') || has('python')
+            XPlugin 'Valloric/YouCompleteMe'
+        endif
     endif
 
-    " if has('python3') && has('timers')
-    "     " requires: pip3 install neovim
-    "     let g:deoplete#enable_at_startup = 1
-    "     XPlugin 'roxma/nvim-yarp'
-    "     XPlugin 'roxma/vim-hug-neovim-rpc'
-    "     XPlugin 'Shougo/deoplete.nvim'
-    " endif
 call vundle#end()
 filetype plugin indent on
 
@@ -509,6 +493,7 @@ function! ShowTag(filter, ...)
     endfor
 endfunction
 
+
 function s:minimizeVisibleWindow(direction)
     let onlyOneWindow = (winnr('$') < 2)
     let wincmdConfig = { 'H': [50, '|'], 'L': [50, '|'], 'J': [10, '_'], 'K': [10, '_'] }
@@ -519,6 +504,34 @@ function s:minimizeVisibleWindow(direction)
     endif
     exe "wincmd " . a:direction
     exe cmd
+
+
+" Snapshots - save current version of this file as temporary file against
+" which you can compare future changes.
+"
+let s:snapshots_location='/tmp'
+function! s:snapshot_location()
+    let path = expand('%:p')
+    if !empty(path)
+        let hashed_path = systemlist('echo "%s" | md5sum | tr -s " " | cut -f1 -d" "')[0]
+        let absolute_path = s:snapshots_location . '/' . hashed_path
+        return absolute_path
+    else
+        return ''
+    endif
+endfunction
+
+function! s:create_snapshot()
+    let snapshot = s:snapshot_location()
+    if !empty(snapshot)
+        call writefile(getline(1,'$'), snapshot)
+    endif
+endfunction
+
+function! s:compare_to_snapshot()
+    let snapshot = s:snapshot_location()
+    let diff = systemlist(printf('diff -aur %s %s', snapshot, expand('%:p')))
+    echo join(diff, "\n")
 endfunction
 
 
