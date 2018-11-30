@@ -106,10 +106,10 @@ set smartcase
 set incsearch
 set matchpairs+=<:>
 
-set wildignore+=cscope.out,a.out,*.pyc
-
 set nojoinspaces
-set wildignore=*.o,*.obj,*.class
+set wildignore+=*.o,*.obj,*.class
+set wildignore+=cscope.out,a.out,*.pyc
+set wildignore+=*.gif,*.jpg,*.JPG,*.pdf,*.png
 set path=.,./include/,/usr/include,/usr/local/include/,/opt/include/
 
 " Backup and viminfo
@@ -162,6 +162,12 @@ cnoremap <c-b> <S-left>
 cnoremap <c-f> <S-right>
 nnoremap gj :call <SID>JumpInView(0.75)<CR>
 nnoremap gk :call <SID>JumpInView(0.25)<CR>
+
+nnoremap <silent> <c-w>gh :call <SID>minimizeVisibleWindow('H')<CR>
+nnoremap <silent> <c-w>gl :call <SID>minimizeVisibleWindow('L')<CR>
+nnoremap <silent> <c-w>gj :call <SID>minimizeVisibleWindow('J')<CR>
+nnoremap <silent> <c-w>gk :call <SID>minimizeVisibleWindow('K')<CR>
+
 
 " Visual
 "
@@ -501,6 +507,18 @@ function! ShowTag(filter, ...)
             echohl NONE
         endif
     endfor
+endfunction
+
+function s:minimizeVisibleWindow(direction)
+    let onlyOneWindow = (winnr('$') < 2)
+    let wincmdConfig = { 'H': [50, '|'], 'L': [50, '|'], 'J': [10, '_'], 'K': [10, '_'] }
+    let cmd = wincmdConfig[a:direction]
+    let cmd = cmd[0] . 'wincmd ' . cmd[1]
+    if onlyOneWindow
+        return
+    endif
+    exe "wincmd " . a:direction
+    exe cmd
 endfunction
 
 
