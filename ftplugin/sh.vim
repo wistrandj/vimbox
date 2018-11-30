@@ -5,6 +5,7 @@ let g:vimbox_ft_loaded_sh = 1
 
 ia elog echo "$(date +%Y%m%d:%H%M)"<LEFT>
 
+set autoindent
 
 au BufEnter *.sh call <SID>FillEmptyScript()
 au BufWritePre *.sh call <SID>SaveAsExecutable_Pre()
