@@ -283,7 +283,7 @@ if HasPlugin('kien/ctrlp.vim')
     comm! CR :CtrlPClearCache
     au! FileWritePost :CtrlPClearCache
     let g:ctrlp_clear_cache_on_exit = 1
-    let g:ctrlp_custom_ignore = {'dir': '\C\<target\>\|node_modules'}
+    let g:ctrlp_custom_ignore = {'dir': '\C\<target\>\|node_modules\|env'}
 endif
 
 if HasPlugin('mtth/scratch.vim')
