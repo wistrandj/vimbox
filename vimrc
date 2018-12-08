@@ -212,18 +212,21 @@ onoremap F   :<C-U>normal! 0f(hvB<CR>
 comm! Snapw call s:create_snapshot()
 comm! Snap call s:compare_to_snapshot()
 
+comm -bang -nargs=1 UndoWhile call <SID>UndoWhile(function('<SID>IsThere'), <bang>0, <f-args>)
+comm -bang -nargs=1 UndoWhileNot call <SID>UndoWhile(function('<SID>IsNotThere'), <bang>0, <f-args>)
+
 " === Plugins and filetypes ===================================================
 set rtp+=$HOME/.vim/bundle/Vundle.vim/
 command! -nargs=1 XPlugin call XPlugin(<args>)
 let b:pluginlist = []
 let b:DisabledPlugins = 0
 function! XPlugin(pluginname)
-    call insert(b:pluginlist, a:pluginname)
-    exe printf("Plugin '%s'", a:pluginname)
+call insert(b:pluginlist, a:pluginname)
+exe printf("Plugin '%s'", a:pluginname)
 endfunction
 
 function! HasPlugin(pluginname)
-    return index(b:pluginlist, a:pluginname) >= 0
+return index(b:pluginlist, a:pluginname) >= 0
 endfunction
 
 call vundle#begin()
@@ -533,6 +536,32 @@ function! s:compare_to_snapshot()
     let snapshot = s:snapshot_location()
     let diff = systemlist(printf('diff -aur %s %s', snapshot, expand('%:p')))
     echo join(diff, "\n")
+endfunction
+
+" Undo changes while there is/or not a piece of text on buffer
+"
+function s:IsThere(searchterm)
+    return search(a:searchterm) > 0
+endfunction
+
+function s:IsNotThere(searchterm)
+    return search(a:searchterm) == 0
+endfunction
+
+function s:UndoWhile(Stop, quick, searchterm)
+    let steps = 0
+    while 1
+        if !a:Stop(a:searchterm)
+            break
+        endif
+        normal! u
+        let steps = steps + 1
+        if !a:quick
+            sleep 300m
+            redraw
+        endif
+    endwhile
+    echo "Stopped after " . steps . " steps"
 endfunction
 
 
