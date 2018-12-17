@@ -166,10 +166,10 @@ nnoremap <leader><space> :set invhls<CR>
 
 " Insert & delete
 "
-nnoremap S i_<Esc>r
 function! s:ReplaceToInsertMode()
     return (mode() == 'R') ? "\<ESC>a" : "\<ESC>lR"
 endfunction
+nnoremap S i_<Esc>r
 inoremap <expr> <c-l> <SID>ReplaceToInsertMode()
 nnoremap <leader>S :call <SID>ToggleCommentSeparator()<CR>
 onoremap = :<C-U>normal! ^vf=gE<CR>
