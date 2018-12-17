@@ -169,6 +169,7 @@ nnoremap <leader><space> :set invhls<CR>
 function! s:ReplaceToInsertMode()
     return (mode() == 'R') ? "\<ESC>a" : "\<ESC>lR"
 endfunction
+nnoremap Y y$
 nnoremap S i_<Esc>r
 inoremap <expr> <c-l> <SID>ReplaceToInsertMode()
 nnoremap <leader>S :call <SID>ToggleCommentSeparator()<CR>
