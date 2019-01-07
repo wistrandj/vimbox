@@ -1,6 +1,5 @@
 
 " === Variables ===============================================================
-filetype off " for V_undle
 syntax on
 
 " Use these keys for mappings
@@ -21,8 +20,6 @@ set confirm
 set hidden
 set autowrite
 set wildmode=longest,list
-autocmd BufRead help set readonly
-autocmd BufRead *.jsm set ft=javascript
 
 " View
 set nohlsearch
@@ -89,12 +86,6 @@ set path=.,./include/,/usr/include,/usr/local/include/,/opt/include/
 " --- Location for backup and swap files
 set directory=/tmp
 set nobackup
-
-" Filetypes
-autocmd BufNewFile,BufRead *.story set ft=groovy
-autocmd BufNewFile,BufRead *.scl set ft=scala
-autocmd BufNewFile,BufRead Jenkinsfile* set ft=groovy
-
 
 " === Mappings ================================================================
 
@@ -217,6 +208,8 @@ comm -bang -nargs=1 UndoWhile call <SID>UndoWhile(function('<SID>IsThere'), <ban
 comm -bang -nargs=1 UndoWhileNot call <SID>UndoWhile(function('<SID>IsNotThere'), <bang>0, <f-args>)
 
 " === Plugins and filetypes ===================================================
+" Vundle wants filetype off because ftdetect doesn't get sourced otherwise
+filetype off
 set rtp+=$HOME/.vim/bundle/Vundle.vim/
 command! -nargs=1 XPlugin call XPlugin(<args>)
 let b:pluginlist = []
