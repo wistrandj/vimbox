@@ -1,42 +1,25 @@
-" Guard
-if exists("g:java_loaded")
-    finish
-endif
-let g:java_loaded = 1
-
 call matchadd("_warn", ")$")
 
-let s:indexFile = expand('$HOME/.vimskel/java_index/index.dat')
-comm -narg=1 -complete=file Add :call javabox#Cmd_AddJarFileToIndex(<f-args>)
-comm -narg=1 PKG :echo javabox#Cmd_GetPackage(<f-args>)
-comm -narg=1 ATT :echo javabox#Cmd_GetAttributes(<f-args>)
-comm SaveIndex :echo javabox#Cmd_SaveIndex(s:indexFile)
-comm LoadIndex :echo javabox#Cmd_LoadIndex(s:indexFile)
 set omnifunc=javabox#JavaInsertCompletion
-inoremap <C-x>j <C-R>=javabox#JavaInsertCompletion()<CR>
-
-nnoremap <leader><leader>r :set ft=java<CR>
-nnoremap <F5> :edit<CR>
-
+inoremap <buffer> <C-x>j <C-R>=javabox#JavaInsertCompletion()<CR>
+nnoremap <buffer> <leader><leader>r :set ft=java<CR>
+nnoremap <buffer> <F5> :edit<CR>
 
 " Public interface: mappings and commands
-set makeprg=mvn\ -q\ -e
-command! Init call s:InitClassOrTest()
-command! Mktest call s:MakeTestFile()
+setlocal makeprg=mvn\ -q\ -e
 
-
-ia E Exception
-ia eamo EasyMock
-ia cemo createMock
-ia ecemo EasyMock.createMock
-ia epe expect
-ia eepel expectLastCall
-ia sse assertEquals();<LEFT><LEFT>
-ia sss assertSame();<LEFT><LEFT>
-ia sst assertTrue();<LEFT><LEFT>
-ia ssf assertFalse();<LEFT><LEFT>
-ia pwane PowerMock.expectLastCall().andReturn(
-ia epel expectLastCall()
+ia <buffer> E Exception
+ia <buffer> eamo EasyMock
+ia <buffer> cemo createMock
+ia <buffer> ecemo EasyMock.createMock
+ia <buffer> epe expect
+ia <buffer> eepel expectLastCall
+ia <buffer> sse assertEquals();<LEFT><LEFT>
+ia <buffer> sss assertSame();<LEFT><LEFT>
+ia <buffer> sst assertTrue();<LEFT><LEFT>
+ia <buffer> ssf assertFalse();<LEFT><LEFT>
+ia <buffer> pwane PowerMock.expectLastCall().andReturn(
+ia <buffer> epel expectLastCall()
 
 nnoremap <buffer> <leader>mr :!mvn exec:java -Dexec.mainClass=ohtu.laskin.Main<CR>
 nnoremap <buffer> <leader>mm :call JavaClean()<CR>
@@ -45,7 +28,20 @@ nnoremap <buffer> <leader>mc :call JavaCompile()<CR>
 nnoremap <buffer> <leader>mC :call JavaCobertura()<CR>
 nnoremap <buffer> <leader>mt :call JavaTest()<CR>
 
-" ------------------------------------------------------------------------------
+if exists("s:loaded")
+    finish
+endif | let s:loaded = 1
+
+command Init call s:InitClassOrTest()
+command Mktest call s:MakeTestFile()
+command -narg=1 -complete=file Add :call javabox#Cmd_AddJarFileToIndex(<f-args>)
+command -narg=1 PKG :echo javabox#Cmd_GetPackage(<f-args>)
+command -narg=1 ATT :echo javabox#Cmd_GetAttributes(<f-args>)
+
+let s:indexFile = expand('$HOME/.vimskel/java_index/index.dat')
+command SaveIndex :echo javabox#Cmd_SaveIndex(s:indexFile)
+command LoadIndex :echo javabox#Cmd_LoadIndex(s:indexFile)
+
 
 set errorformat=
      \[ERROR\]\ %f:[%l\\,%v]\ %m,
@@ -58,17 +54,18 @@ set errorformat=
      \%-G%.%$,
      \%+G%.%#at\ %m(%f:%l)
 
-fun! GetDefaultPackage()
+
+function GetDefaultPackage()
     let files=split(system("find src/main/ -name '*.java'"))
     if empty(files)
         return ""
     endif
     let first = files[0]
     return substitute(first, "\/[^\/]*", "", "")
-endfun
+endfunction
 
 " Private functions
-fun! s:InitClassOrTest()
+function s:InitClassOrTest()
     " Initialize the current empty file from templates.
     if !s:IsEmptyFile()
         return
@@ -89,9 +86,9 @@ fun! s:InitClassOrTest()
     exe "0r ~/.vim/templates/" . template
     exe "%s/#PACKAGE/" . s:GetPackageFromPath(path)
     exe "%s/#CLASS\/" . s:GetClassFromPath(path)
-endfun
+endfunction
 
-fun! s:MakeTestFile()
+function s:MakeTestFile()
     " Create and initialize a test file for current java-file. The test file
     " is named ClassTest.java and it is placed in test/java/PKGPATH/.
     let path = expand("%")
@@ -108,61 +105,61 @@ fun! s:MakeTestFile()
         call mkdir(expand("%:p:h"), "p")
     endif
     call InitClassOrTest()
-endfun
+endfunction
 
-fun! s:GetPathFromPackageAndClass(pkg, class)
+function s:GetPathFromPackageAndClass(pkg, class)
     " Return a path to given class
     "   pkg = ohtu.laskin
     "   class = Main
     "   => src/main/ohtu/laskin/Main.java
     let rest = substitute(a:pkg, "\\.", "\/", "g")
     return "src/main/" . rest . "/" . a:class . ".java"
-endfun
+endfunction
 
-fun! s:GetPackageFromPath(path)
+function s:GetPackageFromPath(path)
     let pkg = substitute(a:path, ".*/java/", "", "g")
     let pkg = substitute(pkg, "\/[^/]*$", "", "")
     return substitute(pkg, "/", ".", "g")
-endfun
+endfunction
 
-fun! s:GetClassFromPath(path)
+function s:GetClassFromPath(path)
     let class = substitute(a:path, ".*/", "", "")
     return substitute(class, "\.java$", "", "")
-endfun
+endfunction
 
-fun! s:IsEmptyFile()
+function s:IsEmptyFile()
     return line('$') == 1 && len(line('$')) == 1
-endfun
+endfunction
 
 " ------------------------------------------------------------------------------
 " MAVEN functionality
 " - depends on VIM plugin AsyncCommand
 
-fun! JavaTest()
+function JavaTest()
     :AsyncMake test
     echo "Testing..."
-endfun
+endfunction
 
-fun! JavaClean()
+function JavaClean()
     " FIXME make AsyncCommand to print DONE when it's done
     let clean_cmd = &makeprg . " clean"
     call asynccommand#run(clean_cmd)
     echo "Cleaning..."
-endfun
+endfunction
 
-fun! JavaCompile()
+function JavaCompile()
     :AsyncMake compile
     echo "Compiling..."
-endfun
+endfunction
 
-fun! JavaCobertura()
+function JavaCobertura()
     call asynccommand#run("mvn cobertura:cobertura; luakit target/site/cobertura/index.html")
     echo "Calculating line coverage"
     " TODO open the target site in luakit
-endfun
+endfunction
 
-fun! JavaIntegrationTest()
+function JavaIntegrationTest()
     " With current output it's not clear if there is any errors
     :AsyncMake integration-test
     echo "Running integration-tests"
-endfun
+endfunction

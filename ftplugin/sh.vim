@@ -1,15 +1,14 @@
-if exists('g:vimbox_ft_loaded_sh')
-    finish
-endif
-let g:vimbox_ft_loaded_sh = 1
+ia <buffer> elog echo "$(date +%Y%m%d:%H%M)"<LEFT>
 
-ia elog echo "$(date +%Y%m%d:%H%M)"<LEFT>
-
-set autoindent
+setlocal autoindent
 au BufEnter *.sh call <SID>FillEmptyScript()
 au BufWritePre *.sh call <SID>SaveAsExecutable_Pre()
 au BufWritePost *.sh call <SID>SaveAsExecutable_Post()
 
+
+if exists('s:loaded')
+    finish
+endif | let s:loaded = 1
 
 
 function s:FillEmptyScript()

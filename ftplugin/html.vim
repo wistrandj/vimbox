@@ -1,9 +1,12 @@
-inoremap <expr> <buffer> <CR> <SID>InsertTagAfterEnter()
-inoremap <expr> > <SID>DuplicateTag()
-" inoremap <expr> :g <SID>SkipTag()
+inoremap <buffer> <expr> <buffer> <CR> <SID>InsertTagAfterEnter()
+inoremap <buffer> <expr> > <SID>DuplicateTag()
+inoremap <buffer> <expr> <leader>b <SID>Bold('b')
+inoremap <buffer> <expr> <leader>i <SID>Bold('i')
+" inoremap <buffer> <expr> :g <SID>SkipTag()
 
-inoremap <expr> <leader>b <SID>Bold('b')
-inoremap <expr> <leader>i <SID>Bold('i')
+if exists('s:loaded')
+    finish
+endif | let s:loaded = 1
 
 let g:VIMBOX_UNCLOSED_ELEMENTS = ['link']
 
@@ -35,7 +38,7 @@ function s:DuplicateTag()
     return printf('></%s>%s', last_tag, repeat("\<LEFT>", len(last_tag) + 3))
 endfunction
 
-function! s:InsertTagAfterEnter()
+function s:InsertTagAfterEnter()
     let NO_MATCH = "\<CR>"
     let line = getline('.')
     let col = col('.')

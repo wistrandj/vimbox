@@ -1,7 +1,7 @@
-set autoindent
-set shiftwidth=4
-set tabstop=4
-set softtabstop=4
+setlocal autoindent
+setlocal shiftwidth=4
+setlocal tabstop=4
+setlocal softtabstop=4
 
-ia pyqt PyQt
-ia pyqt5 PyQt5
+ia <buffer> pyqt PyQt
+ia <buffer> pyqt5 PyQt5
