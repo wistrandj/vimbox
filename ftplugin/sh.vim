@@ -1,6 +1,7 @@
 ia <buffer> elog echo "$(date +%Y%m%d:%H%M)"<LEFT>
 
 setlocal autoindent
+setlocal smartindent
 au BufEnter *.sh call <SID>FillEmptyScript()
 au BufWritePre *.sh call <SID>SaveAsExecutable_Pre()
 au BufWritePost *.sh call <SID>SaveAsExecutable_Post()
