@@ -1,4 +1,4 @@
-inoremap <buffer> <expr> <buffer> <CR> <SID>InsertTagAfterEnter()
+" inoremap <buffer> <expr> <buffer> <CR> <SID>InsertTagAfterEnter()
 inoremap <buffer> <expr> > <SID>DuplicateTag()
 inoremap <buffer> <expr> <leader>b <SID>Bold('b')
 inoremap <buffer> <expr> <leader>i <SID>Bold('i')
