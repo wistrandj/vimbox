@@ -15,3 +15,9 @@ Copy the project into bundle/ directory provided by your plugin manager
     git clone https://github.com/jasu0/vimbox
     ln -s vimbox/vimrc ~/.vimrc
 ```
+
+## Notes
+
+- When using `<Plug>` for mappings, you have to use `nmap` and not `nnoremap` commands
+- Vundle needs `filetype off` defined before loading plugins. Otherwise it will
+  not read sources from ftdetect.
