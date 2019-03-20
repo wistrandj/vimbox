@@ -8,7 +8,7 @@ if exists('s:loaded')
     finish
 endif | let s:loaded = 1
 
-let g:VIMBOX_UNCLOSED_ELEMENTS = ['link']
+let g:VIMBOX_UNCLOSED_ELEMENTS = {'link': 1}
 
 function s:SkipTag()
     return "\<ESC>f>a"
@@ -23,7 +23,7 @@ function s:DuplicateTag()
     let line = getline('.')[:col('.') - 2]
     let last_tag = substitute(line, '.*<\(\w\+\)\( [^>]*\)\?', '\1', '')
 
-    if last_tag !~ '^\w\+$' || index(g:VIMBOX_UNCLOSED_ELEMENTS, last_tag) >= 0
+    if last_tag !~ '^\w\+$' || has_key(g:VIMBOX_UNCLOSED_ELEMENTS, last_tag)
         return NO_MATCH
     endif
 
@@ -51,7 +51,7 @@ function s:InsertTagAfterEnter()
     endif
 
     let last_tag = substitute(pre, '.*<\(\w\+\)\( [^>]*\)\?>$', '\1', '')
-    if last_tag !~ '^\w\+$' || index(g:VIMBOX_UNCLOSED_ELEMENTS, last_tag) >= 0
+    if last_tag !~ '^\w\+$' || has_key(g:VIMBOX_UNCLOSED_ELEMENTS, last_tag)
         return NO_MATCH
     endif
 
