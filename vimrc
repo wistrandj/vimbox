@@ -227,7 +227,6 @@ call vundle#begin()
     XPlugin 'VundleVim/Vundle.vim'
 
     XPlugin 'godlygeek/tabular'
-    XPlugin 'kien/ctrlp.vim'
     XPlugin 'mtth/scratch.vim'
     XPlugin 'scrooloose/nerdcommenter'
     XPlugin 'scrooloose/nerdtree'
@@ -236,6 +235,13 @@ call vundle#begin()
 
     XPlugin 'jasu0/vimbox'
     XPlugin 'jasu0/Z'
+
+    if !empty(system("which fzf"))
+        XPlugin 'junegunn/fzf'
+        XPlugin 'junegunn/fzf.vim'
+    else
+        XPlugin 'kien/ctrlp.vim'
+    endif
 
     if 1
         XPlugin 'MarcWeber/vim-addon-mw-utils'
@@ -310,6 +316,10 @@ if HasPlugin('vim-syntastic/syntastic')
     let g:syntastic_cpp_compiler_options = ' -std=c++11'
 endif
 
+if HasPlugin('junegunn/fzf')
+    nnoremap <c-p> :Files<CR>
+    imap <c-x><c-f> <plug>(fzf-complete-path)
+endif
 
 delcommand XPlugin
 delfunction XPlugin
