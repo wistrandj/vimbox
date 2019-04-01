@@ -1,5 +1,26 @@
 snippet cl'
 	console.log('${1}');
-snippet for
-	for (var i = 0; i < 10; i++) {
+snippet fr
+	for (var i = 0; i < ${1}; i++) {
 	}
+snippet rcl
+	class ${1:Category} extends Component {
+		constructor() {
+			super();
+			this.state = {
+			};
+		}
+
+		componentDidMount() {
+			this.setState({
+			});
+		}
+
+		render() {
+			return (
+				<div></div>
+			);
+		}
+	}
+snippet rimport
+	import React, { Component } from 'React';
