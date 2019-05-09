@@ -1,3 +1,5 @@
+snippet req
+	require('${1}');
 snippet cl'
 	console.log('${1}');
 snippet fr
@@ -24,3 +26,12 @@ snippet rcl
 	}
 snippet rimport
 	import React, { Component } from 'React';
+snippet onload
+	function init() {
+		console.log('DOM loaded');
+	}
+	window.onload = init;
+snippet larrow
+	&#10094
+snippet rarrow
+	&#10095
