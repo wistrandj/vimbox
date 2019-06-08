@@ -210,121 +210,19 @@ comm -bang -nargs=1 UndoWhileNot call <SID>UndoWhile(function('<SID>IsNotThere')
 " === Plugins and filetypes ===================================================
 " Vundle wants filetype off because ftdetect doesn't get sourced otherwise
 filetype off
-set rtp+=$HOME/.vim/bundle/Vundle.vim/
-command! -nargs=1 XPlugin call XPlugin(<args>)
-let b:pluginlist = []
 let b:DisabledPlugins = 0
-function! XPlugin(pluginname)
-call insert(b:pluginlist, a:pluginname)
-exe printf("Plugin '%s'", a:pluginname)
-endfunction
-
-function! HasPlugin(pluginname)
-return index(b:pluginlist, a:pluginname) >= 0
-endfunction
+set rtp+=$HOME/.vim/bundle/vimbox/
+set rtp+=$HOME/.vim/bundle/Vundle.vim/
 
 call vundle#begin()
-    XPlugin 'VundleVim/Vundle.vim'
-
-    XPlugin 'godlygeek/tabular'
-    XPlugin 'mtth/scratch.vim'
-    XPlugin 'scrooloose/nerdcommenter'
-    XPlugin 'scrooloose/nerdtree'
-    XPlugin 'tpope/vim-repeat'
-    XPlugin 'tpope/vim-surround'
-
-    XPlugin 'jasu0/vimbox'
-    XPlugin 'jasu0/Z'
-
-    if !empty(system("which fzf"))
-        XPlugin 'junegunn/fzf'
-        XPlugin 'junegunn/fzf.vim'
-    else
-        XPlugin 'kien/ctrlp.vim'
-    endif
-
-    if 1
-        XPlugin 'MarcWeber/vim-addon-mw-utils'
-        XPlugin 'tomtom/tlib_vim'
-        XPlugin 'honza/vim-snippets'
-        XPlugin 'garbas/vim-snipmate'
-    endif
-
-    if !empty(system("which git"))
-        XPlugin 'airblade/vim-gitgutter'
-    endif
-
-    if b:DisabledPlugins
-        if has('conceal') && has('python3') || has('python')
-            " requires: pip install jedi
-            let g:jedi#completions_command = "<C-Space>"
-            let g:jedi#popup_on_dot = 0
-            XPlugin 'davidhalter/jedi-vim'
-        endif
-
-        if has('python3') && has('timers')
-            " requires: pip3 install neovim
-            let g:deoplete#enable_at_startup = 1
-            XPlugin 'roxma/nvim-yarp'
-            XPlugin 'roxma/vim-hug-neovim-rpc'
-            XPlugin 'Shougo/deoplete.nvim'
-        endif
-
-        if has('python3') || has('python')
-            XPlugin 'Valloric/YouCompleteMe'
-        endif
-    endif
-
+    command! -nargs=1 XPlugin call xplugin#Load(<args>)
+    call xplugin#Source(xplugin#VimboxPath() . '/plugins.vim')
+    call xplugin#Source(glob('$HOME/.vimrc.plugins'))
+    delcommand XPlugin
 call vundle#end()
 filetype plugin indent on
 
-if HasPlugin('tpope/vim-surround')
-    let g:surround_no_insert_mappings = 1
-endif
-
-if HasPlugin('kien/ctrlp.vim')
-    comm! CR :CtrlPClearCache
-    au! FileWritePost :CtrlPClearCache
-    let g:ctrlp_clear_cache_on_exit = 1
-    let g:ctrlp_custom_ignore = {'dir': '\C\<target\>\|node_modules\|env'}
-endif
-
-if HasPlugin('mtth/scratch.vim')
-    comm! SC Scratch
-    comm! SCS split | Scratch
-    comm! SCV vsplit | Scratch
-endif
-
-
-if HasPlugin('scrooloose/nerdtree')
-    let g:NERDTreeStatusline = '---'
-    let g:NERDTreeDirArrows = 0
-    let g:NERDTreeIgnore = exists('g:NERDTreeIgnore') ? g:NERDTreeIgnore : []
-    call insert(NERDTreeIgnore, '\.pyc')
-    call insert(NERDTreeIgnore, '__init__\.py')
-    nnoremap <leader>sn :NERDTreeToggle<CR>
-endif
-
-if HasPlugin('airblade/git-gutter')
-    let g:gitgutter_map_keys = 0
-    let g:gitgutter_realtime = 0
-    let g:gitgutter_highlight_lines = 0
-    nnoremap <leader>pg :GitGutterSignsToggle<CR>
-endif
-
-if HasPlugin('vim-syntastic/syntastic')
-    let g:syntastic_cpp_compiler_options = ' -std=c++11'
-endif
-
-if HasPlugin('junegunn/fzf')
-    nnoremap <c-p> :Files<CR>
-    imap <c-x><c-f> <plug>(fzf-complete-path)
-endif
-
-delcommand XPlugin
-delfunction XPlugin
-delfunction HasPlugin
-
+call xplugin#Source(xplugin#VimboxPath() . '/settings.vim')
 
 " === Functions ===============================================================
 
