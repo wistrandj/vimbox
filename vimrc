@@ -403,9 +403,7 @@ if vimbox#really_loaded()
     comm!          SyntaxItem :echo debug#GetSyntaxItemUnderCursor()
     comm! -nargs=1 Pretty call debug#PrettyPrint_list(eval(<f-args>))
 
-    nnoremap <F7> :call      sign#SetRange(line('.'),   line('.'))<CR>
-    vnoremap <F7> <ESC>:call sign#SetRange(line("'<"), line("'>"))<CR>
-    command! -nargs=1 SetSign :call sign#SetLine(<f-args>)
+    command! -nargs=? -range -bang -complete=customlist,sign#CommandCompletion Sign call sign#PlaceCommand(<line1>, <line2>, <bang>0, <f-args>)
 endif
 
 if filereadable(glob('$HOME/.vimrc.local'))
