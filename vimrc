@@ -1,5 +1,12 @@
+" NOTE: Vundle wants filetype off because ftdetect doesn't get sourced otherwise
+filetype off
+let g:VimboxLoaded = 1
+set rtp+=$HOME/.vim/bundle/vimbox/
+set rtp+=$HOME/.vim/bundle/Vundle.vim/
+try | call xplugin#Available() | catch | let g:VimboxLoaded = 0 | endtry
+command! -nargs=* VimboxL :if g:VimboxLoaded | exe <q-args> | endif
 
-" === Variables ===============================================================
+
 syntax on
 
 " Use these keys for mappings
@@ -87,6 +94,18 @@ set path=.,./include/,/usr/include,/usr/local/include/,/opt/include/
 set directory=/tmp
 set nobackup
 
+" === Plugins =================================================================
+call vundle#begin()
+    command! -nargs=1 XPlugin call xplugin#Load(<args>)
+    call xplugin#Source(xplugin#VimboxPath() . '/plugins.vim')
+    call xplugin#Source(glob('$HOME/.vimrc.plugins'))
+    delcommand XPlugin
+call vundle#end()
+filetype plugin indent on
+
+call xplugin#Source(xplugin#VimboxPath() . '/settings.vim')
+
+
 " === Mappings ================================================================
 
 " Files, Windows, buffers and tabs
@@ -124,33 +143,33 @@ cnoremap <c-a> <home>
 cnoremap <c-e> <end>
 cnoremap <c-b> <S-left>
 cnoremap <c-f> <S-right>
-nmap gj <Plug>VimboxJumpInViewFwd
-nmap gk <Plug>VimboxJumpInViewBck
+VimboxL nmap gj <Plug>VimboxJumpInViewFwd
+VimboxL nmap gk <Plug>VimboxJumpInViewBck
 
-nmap <c-w>gh <Plug>VimboxMinimizeWindowH
-nmap <c-w>gl <Plug>VimboxMinimizeWindowL
-nmap <c-w>gj <Plug>VimboxMinimizeWindowJ
-nmap <c-w>gk <Plug>VimboxMinimizeWindowK
+VimboxL nmap <c-w>gh <Plug>VimboxMinimizeWindowH
+VimboxL nmap <c-w>gl <Plug>VimboxMinimizeWindowL
+VimboxL nmap <c-w>gj <Plug>VimboxMinimizeWindowJ
+VimboxL nmap <c-w>gk <Plug>VimboxMinimizeWindowK
 
 
 " Visual
 "
 vnoremap > >gv
 vnoremap < <gv
-nmap <leader>v <Plug>VimboxExpandVisualBlock
-nmap vi<TAB> <Plug>VimboxSelectIndention
-omap i<TAB> <Plug>VimboxSelectIndentionOperator
+VimboxL nmap <leader>v <Plug>VimboxExpandVisualBlock
+VimboxL nmap vi<TAB> <Plug>VimboxSelectIndention
+VimboxL omap i<TAB> <Plug>VimboxSelectIndentionOperator
 
 
 " Colors
 "
 if exists('*matchaddpos')
-nmap <silent> n <Plug>VimboxHLnextFwd
-nmap <silent> N <Plug>VimboxHLnextBck
+VimboxL nmap <silent> n <Plug>VimboxHLnextFwd
+VimboxL nmap <silent> N <Plug>VimboxHLnextBck
 endif
-nmap g/ <Plug>VimboxHlsobjSearch
-nmap g\ <Plug>VimboxHlsobjClear
-nmap g* <Plug>VimboxHlsobjStar
+VimboxL nmap g/ <Plug>VimboxHlsobjSearch
+VimboxL nmap g\ <Plug>VimboxHlsobjClear
+VimboxL nmap g* <Plug>VimboxHlsobjStar
 nnoremap <leader><space> :set invhls<CR>
 
 
@@ -163,14 +182,14 @@ endfunction
 nnoremap Y y$
 nnoremap S i_<Esc>r
 inoremap <expr> <c-l> <SID>ReplaceToInsertMode()
-nmap <leader>S <Plug>VimboxCommentSeparator
+VimboxL nmap <leader>S <Plug>VimboxCommentSeparator
 onoremap = :<C-U>normal! ^vf=gE<CR>
 onoremap g= :<C-U>normal! ^f=wv$h<CR>
 
-nnoremap gp/ :QuickPaste / 
-nnoremap gp? :QuickPaste ? 
+VimboxL nnoremap gp/ :QuickPaste / 
+VimboxL nnoremap gp? :QuickPaste ? 
 
-nmap <leader>R <Plug>VerticalRDown
+VimboxL nmap <leader>R <Plug>VerticalRDown
 
 inoremap {<CR>  {<CR>}<ESC>O
 " --- Insert brackets around v:count lines
@@ -188,8 +207,6 @@ inoremap <expr> <c-k> pumvisible() ? '<c-p>' : '<c-x><c-p>'
 nnoremap <Space> za
 " --- Make the previous word UPPER CASE
 inoremap <C-u> <esc>hviwUel
-" --- Align with Tabular plugin
-vnoremap <leader>ta :Tabular /
 " --- Add quotes/parens/brackets till the end of line
 nnoremap gs' i'<ESC>A'<ESC>
 nnoremap gs" i"<ESC>A"<ESC>
@@ -201,28 +218,11 @@ nnoremap gs{ i{<ESC>A}<ESC>%
 nnoremap gs} i{<ESC>A}<ESC>%
 onoremap F   :<C-U>normal! 0f(hvB<CR>
 
-comm! Snapw call CreateSnapshot()
-comm! Snap call CompareToSnapshot()
+VimboxL comm! Snapw call CreateSnapshot()
+VimboxL comm! Snap call CompareToSnapshot()
 
 comm -bang -nargs=1 UndoWhile call <SID>UndoWhile(function('<SID>IsThere'), <bang>0, <f-args>)
 comm -bang -nargs=1 UndoWhileNot call <SID>UndoWhile(function('<SID>IsNotThere'), <bang>0, <f-args>)
-
-" === Plugins and filetypes ===================================================
-" Vundle wants filetype off because ftdetect doesn't get sourced otherwise
-filetype off
-let b:DisabledPlugins = 0
-set rtp+=$HOME/.vim/bundle/vimbox/
-set rtp+=$HOME/.vim/bundle/Vundle.vim/
-
-call vundle#begin()
-    command! -nargs=1 XPlugin call xplugin#Load(<args>)
-    call xplugin#Source(xplugin#VimboxPath() . '/plugins.vim')
-    call xplugin#Source(glob('$HOME/.vimrc.plugins'))
-    delcommand XPlugin
-call vundle#end()
-filetype plugin indent on
-
-call xplugin#Source(xplugin#VimboxPath() . '/settings.vim')
 
 " === Functions ===============================================================
 
@@ -287,7 +287,7 @@ endfunction
 
 call <SID>ScanTags()
 
-if vimbox#really_loaded()
+if g:VimboxLoaded
     set statusline=%!statusline#StatusLineFunction()
     inoremap <expr> " parenthesis#InsertQuote("\"")
     inoremap <expr> ) parenthesis#InsertOrSkip(')')

@@ -27,7 +27,7 @@ if !empty(system("which git"))
     XPlugin 'airblade/vim-gitgutter'
 endif
 
-if b:DisabledPlugins
+if 0
     if has('conceal') && has('python3') || has('python')
         " requires: pip install jedi
         let g:jedi#completions_command = "<C-Space>"

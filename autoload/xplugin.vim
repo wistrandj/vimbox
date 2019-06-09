@@ -3,7 +3,18 @@ if exists('s:loaded')
     finish
 endif | let s:loaded = 1
 
+let s:VimboxPath = expand('<sfile>:p:h:h')
 let s:LoadedPlugins = {}
+
+" NOTE: This is a dummy function that can be used in a try-catch block. It
+" tells if Vimbox plugin has been loaded either by setting
+"
+"   set rtp+=$HOME/.vim/bundle/vimbox/
+"
+" or by plugin manager.
+function xplugin#Available()
+    return 1
+endfunction
 
 function xplugin#Load(plugin)
     let s:LoadedPlugins[a:plugin] = 1
@@ -22,7 +33,6 @@ function xplugin#Source(source)
     endif
 endfunction
 
-let s:VimboxPath = expand('<sfile>:p:h:h')
 function xplugin#VimboxPath()
     return s:VimboxPath
 endfunction

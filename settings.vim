@@ -1,3 +1,7 @@
+if xplugin#Has('godlygeek/tabular')
+    vnoremap <leader>ta :Tabular /
+endif
+
 if xplugin#Has('tpope/vim-surround')
     let g:surround_no_insert_mappings = 1
 endif
