@@ -220,6 +220,7 @@ onoremap F   :<C-U>normal! 0f(hvB<CR>
 
 VimboxL comm! Snapw call CreateSnapshot()
 VimboxL comm! Snap call CompareToSnapshot()
+VimboxL comm! ShowIndent call ShowIndentationOptions()
 
 comm -bang -nargs=1 UndoWhile call <SID>UndoWhile(function('<SID>IsThere'), <bang>0, <f-args>)
 comm -bang -nargs=1 UndoWhileNot call <SID>UndoWhile(function('<SID>IsNotThere'), <bang>0, <f-args>)
