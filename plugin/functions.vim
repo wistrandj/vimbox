@@ -232,3 +232,8 @@ function! ShowIndentationOptions()
     echo printf('indentexpr:  %s', &indentexpr)
 endfunction
 
+function! ShowRuntimepath()
+    for plugin in split(&rtp, ',')
+        echo plugin
+    endfor
+endfunction
