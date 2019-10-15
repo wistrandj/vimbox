@@ -290,12 +290,6 @@ call <SID>ScanTags()
 
 if g:VimboxLoaded
     set statusline=%!statusline#StatusLineFunction()
-    inoremap <expr> " parenthesis#InsertQuote("\"")
-    inoremap <expr> ) parenthesis#InsertOrSkip(')')
-    inoremap <expr> ] parenthesis#InsertOrSkip(']')
-    inoremap <expr> } parenthesis#InsertOrSkip('}')
-    inoremap <expr> <BS> parenthesis#Backspace()
-    nnoremap g{ :<C-U>call parenthesis#InsertBrackets(v:count1)<CR> 
     nnoremap <F8> :call git#commit()<CR>
     nnoremap <F9> :call git#status()<CR>
 
