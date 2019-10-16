@@ -220,7 +220,6 @@ onoremap F   :<C-U>normal! 0f(hvB<CR>
 
 VimboxL comm! Snapw call CreateSnapshot()
 VimboxL comm! Snap call CompareToSnapshot()
-VimboxL comm! ShowIndent call ShowIndentationOptions()
 
 comm -bang -nargs=1 UndoWhile call <SID>UndoWhile(function('<SID>IsThere'), <bang>0, <f-args>)
 comm -bang -nargs=1 UndoWhileNot call <SID>UndoWhile(function('<SID>IsNotThere'), <bang>0, <f-args>)
@@ -290,8 +289,7 @@ call <SID>ScanTags()
 
 if g:VimboxLoaded
     set statusline=%!statusline#StatusLineFunction()
-    nnoremap <F8> :call git#commit()<CR>
-    nnoremap <F9> :call git#status()<CR>
+    comm! Git      :call git#status()<CR>
 
     comm!          SyntaxItem :echo debug#GetSyntaxItemUnderCursor()
     comm! -nargs=1 Pretty call debug#PrettyPrint_list(eval(<f-args>))
