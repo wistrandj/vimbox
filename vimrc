@@ -32,8 +32,15 @@ set wildmode=longest,list
 set nohlsearch
 set display=lastline
 set lazyredraw      " don't redraw while macro execution
-set list            " show ws as visible char
-set listchars=tab:>\ ,trail:·
+if tolower(expand('$LC_ALL')) =~ 'utf-8'
+    " Show tabs and trailing whitespace. The dot character needs UTF-8 to be
+    " enabled
+    set list
+    set listchars=tab:>\ ,trail:·
+else
+    set list
+    set listchars=tab:>\ ,trail:.
+endif
 set noshowmode
 set scrolloff=2     " Keep a few lines always visible around cursor
 if exists('&breakindent')
