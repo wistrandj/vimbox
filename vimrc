@@ -6,7 +6,6 @@ set rtp+=$HOME/.vim/bundle/Vundle.vim/
 try | call xplugin#Available() | catch | let g:VimboxLoaded = 0 | endtry
 command! -nargs=* VimboxL :if g:VimboxLoaded | exe <q-args> | endif
 
-
 syntax on
 
 " Use these keys for mappings
@@ -137,19 +136,8 @@ command! -nargs=* Tag call ShowTag(<f-args>)
 
 " Escaping and moving cursor
 "
-noremap ö [
-noremap ä ]
-noremap Ö {
-noremap Ä }
-noremap , ;
-noremap ; ,
 noremap j gj
 noremap k gk
-nnoremap ` ``
-cnoremap <c-a> <home>
-cnoremap <c-e> <end>
-cnoremap <c-b> <S-left>
-cnoremap <c-f> <S-right>
 VimboxL nmap gj <Plug>VimboxJumpInViewFwd
 VimboxL nmap gk <Plug>VimboxJumpInViewBck
 
