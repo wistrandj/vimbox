@@ -132,12 +132,16 @@ Command:
 6. TODO~
                                                                    *vimbox-todo*
 
-List of small things
+- Add a git command to checkout the block of code under cursor
+       - take the note on line number under cursor
+       - git checkout current buffer only partially around the cursor
 
-    - In $HOME/.vimrc.local you cannot call for example GitGutterDisable or
-      any other plugin commands.
+- Add a command to delete unedited buffers
 
-Write documentation for modules in autoload folder.
+- In $HOME/.vimrc.local you cannot call for example GitGutterDisable or
+    any other plugin commands.
+
+- Write documentation for modules in autoload folder.
 
     - debug.vim
     - git.vim
@@ -146,6 +150,7 @@ Write documentation for modules in autoload folder.
     - sign.vim
     - statusline.vim
     - xplugin.vim
+
 
 
  vim:tw=78:ts=8:ft=help:norl:
