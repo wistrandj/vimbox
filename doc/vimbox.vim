@@ -12,16 +12,20 @@
 1. DESCRIPTION~
                                                             *vimbox-description*
 
-Tell about:
+Vimbox loads vim script from home folder:
 
-    - $HOME/.vimrc - This can be used as standalone
-    - $HOME/.vimrc.local
-    - $HOME/.vimrc.plugins
+    - $HOME/.vimrc -> Create a symbolic link to ./vimrc
 
-Write help:
+    - $HOME/.vimrc.local -> This file is sources at the end of vimrc script. Add any
+      commands here.
 
-    - How to use tags with vim and :Tag command
-    - ...
+    - $HOME/.vimrc.plugins -> Additional Vundle plugins.
+
+Plugins are defined in Vimbox in:
+
+    - ./plugins.vim -> Vundle definitions
+
+    - ./settings.vim -> Additional configuration for plugins
 
 ================================================================================
 2. COMMANDS~
@@ -141,7 +145,7 @@ Command:
 - In $HOME/.vimrc.local you cannot call for example GitGutterDisable or
     any other plugin commands.
 
-- Write documentation for modules in autoload folder.
+- Write documentation for modules in autoload folder
 
     - debug.vim
     - git.vim
@@ -151,6 +155,7 @@ Command:
     - statusline.vim
     - xplugin.vim
 
+- How to use tags with vim and :Tag command (defined in vimrc)
 
 
  vim:tw=78:ts=8:ft=help:norl:
