@@ -7,6 +7,7 @@ XPlugin 'scrooloose/nerdtree'
 XPlugin 'tpope/vim-repeat'
 XPlugin 'tpope/vim-surround'
 
+XPlugin 'jasu0/vimbox'
 XPlugin 'jasu0/Z'
 
 if !empty(system("which fzf"))
