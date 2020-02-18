@@ -165,52 +165,24 @@ endif
 VimboxL nmap g/ <Plug>VimboxHlsobjSearch
 VimboxL nmap g\ <Plug>VimboxHlsobjClear
 VimboxL nmap g* <Plug>VimboxHlsobjStar
-nnoremap <leader><space> :set invhls<CR>
-
 
 
 " Insert & delete
 "
-function! s:ReplaceToInsertMode()
-    return (mode() == 'R') ? "\<ESC>a" : "\<ESC>lR"
-endfunction
-nnoremap Y y$
 nnoremap S i_<Esc>r
-inoremap <expr> <c-l> <SID>ReplaceToInsertMode()
 VimboxL nmap <leader>S <Plug>VimboxCommentSeparator
-onoremap = :<C-U>normal! ^vf=gE<CR>
-onoremap g= :<C-U>normal! ^f=wv$h<CR>
 
 VimboxL nnoremap gp/ :QuickPaste / 
 VimboxL nnoremap gp? :QuickPaste ? 
 
 VimboxL nmap <leader>R <Plug>VerticalRDown
 
-inoremap {<CR>  {<CR>}<ESC>O
-" --- Insert brackets around v:count lines
-exe "vmap g} S}i <left>"
-" --- Delete brackets around AND the if/while/for-stuff prepending
-nmap gda} ?{<CR>d^ds}
-" --- Move everything away from current block
-nmap gd} ?{<CR>i<CR><CR><ESC>ds}<<kk:s/ *$//<CR>jA<TAB>
-
-
 " Misc
 "
 inoremap <expr> <c-j> pumvisible() ? '<c-o>' : '<c-x><c-o>'
 inoremap <expr> <c-k> pumvisible() ? '<c-p>' : '<c-x><c-p>'
-nnoremap <Space> za
-" --- Make the previous word UPPER CASE
-inoremap <C-u> <esc>hviwUel
-" --- Add quotes/parens/brackets till the end of line
-nnoremap gs' i'<ESC>A'<ESC>
-nnoremap gs" i"<ESC>A"<ESC>
-nnoremap gs( i(<ESC>A)<ESC>%
-nnoremap gs) i(<ESC>A)<ESC>%
-nnoremap gs[ i[<ESC>A]<ESC>%
-nnoremap gs] i[<ESC>A]<ESC>%
-nnoremap gs{ i{<ESC>A}<ESC>%
-nnoremap gs} i{<ESC>A}<ESC>%
+
+" --- ???
 onoremap F   :<C-U>normal! 0f(hvB<CR>
 
 VimboxL comm! Snapw call CreateSnapshot()
@@ -220,7 +192,7 @@ comm -bang -nargs=1 UndoWhile call <SID>UndoWhile(function('<SID>IsThere'), <ban
 comm -bang -nargs=1 UndoWhileNot call <SID>UndoWhile(function('<SID>IsNotThere'), <bang>0, <f-args>)
 
 " === Functions ===============================================================
-
+''
 " ONCE: Find ´tags´ tags in parent folders
 " 
 function! s:ScanTags()
