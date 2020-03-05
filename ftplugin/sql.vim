@@ -7,5 +7,3 @@ else
     let b:current_ftplugin = 'sql'
 endif
 
-syn keyword sqlType numeric
-

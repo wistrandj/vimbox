@@ -1,7 +1,3 @@
-if exists('s:loaded')
-    finish
-endif | let s:loaded = 1
-
 hi UserSignBad ctermfg=Magenta
 hi UserSignGood ctermfg=Green
 hi UserSignInfo ctermfg=Brown

@@ -34,7 +34,6 @@ Plugins are defined in Vimbox in:
 Commands that Vimbox provides
 
     - Sign
-    - UndoWhile
     - Snap
     - SyntaxItem
     - Pretty
@@ -58,16 +57,6 @@ Mappings that Vimbox provides
 Save a temporary snapshot of current buffer (:Snapw) and later compare the 'diff'
 to it after modifications. Each buffer can have at most one snapshot. Command
 md5sum is required.
-
-:UndoWhile <pattern>
-
-Execute undo (or hit the key 'u') while the given pattern exists in the document.
-Helps to see what modifications the user did after certain point.
-
-:UndoWhileNot <pattern>
-
-Execute undo (or hit the key 'u') while the pattern does *not* exists in the
-document.
 
 
 ================================================================================

@@ -1,5 +1,3 @@
-ia <buffer> elog echo "$(date +%Y%m%d:%H%M)"<LEFT>
-
 setlocal autoindent
 setlocal smartindent
 au BufEnter *.sh call <SID>FillEmptyScript()

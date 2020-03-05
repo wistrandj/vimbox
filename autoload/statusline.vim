@@ -1,4 +1,3 @@
-
 let s:statusline = []
 let s:package_cache_by_buffer = {}
 

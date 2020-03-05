@@ -19,3 +19,4 @@ function! s:YamlIndent(lnum)
     endif
     return indent
 endfunction
+

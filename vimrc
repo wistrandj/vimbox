@@ -132,7 +132,6 @@ nnoremap <F1> :so $MYVIMRC<CR>
 nnoremap <F1> :echo g:vim_default_source<CR>
 nnoremap <Leader>w :update<CR>
 inoremap <C-x><C-o> <C-x><C-o><C-p>
-command! -nargs=* Tag call ShowTag(<f-args>)
 
 " Escaping and moving cursor
 "
@@ -182,77 +181,11 @@ VimboxL nmap <leader>R <Plug>VerticalRDown
 inoremap <expr> <c-j> pumvisible() ? '<c-o>' : '<c-x><c-o>'
 inoremap <expr> <c-k> pumvisible() ? '<c-p>' : '<c-x><c-p>'
 
-" --- ???
-onoremap F   :<C-U>normal! 0f(hvB<CR>
-
 VimboxL comm! Snapw call CreateSnapshot()
 VimboxL comm! Snap call CompareToSnapshot()
 
-comm -bang -nargs=1 UndoWhile call <SID>UndoWhile(function('<SID>IsThere'), <bang>0, <f-args>)
-comm -bang -nargs=1 UndoWhileNot call <SID>UndoWhile(function('<SID>IsNotThere'), <bang>0, <f-args>)
-
-" === Functions ===============================================================
-''
-" ONCE: Find ´tags´ tags in parent folders
-" 
-function! s:ScanTags()
-    let path = getcwd()
-    while !empty(path)
-        let tags = split(glob(path . '/*tags'))
-        let path = substitute(path, '\/[^\/]*$', '', '')
-        for t in tags
-            exe "set tags+=" . t
-        endfor
-    endwhile
-endfunction
-
-" Tags
-"
-function! ShowTag(filter, ...)
-    let tags = taglist(a:filter)
-    for exp in a:000
-        call filter(tags, 'v:val["name"] =~ exp')
-    endfor
-    for tag in tags
-        echo tag["name"]
-        if has_key(tag, "signature")
-            echohl String
-            echon tag["signature"]
-            echohl NONE
-        endif
-    endfor
-endfunction
-
-" Undo changes while there is/or not a piece of text on buffer
-"
-function s:IsThere(searchterm)
-    return search(a:searchterm) > 0
-endfunction
-
-function s:IsNotThere(searchterm)
-    return search(a:searchterm) == 0
-endfunction
-
-function s:UndoWhile(Stop, quick, searchterm)
-    let steps = 0
-    while 1
-        if !a:Stop(a:searchterm)
-            break
-        endif
-        normal! u
-        let steps = steps + 1
-        if !a:quick
-            sleep 300m
-            redraw
-        endif
-    endwhile
-    echo "Stopped after " . steps . " steps"
-endfunction
-
 
 " === Initialize ==============================================================
-
-call <SID>ScanTags()
 
 if g:VimboxLoaded
     set statusline=%!statusline#StatusLineFunction()
@@ -267,3 +200,4 @@ endif
 if filereadable(glob('$HOME/.vimrc.local'))
     exe 'source ' . glob('$HOME/.vimrc.local')
 endif
+

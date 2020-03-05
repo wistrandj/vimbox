@@ -1,8 +1,4 @@
-" inoremap <buffer> <expr> <buffer> <CR> <SID>InsertTagAfterEnter()
-inoremap <buffer> <expr> > <SID>DuplicateTag()
-" inoremap <buffer> <expr> <leader>b <SID>Bold('b')
-" inoremap <buffer> <expr> <leader>i <SID>Bold('i')
-inoremap <buffer> <expr> :g <SID>SkipTag()
+inoremap <buffer> <expr> > <SID>ClosingAngleBracketInserted()
 
 if exists('s:loaded')
     finish
@@ -15,17 +11,24 @@ let s:AUTOCLOSED_ELEMENTS = {
     \'title': 1,
 \}
 
-function s:SkipTag()
-    return "\<ESC>f>a"
+let s:NOT_CLOSED_TAGS = [
+    \'img', 'input', 'hr', 'area',
+    \'link', 'br', 'meta', 'base',
+    \'col', 'embed', 'keygen',
+    \'param', 'source', 'track', 'wbr'
+\]
+
+function s:ClosingAngleBracketInserted()
+    " @Todo: Check if this tag is in s:NOT_CLOSED_TAGS and warn the user if it
+    " has closing '/' in the tag
+    return <SID>AutoInsertClosingTag()
 endfunction
 
-function s:Bold(style)
-    return printf('<%s></%s>%s', a:style, a:style, repeat("\<LEFT>", len(a:style) + 3))
-endfunction
-
-function s:DuplicateTag()
+function s:AutoInsertClosingTag()
     let NO_MATCH = '>'
+    " The text on left side of cursor excluding '>'
     let line = getline('.')[:col('.') - 2]
+    " Match the first word inside tag and ignore attributes
     let last_tag = substitute(line, '.*<\(\w\+\)\( [^>]*\)\?', '\1', '')
 
     if last_tag !~ '^\w\+$' || !has_key(s:AUTOCLOSED_ELEMENTS, last_tag)
@@ -43,26 +46,8 @@ function s:DuplicateTag()
     return printf('></%s>%s', last_tag, repeat("\<LEFT>", len(last_tag) + 3))
 endfunction
 
-function s:InsertTagAfterEnter()
-    let NO_MATCH = "\<CR>"
-    let line = getline('.')
-    let col = col('.')
-    let [pre, rest] = [line[:col-2], line[col-1:]]
-    echom pre
-    echom rest
-
-    if pre[-1:] != '>'
-        return NO_MATCH
-    endif
-
-    let last_tag = substitute(pre, '.*<\(\w\+\)\( [^>]*\)\?>$', '\1', '')
-    if last_tag !~ '^\w\+$' || !has_key(s:AUTOCLOSED_ELEMENTS, last_tag)
-        return NO_MATCH
-    endif
-
-    if rest !~ printf("</%s>.*", last_tag)
-        return NO_MATCH
-    endif
-
-    return printf("\<CR>\<CR>\<UP>")
+function s:EnsureThisTagIsNotClosed()
+    " @Todo: Implement here
+    return '>'
 endfunction
+
