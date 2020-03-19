@@ -17,11 +17,25 @@ let b:margin_match_id = -1
 let b:current_margin_type = 'off'
 
 
+" This script file is executed only for the first buffer so the buffer
+" variables are not defined any other buffer. This function makes sure
+" that they are defined.
+function s:DefineVariables()
+    if !exists('b:margin_match_id')
+        let b:margin_match_id = -1
+    endif
+    if !exists('b:current_margin_type')
+        let b:current_margin_type = 'off'
+    endif
+endfunction
+
 
 " Set a marker on too long lines, which determined byt the given argument.
 " @param a:size = Either 'wide', 'tiny' or 'off' 
 "
 function! s:TextDocumentWidth(size)
+    call <SID>DefineVariables()
+
     if b:margin_match_id != -1
         call matchdelete(b:margin_match_id)
         let b:margin_match_id = -1
@@ -52,6 +66,8 @@ endfunction
 " Cycle through all text widths.
 "
 function! s:CycleTextWidths()
+    call <SID>DefineVariables()
+
     let options = ['wide', 'tiny', 'off']
     let current_index = index(options, b:current_margin_type)
     let next_index = (current_index + 1) % len(options)
@@ -69,4 +85,7 @@ nmap <expr> <Plug>CycleTextWidths <SID>CycleTextWidths()
 
 " Expose a command for setting different text widths
 command! -nargs=1 -complete=custom,<SID>TextDocumentWidth_completion Document call <SID>TextDocumentWidth(<f-args>)
+
+" For each new buffer, define buffer local variables for this module.
+autocmd BufNew,BufNewFile * call <SID>DefineVariables()
 
