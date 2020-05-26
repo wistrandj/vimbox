@@ -2,6 +2,11 @@ if exists('s:loaded')
     finish
 endif | let s:loaded = 1
 
+setlocal autoindent
+setlocal shiftwidth=4
+setlocal tabstop=4
+setlocal softtabstop=4
+
 command! Funcs call ShowPythonFunctions()
 command! Methods call ShowPythonMethods()
 
