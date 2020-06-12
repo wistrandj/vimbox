@@ -10,7 +10,7 @@ hi _link_to_other_file cterm=underline
 
 syn clear
 
-syn match _code '^\s\s.*$'
+" syn match _code '^\s\s*[^-].*$'
 syn match _hashed_title '^#[^#]*$'
 syn match _hashed_title_2 '^##.*$'
 syn match _link_line '^\[.*\]:.*$'
