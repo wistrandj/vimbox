@@ -184,11 +184,6 @@ inoremap <expr> <c-k> pumvisible() ? '<c-p>' : '<c-x><c-p>'
 VimboxL comm! Snapw call CreateSnapshot()
 VimboxL comm! Snap call CompareToSnapshot()
 
-" Functions in plugin/document_width.vim. There's also a command exposed
-" there.
-"
-nmap <CR> <Plug>CycleTextWidths
-
 " === Initialize ==============================================================
 
 if g:VimboxLoaded

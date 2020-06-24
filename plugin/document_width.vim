@@ -8,6 +8,12 @@
 "   <Plug>CycleTextWidths
 "
 
+" Improvement idea: This module is only used with zknotes and should not be
+" used ever with any source code. Set vim to recognise any lines starting with
+" four whitespaces as comments, and set 'formatoptions' to not wrap those
+" lines.
+" See: help formatoptions and fo-table
+
 hi right_margin_highlight ctermbg=red
 
 " Positive number that is Currently used 'matchadd' id, or -1 if not used.
