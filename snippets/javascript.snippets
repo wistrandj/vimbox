@@ -35,3 +35,15 @@ snippet larrow
 	&#10094
 snippet rarrow
 	&#10095
+snippet xhr
+	let xhr = new XMLHttpRequest();
+	xhr.addEventListener('load', function() {
+	    if (this.status == 200) {
+	        console.log(this.responseText);
+	    } else {
+	        console.error('Error');
+	    }
+	});
+	xhr.open('GET', url);
+	xhr.send();
+
