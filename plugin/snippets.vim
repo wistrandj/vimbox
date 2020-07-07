@@ -1,3 +1,6 @@
+" Module to open the filetype's snippet file quickly.
+"
+
 let s:vimbox_snippets_folder = expand('$HOME') . '/.vim/bundle/vimbox/snippets'
 
 if !isdirectory(s:vimbox_snippets_folder)
