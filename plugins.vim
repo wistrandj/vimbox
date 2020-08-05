@@ -1,7 +1,6 @@
 XPlugin 'VundleVim/Vundle.vim'
 
 XPlugin 'godlygeek/tabular'
-XPlugin 'mtth/scratch.vim'
 XPlugin 'scrooloose/nerdcommenter'
 XPlugin 'scrooloose/nerdtree'
 XPlugin 'tpope/vim-repeat'
@@ -17,9 +16,11 @@ else
 endif
 
 if 1
+    " Snipmate depends on vim-addon-mw-utils and tlib_vim. It does not contain
+    " any snippets by default. They recommend to use 'honza/vim-snippets' to
+    " include some common snippets for various languages.
     XPlugin 'MarcWeber/vim-addon-mw-utils'
     XPlugin 'tomtom/tlib_vim'
-    XPlugin 'honza/vim-snippets'
     XPlugin 'garbas/vim-snipmate'
 endif
 
