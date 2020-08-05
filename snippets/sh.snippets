@@ -1,0 +1,22 @@
+snippet helpit
+	help() {
+		echo 'How to use this program...'
+		echo ''
+		echo 'Usage:'
+		echo ''
+		echo "  $0 <options>"
+	}
+snippet ifx
+	if [[ ${1:condition} == ${2:value} ]]; then
+		${3:echo yes}
+	else
+		${0:echo no}
+	fi
+snippet casex
+	case ${1:condition} in
+		${2:value})
+			$0
+			;;
+		*)
+			;;
+	esac

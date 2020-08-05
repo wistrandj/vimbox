@@ -1,0 +1,11 @@
+snippet dirreadx
+	use std::fs;
+	use std::path;
+
+	fn main() {
+		for entry in fs::read_dir(".").unwrap() {
+			let entry: fs::DirEntry = entry.unwrap();
+			let path: path::PathBuf = entry.path();
+			println!("> {:?}", path);
+		}
+	}
