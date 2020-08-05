@@ -4,6 +4,11 @@ au BufEnter *.sh call <SID>FillEmptyScript()
 au BufWritePre *.sh call <SID>SaveAsExecutable_Pre()
 au BufWritePost *.sh call <SID>SaveAsExecutable_Post()
 
+" Move text after quote to inside quote. For example (""${quote})
+" is transformed into ("${quote}")
+inoremap <C-h>q <ESC>v?['"]<CR>lxPla
+nnoremap <C-h>q v?['"]<CR>lxP
+
 
 if exists('s:loaded')
     finish
