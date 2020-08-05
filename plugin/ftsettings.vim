@@ -10,6 +10,7 @@ autocmd FileType javascript setlocal shiftwidth=4
 autocmd FileType json setlocal conceallevel=0
 
 autocmd FileType python setlocal autoindent
+autocmd FileType python setlocal smartindent
 autocmd FileType python setlocal shiftwidth=4
 autocmd FileType python setlocal tabstop=4
 autocmd FileType python setlocal softtabstop=4

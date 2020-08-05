@@ -1,12 +1,12 @@
-" Public interface: mappings and commands
-setlocal makeprg=mvn\ -q\ -e
 
 if exists("s:loaded")
     finish
 endif | let s:loaded = 1
 
+setlocal makeprg=mvn\ -q\ -e
+
 " Maven error format
-set errorformat=
+setlocal errorformat=
      \[ERROR\]\ %f:[%l\\,%v]\ %m,
      \%-G%.%#INFO%.%#,
      \%-G%.%#at\ org%.junit%.%#,
