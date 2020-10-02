@@ -1,3 +1,5 @@
+snippet println
+	println!("${1}");
 snippet dirreadx
 	use std::fs;
 	use std::path;
@@ -9,3 +11,18 @@ snippet dirreadx
 			println!("> {:?}", path);
 		}
 	}
+snippet modtest
+	#[cfg(test)]
+	mod test {
+		use super::*;
+		
+		#[test]
+		fn test_foobar() {
+			assert!(true);
+		}
+	}
+snippet atest
+	#[test]
+	fn ${1:test_foobar}() {
+	}
+
