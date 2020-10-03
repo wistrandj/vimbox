@@ -12,11 +12,6 @@ snippet ifx
 	else
 		${0:echo no}
 	fi
-snippet casex
-	case ${1:condition} in
-		${2:value})
-			$0
-			;;
-		*)
-			;;
+snippet xc
+	case "${${1}}" in
 	esac
