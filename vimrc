@@ -9,7 +9,7 @@ command! -nargs=* VimboxL :if g:VimboxLoaded | exe <q-args> | endif
 syntax on
 
 " Use these keys for mappings
-let mapleader = "-"
+" let mapleader = "-"
 
 " Environment
 let $VIMHOME = $HOME . "/.vim/"
@@ -26,6 +26,7 @@ set confirm
 set hidden
 set autowrite
 set wildmode=longest,list
+set modeline  " Read modeline variables from the top and bottom of each buffer
 
 " View
 set nohlsearch
