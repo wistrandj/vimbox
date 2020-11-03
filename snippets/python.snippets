@@ -7,3 +7,17 @@ snippet exp
 snippet ifmain
 	if __name__ == '__main__':
 		{VISUAL}
+snippet init
+	def __init__(self):
+		pass
+snippet enter
+	def __enter__(self):
+		return self
+
+	def __exit__(self, exctype, excinst, exctb):
+		if exctype, excinst, exctb == None, None, None:
+			raise excinst
+		pass
+snippet getattribute
+	def __getattribute__(self, name):
+		pass

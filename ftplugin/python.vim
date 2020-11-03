@@ -7,6 +7,8 @@ setlocal shiftwidth=4
 setlocal tabstop=4
 setlocal softtabstop=4
 
+iabbrev improt import
+
 command! Funcs call ShowPythonFunctions()
 command! Methods call ShowPythonMethods()
 
@@ -17,4 +19,5 @@ endfunction
 function ShowPythonMethods()
     global/\C\s*def/#
 endfunction
+
 
