@@ -25,7 +25,7 @@ if xplugin#Has('scrooloose/nerdtree')
     let g:NERDTreeIgnore = exists('g:NERDTreeIgnore') ? g:NERDTreeIgnore : []
     call insert(NERDTreeIgnore, '\.pyc')
     call insert(NERDTreeIgnore, '__init__\.py')
-    nnoremap <leader>sn :NERDTreeToggle<CR>
+    nnoremap <leader>n :NERDTreeToggle<CR>
 endif
 
 if xplugin#Has('airblade/git-gutter')
