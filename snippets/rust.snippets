@@ -25,4 +25,22 @@ snippet atest
 	#[test]
 	fn ${1:test_foobar}() {
 	}
+snippet impl-partialeq
+	impl PartialEq for ${1} {
+		fn eq(&self, &other: &${1}) -> bool {
+			return false;
+		}
+	}
+	impl Eq for ${1}
+snippet impl-ord
+	impl PartialOrd for ${1} {
+		fn partial_cmp(&self, &other: ${1}) -> Option<Ordering> {
+			return Ordering::Equal;
+		}
+	}
+	impl Ord for ${1} {
+		fn cmp(&self, &other: ${1}) -> Ordering {
+			return self.partial_cmp(other).unwrap();
+		}
+	}
 
