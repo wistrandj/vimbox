@@ -23,6 +23,7 @@ set confirm
 set hidden
 set autowrite
 set wildmode=longest,list
+set modeline  " Read modeline variables from the top and bottom of each buffer
 
 " View
 set nohlsearch
