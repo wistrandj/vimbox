@@ -8,9 +8,6 @@ command! -nargs=* VimboxL :if g:VimboxLoaded | exe <q-args> | endif
 
 syntax on
 
-" Use these keys for mappings
-let mapleader = "-"
-
 " Environment
 let $VIMHOME = $HOME . "/.vim/"
 let $MYSTUFF = $VIMHOME . "bundle/mystuff/"
