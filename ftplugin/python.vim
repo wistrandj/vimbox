@@ -28,7 +28,6 @@ hi _python_string ctermfg=red
 hi _python_comment ctermfg=magenta
 
 function s:PythonMinimalSyntax()
-    syntax off
     syn match _python_string "'[^']*'"
     syn match _python_string '"[^"]*"'
     syn match _python_string '"""'

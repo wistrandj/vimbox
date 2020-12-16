@@ -114,7 +114,6 @@ call xplugin#Source(xplugin#VimboxPath() . '/settings.vim')
 
 " Files, Windows, buffers and tabs
 "
-let g:vim_default_source = expand('<sfile>')
 nnoremap <leader>T :tabnew<CR>
 nnoremap <leader>ta :tabprev<CR>
 nnoremap <leader>tw :tabnext<CR>
@@ -126,9 +125,6 @@ nnoremap <C-j> :wincmd j<CR>
 nnoremap <C-k> :wincmd k<CR>
 nnoremap <C-l> :wincmd l<CR>
 
-nnoremap <F1> :so $MYVIMRC<CR>
-nnoremap <F1> :echo g:vim_default_source<CR>
-nnoremap <Leader>w :update<CR>
 inoremap <C-x><C-o> <C-x><C-o><C-p>
 
 " Escaping and moving cursor
