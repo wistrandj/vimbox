@@ -2,6 +2,7 @@ if exists('s:loaded')
     finish
 endif | let s:loaded = 1
 
+setlocal smartindent
 setlocal autoindent
 setlocal shiftwidth=4
 setlocal tabstop=4
