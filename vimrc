@@ -120,11 +120,6 @@ nnoremap <leader>tw :tabnext<CR>
 nnoremap <leader>tc :tabclose<CR>
 nnoremap <leader>to :tabonly<CR>
 
-nnoremap <C-h> :wincmd h<CR>
-nnoremap <C-j> :wincmd j<CR>
-nnoremap <C-k> :wincmd k<CR>
-nnoremap <C-l> :wincmd l<CR>
-
 inoremap <C-x><C-o> <C-x><C-o><C-p>
 
 " Escaping and moving cursor

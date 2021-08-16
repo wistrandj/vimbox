@@ -1,3 +1,2 @@
-" Wrap text in tiny/wide mode using <CR>
+" Empty file
 "
-nmap <CR> <Plug>CycleTextWidths
