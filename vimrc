@@ -165,11 +165,14 @@ VimboxL nnoremap gp? :QuickPaste ?
 
 VimboxL nmap <leader>R <Plug>VerticalRDown
 
-" Misc
-"
+" Increase the number under cursor
+nnoremap <leader>a <C-a>
+
+" Navigate in pop-up menu (PUM)
 inoremap <expr> <c-j> pumvisible() ? '<c-o>' : '<c-x><c-o>'
 inoremap <expr> <c-k> pumvisible() ? '<c-p>' : '<c-x><c-p>'
 
+" Create a temporary snapshot and compare the current contents with it
 VimboxL comm! Snapw call CreateSnapshot()
 VimboxL comm! Snap call CompareToSnapshot()
 
