@@ -1,0 +1,13 @@
+There are two folders for syntax highlighting:
+
+    - ./syntax/*.vim
+    - ./after/syntax/*.vim
+
+See :h mysyntaxfile for making own syntax plugins.
+
+A syntax plugin sets b:current_syntax variable, which prevents
+later plugins from loading syntax.
+
+Note: Some after/syntax files use the variable g:no_syntax. Not
+sure if this is a common variable in VIM or something from vimbox.
+

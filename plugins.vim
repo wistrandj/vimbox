@@ -21,6 +21,9 @@ if 1
     " include some common snippets for various languages.
     XPlugin 'MarcWeber/vim-addon-mw-utils'
     XPlugin 'tomtom/tlib_vim'
+    " Note: SnipMate complains about deprecating legacy parser.
+    " This options sets it to use new parser.
+    let g:snipMate = { 'snippet_version' : 1 }
     XPlugin 'garbas/vim-snipmate'
 endif
 

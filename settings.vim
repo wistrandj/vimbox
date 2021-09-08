@@ -21,7 +21,8 @@ endif
 
 if xplugin#Has('scrooloose/nerdtree')
     let g:NERDTreeStatusline = '---'
-    let g:NERDTreeDirArrows = 0
+    let g:NERDTreeDirArrowExpandable='>'
+    let g:NERDTreeDirArrowCollapsible='v'
     let g:NERDTreeIgnore = exists('g:NERDTreeIgnore') ? g:NERDTreeIgnore : []
     call insert(NERDTreeIgnore, '__pycache__')
     call insert(NERDTreeIgnore, '\.pyc')
