@@ -42,7 +42,8 @@ syn region PythonValue start='u\?"""' skip='[^\\]\\"' end='"""' display
 syn region PythonValue start="u\?'" skip="[^\\]\\'" end = "'" display
 syn match PythonValue "\<\d\+\(\.\d\+\)\?"
 syn keyword PythonConstant None True False
-syn match PythonStandardFunction "\<\(__import__\|abs\|all\|any\|ascii\|bin\|bool\|bytearray\|bytes\|callable\|chr\|classmethod\|compile\|complex\|delattr\|dict\|dir\|divmod\|enumerate\|eval\|exec\|filter\|float\|format\|frozenset\|getattr\|globals\|hasattr\|hash\|help\|hex\|id\|input\|int\|isinstance\|issubclass\|iter\|len\|list\|locals\|map\|max\|memoryview\|min\|next\|object\|oct\|open\|ord\|pow\|print\|property\|range\|repr\|reversed\|round\|set\|setattr\|slice\|sorted\|staticmethod\|str\|sum\|super\|tuple\|type\|vars\|zip\)\ze("
+syn keyword PythonStandardFunction abs all any ascii bin bool bytearray bytes callable chr classmethod compile complex delattr dict dir divmod enumerate eval exec filter float format frozenset getattr globals hasattr hash help hex id input int isinstance issubclass iter len list locals map max memoryview min next object oct open ord pow print property range repr reversed round set setattr slice sorted staticmethod str sum super tuple type vars zip
+syn keyword PythonStandardFunction __all__ __args__ __author__ __bases__ __builtin__ __builtins__ __cached__ __call__ __class__ __copy__ __credits__ __date__ __decimal_context__ __deepcopy__ __dict__ __doc__ __exception__ __file__ __flags__ __ge__ __getinitargs__ __getstate__ __gt__ __import__ __importer__ __init__ __ispkg__ __iter__ __le__ __len__ __loader__ __lt__ __main__ __module__ __mro__ __name__ __package__ __path__ __pkgdir__ __return__ __safe_for_unpickling__ __setstate__ __slots__ __temp__ __test__ __version__
 syn match PythonList "\[\|\]\|{\|}"
 
 " Comments
