@@ -115,8 +115,8 @@ call xplugin#Source(xplugin#VimboxPath() . '/settings.vim')
 " Files, Windows, buffers and tabs
 "
 nnoremap <leader>T :tabnew<CR>
-nnoremap <leader>ta :tabprev<CR>
-nnoremap <leader>tw :tabnext<CR>
+nnoremap <leader>tn :tabprev<CR>
+nnoremap <leader>tp :tabnext<CR>
 nnoremap <leader>tc :tabclose<CR>
 nnoremap <leader>to :tabonly<CR>
 
