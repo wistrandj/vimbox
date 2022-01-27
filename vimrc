@@ -186,6 +186,12 @@ if g:VimboxLoaded
     comm! -nargs=1 Pretty call debug#PrettyPrint_list(eval(<f-args>))
 
     command! -nargs=? -range -bang -complete=customlist,sign#CommandCompletion Sign call sign#PlaceCommand(<line1>, <line2>, <bang>0, <f-args>)
+
+    " @Note: Disable a HTML feature that closes pre-defined
+    " tags automatically. It has proved not to be so useful.
+    " @Todo: Delete the whole feature. Perhaps document the
+    " information somewhere.
+    let g:enable_vimbox_html_autoclose = 0
 endif
 
 if filereadable(glob('$HOME/.vimrc.local'))

@@ -4,13 +4,25 @@ if exists('s:loaded')
     finish
 endif | let s:loaded = 1
 
-let s:AUTOCLOSED_ELEMENTS = {
-    \'body': 1,
-    \'div': 1,
-    \'script': 1,
-    \'title': 1,
-\}
+if !exists('g:enable_vimbox_html_autoclose')
+    " Enable this feature by default.
+    let g:enable_vimbox_html_autoclose = 1
+endif
 
+if g:enable_vimbox_html_autoclose == 1
+    let s:AUTOCLOSED_ELEMENTS = {
+        \'body': 1,
+        \'div': 1,
+        \'script': 1,
+        \'title': 1,
+    \}
+else
+    let s:AUTOCLOSED_ELEMENTS = {}
+endif
+
+
+" @Note: These are not used at all. Maybe give a warning
+" to the user or write them in documentation somewhere?
 let s:NOT_CLOSED_TAGS = [
     \'img', 'input', 'hr', 'area',
     \'link', 'br', 'meta', 'base',
