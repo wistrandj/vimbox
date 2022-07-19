@@ -24,6 +24,7 @@ if xplugin#Has('scrooloose/nerdtree')
     let g:NERDTreeDirArrowExpandable='>'
     let g:NERDTreeDirArrowCollapsible='v'
     let g:NERDTreeIgnore = exists('g:NERDTreeIgnore') ? g:NERDTreeIgnore : []
+    let g:NERDTreeNaturalSort = 1
     call insert(NERDTreeIgnore, '__pycache__')
     call insert(NERDTreeIgnore, '\.pyc')
     call insert(NERDTreeIgnore, '__init__\.py')
