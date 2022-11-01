@@ -49,11 +49,6 @@ set wildmenu
 set wildmode=list:longest,full
 set conceallevel=2
 set nowrap
-if has("gui_running")
-    colorscheme desert
-else
-    colorscheme elflord " This seems to clear all hilights
-endif
 hi SignColumn ctermbg=darkgreen
 hi Folded ctermfg=White ctermbg=Black
 hi Search cterm=reverse ctermfg=Black ctermbg=DarkYellow
