@@ -1,23 +1,14 @@
-snippet pxp
-	pexpect
-snippet spn
-	spawn
-snippet exp
-	expect
 snippet ifmain
 	if __name__ == '__main__':
-		{VISUAL}
-snippet init
+		${VISUAL}
+snippet __init
 	def __init__(self):
 		pass
-snippet enter
+snippet __enter
 	def __enter__(self):
 		return self
 
 	def __exit__(self, exctype, excinst, exctb):
 		if exctype, excinst, exctb == None, None, None:
 			raise excinst
-		pass
-snippet getattribute
-	def __getattribute__(self, name):
 		pass
