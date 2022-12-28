@@ -32,3 +32,5 @@ Copy the project into bundle/ directory provided by your plugin manager
 - When using `<Plug>` for mappings, you have to use `nmap` and not `nnoremap` commands
 - Vundle needs `filetype off` defined before loading plugins. Otherwise it will
   not read sources from ftdetect.
+- Find loaded plugins with `:scriptnames`. 
+
