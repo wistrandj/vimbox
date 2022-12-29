@@ -187,6 +187,11 @@ if g:VimboxLoaded
     " @Todo: Delete the whole feature. Perhaps document the
     " information somewhere.
     let g:enable_vimbox_html_autoclose = 0
+
+    " @Note: Disable annoying SQL mappings in insert-mode.
+    " Check if `sqlcomplete.vim` is loaded with `:scriptnames`
+    " and if there are mappings for <C-c> in `:imap`.
+    let g:omni_sql_no_default_maps = 1
 endif
 
 if filereadable(glob('$HOME/.vimrc.local'))
