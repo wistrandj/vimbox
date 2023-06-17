@@ -27,6 +27,11 @@ Copy the project into bundle/ directory provided by your plugin manager
 
   This will ask some question whether to use autocompletion - turn it on in bash.
 
+- Load only vimbox and no other plugins.
+
+    $ export VIMBOX_NO_PLUGINS=1
+    $ vim
+
 ## Notes
 
 - When using `<Plug>` for mappings, you have to use `nmap` and not `nnoremap` commands

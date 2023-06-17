@@ -17,9 +17,14 @@ function xplugin#Available()
 endfunction
 
 function xplugin#Load(plugin)
-    let s:LoadedPlugins[a:plugin] = 1
-    let cmd = printf("Plugin '%s'", a:plugin)
-    exe cmd
+    if getenv('VIMBOX_NO_PLUGINS') == v:null
+        let s:LoadedPlugins[a:plugin] = 1
+        let cmd = printf("Plugin '%s'", a:plugin)
+        exe cmd
+    else
+        " Do not load any plugins when this env var is defined.
+        silent echom '(VIMBOX) Skipping loading ' . a:plugin
+    endif
 endfunction
 
 function xplugin#Has(plugin)

@@ -5,8 +5,8 @@ function s:SwitchToScratchBuffer()
     if s:ScratchBufferNumber == -1
         let s:ScratchBufferNumber = bufadd(s:ScratchBufferName)
         call s:ScratchMarkBuffer()
-        echo '(VIMBOX) Created a new buffer ' . s:ScratchBufferNumber
         " exec 'file ' . s:ScratchBufferName
+        execute 'buffer ' . s:ScratchBufferNumber
     else
         if bufwinnr(s:ScratchBufferNumber) != -1
             execute bufwinnr(s:ScratchBufferNumber) . 'wincmd w'
