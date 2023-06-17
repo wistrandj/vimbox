@@ -171,6 +171,10 @@ inoremap <expr> <c-k> pumvisible() ? '<c-p>' : '<c-x><c-p>'
 VimboxL comm! Snapw call CreateSnapshot()
 VimboxL comm! Snap call CompareToSnapshot()
 
+" Temporary buffers
+nmap <leader>ss <Plug>VimboxScratchBuffer_SwitchToScratchBuffer()
+nmap <leader>sr <Plug>VimboxScratchBuffer_RGInScratchBuffer()
+
 " === Initialize ==============================================================
 
 if g:VimboxLoaded
