@@ -175,6 +175,10 @@ VimboxL comm! Snap call CompareToSnapshot()
 nmap <leader>ss <Plug>VimboxScratchBuffer_SwitchToScratchBuffer()
 nmap <leader>sr <Plug>VimboxScratchBuffer_RGInScratchBuffer()
 
+" System copy-paste
+nmap <leader>xp <Plug>VimboxSystemPaste_PasteTextAfterCursor()
+
+
 " === Initialize ==============================================================
 
 if g:VimboxLoaded

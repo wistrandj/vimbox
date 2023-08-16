@@ -15,7 +15,7 @@ else
     XPlugin 'kien/ctrlp.vim'
 endif
 
-if 1
+if v:true
     " Snipmate depends on vim-addon-mw-utils and tlib_vim. It does not contain
     " any snippets by default. They recommend to use 'honza/vim-snippets' to
     " include some common snippets for various languages.
@@ -27,11 +27,7 @@ if 1
     XPlugin 'garbas/vim-snipmate'
 endif
 
-if !empty(system("which git"))
-    XPlugin 'airblade/vim-gitgutter'
-endif
-
-if 0
+if v:false
     if has('conceal') && has('python3') || has('python')
         " requires: pip install jedi
         let g:jedi#completions_command = "<C-Space>"
@@ -50,4 +46,9 @@ if 0
     if has('python3') || has('python')
         XPlugin 'Valloric/YouCompleteMe'
     endif
+
+    if !empty(system("which git"))
+        XPlugin 'airblade/vim-gitgutter'
+    endif
+
 endif
