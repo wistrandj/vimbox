@@ -10,7 +10,6 @@ syntax on
 
 " Environment
 let $VIMHOME = $HOME . "/.vim/"
-let $MYSTUFF = $VIMHOME . "bundle/mystuff/"
 
 " Misc
 " set nocompatible
