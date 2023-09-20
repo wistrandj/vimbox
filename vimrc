@@ -53,7 +53,6 @@ hi Folded ctermfg=White ctermbg=Black
 hi Search cterm=reverse ctermfg=Black ctermbg=DarkYellow
 set hlsearch
 
-
 set laststatus=2
 
 set showmatch
@@ -175,7 +174,7 @@ nmap <leader>ss <Plug>VimboxScratchBuffer_SwitchToScratchBuffer()
 nmap <leader>sr <Plug>VimboxScratchBuffer_RGInScratchBuffer()
 
 " System copy-paste
-nmap <leader>xp <Plug>VimboxSystemPaste_PasteTextAfterCursor()
+nmap <leader>xp <Plug>Vimbox_PasteFromSystemClipboard()
 
 
 " === Initialize ==============================================================
@@ -205,5 +204,11 @@ if filereadable(glob('$HOME/.vimrc.local'))
     exe 'source ' . glob('$HOME/.vimrc.local')
 endif
 
+
+" === Spelling ================================================================
+
 ia connectoin connection
+ia selectoin selection
+ia retunr return
+ia arean arean
 
